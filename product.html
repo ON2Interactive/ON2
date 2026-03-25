@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="ON2 Interactive" />
+    <meta name="description" content="Product details for ON2 Interactive." />
+    <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
+    <title>Product | ON2 Interactive</title>
+    <style>
+      :root {
+        --bg: #f5f0e7;
+        --bg-soft: #fbf8f2;
+        --text: #171717;
+        --text-muted: rgba(23, 23, 23, 0.66);
+        --line: rgba(23, 23, 23, 0.1);
+        --panel: rgba(255, 255, 255, 0.48);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+      }
+      body {
+        font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+        color: var(--text);
+        background:
+          linear-gradient(rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          var(--bg);
+        background-size: 18px 18px;
+      }
+      .page {
+        min-height: 100vh;
+        padding-top: 60px;
+      }
+      .nav {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 10;
+        width: 100%;
+        height: 60px;
+        background: rgba(245, 240, 231, 0.82);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(8px);
+      }
+      .nav-inner {
+        width: 100%;
+        height: 60px;
+        padding: 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        height: 60px;
+        text-decoration: none;
+      }
+      .logo img {
+        width: 32px;
+        height: 32px;
+      }
+      .nav-link {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .product-hero {
+        position: relative;
+        min-height: 50vh;
+        display: flex;
+        align-items: flex-end;
+        background: #d7ccbe;
+        overflow: hidden;
+      }
+      .product-hero-media {
+        position: absolute;
+        inset: 0;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      .product-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(18, 13, 10, 0.32) 0%, rgba(18, 13, 10, 0.22) 28%, rgba(245, 240, 231, 0.24) 62%, rgba(245, 240, 231, 0.82) 100%),
+          linear-gradient(90deg, rgba(18, 13, 10, 0.28) 0%, rgba(18, 13, 10, 0.08) 22%, rgba(18, 13, 10, 0.08) 78%, rgba(18, 13, 10, 0.3) 100%);
+      }
+      .product-hero-inner {
+        position: relative;
+        z-index: 1;
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 0 0 34px;
+      }
+      .product-hero-kicker {
+        margin: 0 0 10px;
+        color: rgba(23, 23, 23, 0.62);
+        font-size: 14px;
+        line-height: 1.4;
+        text-transform: none;
+      }
+      .product-hero-title {
+        margin: 0;
+        max-width: 900px;
+        font-size: clamp(3.2rem, 7vw, 6rem);
+        line-height: 0.94;
+        letter-spacing: -0.05em;
+      }
+      .product-body {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 44px 0 96px;
+      }
+      .product-intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+        gap: 36px;
+        padding-bottom: 36px;
+        border-bottom: 1px solid var(--line);
+      }
+      .product-summary {
+        margin: 0;
+        max-width: 760px;
+        color: var(--text-muted);
+        font-size: 16px;
+        line-height: 1.8;
+      }
+      .product-meta {
+        display: grid;
+        gap: 18px;
+      }
+      .product-meta-item {
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+      .product-meta-item:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+      .product-meta-label {
+        margin: 0 0 8px;
+        color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1.4;
+        text-transform: none;
+      }
+      .product-meta-value {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .product-sections {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 36px;
+        margin-top: 36px;
+      }
+      .product-main {
+        display: grid;
+        gap: 34px;
+      }
+      .product-block {
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+      }
+      .product-block:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+      .product-block-title {
+        margin: 0 0 14px;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #1a1a1a;
+      }
+      .product-block p {
+        margin: 0 0 18px;
+        color: var(--text-muted);
+        font-size: 16px;
+        line-height: 1.8;
+      }
+      .product-block p:last-child {
+        margin-bottom: 0;
+      }
+      .product-side {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 22px;
+        align-self: start;
+      }
+      .product-side-title {
+        margin: 0 0 14px;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #1a1a1a;
+      }
+      .product-side p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+      .site-footer {
+        background-color: #efe6d8;
+        background-image:
+          linear-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.04) 1px, transparent 1px);
+        background-size: 24px 24px;
+        background-position: 0 0, 0 0;
+        min-height: 600px;
+        padding: 50px 20px;
+        border-top: 1px solid rgba(23, 23, 23, 0.08);
+      }
+      .site-footer-inner {
+        width: min(1400px, 100%);
+        margin: 0 auto;
+        min-height: calc(600px - 136px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .site-footer-top {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        width: 100%;
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+      }
+      .site-footer-logo-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        color: #1a1a1a;
+      }
+      .site-footer-logo {
+        display: block;
+        width: 72px;
+        height: 72px;
+      }
+      .site-footer-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        text-align: right;
+      }
+      .site-footer-links a {
+        color: rgba(23, 23, 23, 0.72);
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .site-footer-links a:hover {
+        color: rgba(23, 23, 23, 0.5);
+      }
+      .site-footer-social {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .site-footer-social a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        color: rgba(23, 23, 23, 0.78);
+      }
+      .site-footer-social a:hover {
+        color: rgba(23, 23, 23, 0.56);
+      }
+      .site-footer-social svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .site-footer-bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        width: 100%;
+      }
+      .site-footer-bottom p {
+        margin: 0;
+        color: rgba(23, 23, 23, 0.62);
+        font-size: 0.92rem;
+        text-align: right;
+      }
+      .product-empty {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 48px 0 96px;
+        color: var(--text-muted);
+      }
+      @media (max-width: 900px) {
+        .product-intro,
+        .product-sections {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        .product-hero-inner,
+        .product-body,
+        .product-empty {
+          width: calc(100% - 32px);
+        }
+        .product-hero {
+          min-height: 50vh;
+        }
+        .product-hero-inner {
+          padding-bottom: 22px;
+        }
+        .product-summary {
+          font-size: 16px;
+        }
+        .product-meta-value,
+        .product-block p,
+        .product-side p {
+          font-size: 16px;
+        }
+        .product-hero-title {
+          font-size: 18px;
+          line-height: 1.12;
+          letter-spacing: -0.01em;
+        }
+        .product-block-title,
+        .product-side-title {
+          font-size: 18px;
+        }
+        .site-footer {
+          padding: 50px 14px;
+        }
+        .site-footer-top {
+          align-items: flex-start;
+        }
+        .site-footer-links,
+        .site-footer-bottom {
+          align-items: flex-start;
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="nav">
+        <div class="nav-inner">
+          <a class="logo" href="/" aria-label="ON2 Interactive home">
+            <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="ON2 Interactive" />
+          </a>
+          <a class="nav-link" href="/">Back</a>
+        </div>
+      </header>
+
+      <main id="productRoot">
+        <section class="product-empty">Loading product...</section>
+      </main>
+
+      <footer class="site-footer" aria-label="ON2 Interactive footer">
+        <div class="site-footer-inner">
+          <div class="site-footer-top">
+            <a class="site-footer-logo-link" href="/" aria-label="ON2 Interactive Home">
+              <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="ON2 Interactive" class="site-footer-logo" />
+            </a>
+            <nav class="site-footer-links" aria-label="Footer">
+              <a href="/">Home</a>
+              <a href="/contact">Contact</a>
+            </nav>
+            <div class="site-footer-social" aria-label="Social links">
+              <a href="https://www.linkedin.com/company/on2interactive/" aria-label="LinkedIn" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M6.94 8.5H3.56V20h3.38V8.5Zm-1.69-5A1.96 1.96 0 0 0 3.25 5.45c0 1.07.79 1.94 1.96 1.94h.02c1.2 0 1.96-.87 1.96-1.94A1.92 1.92 0 0 0 5.27 3.5h-.02ZM20.75 12.9c0-3.46-1.85-5.07-4.31-5.07-1.99 0-2.88 1.09-3.38 1.86V8.5H9.69c.04.79 0 11.5 0 11.5h3.37v-6.42c0-.34.03-.68.12-.93.27-.68.89-1.38 1.92-1.38 1.35 0 1.89 1.03 1.89 2.54V20H20.75l-.01-7.1Z"/>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/ON2Interactive/" aria-label="Facebook" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M13.5 21v-8.05h2.7l.4-3.15h-3.1V7.79c0-.91.25-1.53 1.56-1.53H16.7V3.44c-.29-.04-1.28-.12-2.43-.12-2.4 0-4.04 1.46-4.04 4.15v2.33H7.5v3.15h2.73V21h3.27Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="site-footer-bottom">
+            <p>© <span id="footerYear"></span> ON2 Interactive. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const root = document.getElementById("productRoot");
+        if (!root) return;
+        const footerYear = document.getElementById("footerYear");
+        if (footerYear) footerYear.textContent = String(new Date().getFullYear());
+
+        const escapeHtml = (value) =>
+          String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        const toSentenceCase = (value) => {
+          const text = String(value || "").trim();
+          if (!text) return "";
+          const normalized = text.toLowerCase();
+          return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+        };
+
+        const slug = decodeURIComponent(String(window.location.pathname || "").split("/").pop() || "").trim().toLowerCase();
+
+        const renderMissing = () => {
+          root.innerHTML = `
+            <section class="product-empty">
+              <p class="product-hero-kicker">Product</p>
+              <h1 class="product-hero-title">Product not found.</h1>
+            </section>
+          `;
+        };
+
+        fetch("/api/projects")
+          .then((response) => response.json())
+          .then((payload) => {
+            const projects = Array.isArray(payload.projects) ? payload.projects : [];
+            const project = projects.find((entry) => String(entry.slug || "").toLowerCase() === slug);
+            if (!project) {
+              renderMissing();
+              return;
+            }
+
+            const title = escapeHtml(project.title);
+            const category = escapeHtml(toSentenceCase(project.category || "Product"));
+            const summary = escapeHtml(project.summary || "");
+            const client = escapeHtml(project.client || "Internal");
+            const services = escapeHtml(toSentenceCase(project.services || "Product strategy, design, engineering"));
+            const year = escapeHtml(project.year || "Current");
+            const image = "/Assets/Hero-Latest.png";
+
+            document.title = `${title} | ON2 Interactive`;
+
+            root.innerHTML = `
+              <section class="product-hero">
+                <div class="product-hero-media" style="background-image: url('${image}')"></div>
+                <div class="product-hero-overlay"></div>
+                <div class="product-hero-inner">
+                  <p class="product-hero-kicker">${category}</p>
+                  <h1 class="product-hero-title">${title}</h1>
+                </div>
+              </section>
+
+              <section class="product-body">
+                <div class="product-intro">
+                  <p class="product-summary">${summary}</p>
+                  <aside class="product-meta">
+                    <div class="product-meta-item">
+                      <p class="product-meta-label">Client</p>
+                      <p class="product-meta-value">${client}</p>
+                    </div>
+                    <div class="product-meta-item">
+                      <p class="product-meta-label">Year</p>
+                      <p class="product-meta-value">${year}</p>
+                    </div>
+                    <div class="product-meta-item">
+                      <p class="product-meta-label">Solutions</p>
+                      <p class="product-meta-value">${services}</p>
+                    </div>
+                  </aside>
+                </div>
+
+                <div class="product-sections">
+                  <div class="product-main">
+                    <section class="product-block">
+                      <h2 class="product-block-title">Overview</h2>
+                      <p>${summary}</p>
+                      <p>This is the rebuilt placeholder structure for the product slug page. The direction is now image-led first, with the content flowing underneath in a calmer editorial layout rather than a boxed data sheet.</p>
+                    </section>
+
+                    <section class="product-block">
+                      <h2 class="product-block-title">What this page will hold</h2>
+                      <p>Once the Supabase-backed product model is ready, this page can expand into a full case-study format with sections for context, problem, solution, technology stack, design system, outcomes, screenshots, and supporting media.</p>
+                      <p>The layout is already prepared for that evolution without needing to change the overall page direction again.</p>
+                    </section>
+                  </div>
+
+                  <aside class="product-side">
+                    <h2 class="product-side-title">Notes</h2>
+                    <p>The hero uses the product image as a full-width background at roughly half the viewport height, then shifts into structured content below. This gives the slug page a stronger opening and a more premium feel.</p>
+                  </aside>
+                </div>
+              </section>
+            `;
+          })
+          .catch(() => {
+            renderMissing();
+          });
+      })();
+    </script>
+  </body>
+</html>

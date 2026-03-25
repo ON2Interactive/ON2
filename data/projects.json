@@ -1,0 +1,30 @@
+[
+  {
+    "id": "on2-studio-framework",
+    "title": "Studio Framework",
+    "slug": "studio-framework",
+    "year": "2026",
+    "category": "Brand Systems",
+    "client": "Internal",
+    "summary": "A modular visual and messaging framework for launching digital identities with speed and consistency.",
+    "services": "Strategy, Identity, Creative Direction, Web",
+    "image": "/Images/ON2-Banner-Social-YT.png",
+    "link": "",
+    "featured": true,
+    "publishedAt": "2026-03-25T09:00:00.000Z"
+  },
+  {
+    "id": "on2-campaign-ops",
+    "title": "Campaign Ops",
+    "slug": "campaign-ops",
+    "year": "2025",
+    "category": "Marketing Systems",
+    "client": "Confidential",
+    "summary": "An operating layer for campaign production that aligns creative, content, and launch execution.",
+    "services": "Content Systems, Design Ops, Production",
+    "image": "/Images/ON2-Banner-Social-YT.png",
+    "link": "",
+    "featured": false,
+    "publishedAt": "2026-03-20T14:30:00.000Z"
+  }
+]

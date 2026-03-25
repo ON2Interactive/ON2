@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="ON2 Interactive" />
+    <meta name="description" content="Contact ON2 Interactive." />
+    <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Contact | ON2 Interactive</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-nav">
+        <a class="brand-mark" href="/" aria-label="ON2 Interactive home">
+          <img class="brand-mark-icon" src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" />
+          <span class="brand-mark-text">
+            <span class="brand-mark-name">ON2 Interactive</span>
+            <span class="brand-mark-tag">Digital studio journal</span>
+          </span>
+        </a>
+        <nav class="site-nav-links" aria-label="Primary">
+          <a href="/">Home</a>
+          <a href="/#projects">Projects</a>
+          <a class="nav-cta" href="/adminlogin">Admin</a>
+        </nav>
+      </header>
+
+      <main class="page-section">
+        <section class="page-hero">
+          <div class="eyebrow">Contact</div>
+          <h1 class="page-title">Start with the brief. We can shape the system after that.</h1>
+          <p class="contact-intro">
+            Use this page for project inquiries, collaborations, or general questions. Messages are stored for admin review.
+          </p>
+        </section>
+
+        <section class="contact-layout">
+          <aside class="contact-card">
+            <div class="micro-label">Studio</div>
+            <div class="contact-detail-list">
+              <div>
+                <div class="detail-label">Email</div>
+                <div class="detail-value">hello@on2interactive.com</div>
+              </div>
+              <div>
+                <div class="detail-label">Focus</div>
+                <div class="detail-value">Brand systems, responsive web, and editorial publishing structures.</div>
+              </div>
+              <div>
+                <div class="detail-label">Response</div>
+                <div class="detail-value">Messages submitted here are captured by the site backend for admin review.</div>
+              </div>
+            </div>
+          </aside>
+
+          <section class="contact-card">
+            <form id="contactForm" class="contact-form" novalidate>
+              <label class="form-label" for="contactName">
+                Name
+                <input class="text-input" id="contactName" name="name" type="text" maxlength="120" required />
+              </label>
+
+              <label class="form-label" for="contactEmail">
+                Email
+                <input class="text-input" id="contactEmail" name="email" type="email" maxlength="180" required />
+              </label>
+
+              <label class="form-label" for="contactSubject">
+                Subject
+                <input class="text-input" id="contactSubject" name="subject" type="text" maxlength="180" required />
+              </label>
+
+              <label class="form-label" for="contactMessage">
+                Message
+                <textarea class="text-area" id="contactMessage" name="message" maxlength="4000" required></textarea>
+              </label>
+
+              <button id="contactSubmit" class="primary-button" type="submit">Send Message</button>
+              <p id="contactStatus" class="form-status" aria-live="polite"></p>
+            </form>
+          </section>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>© <span id="year"></span> ON2 Interactive</span>
+        <span>Projects, contact, and admin publishing.</span>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const yearEl = document.getElementById("year");
+        if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+        const form = document.getElementById("contactForm");
+        const submitBtn = document.getElementById("contactSubmit");
+        const statusEl = document.getElementById("contactStatus");
+        if (!form || !submitBtn || !statusEl) return;
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const name = String(document.getElementById("contactName")?.value || "").trim();
+          const email = String(document.getElementById("contactEmail")?.value || "").trim();
+          const subject = String(document.getElementById("contactSubject")?.value || "").trim();
+          const message = String(document.getElementById("contactMessage")?.value || "").trim();
+
+          if (!name || !email || !subject || !message) {
+            statusEl.textContent = "Please complete all fields.";
+            return;
+          }
+
+          submitBtn.setAttribute("disabled", "disabled");
+          statusEl.textContent = "Sending...";
+
+          try {
+            const response = await fetch("/api/contact", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name, email, subject, message }),
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              statusEl.textContent = payload.error || "Unable to send message.";
+              return;
+            }
+            form.reset();
+            statusEl.textContent = payload.message || "Message sent.";
+          } catch {
+            statusEl.textContent = "Network error. Please try again.";
+          } finally {
+            submitBtn.removeAttribute("disabled");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

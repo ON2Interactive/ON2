@@ -1,0 +1,9 @@
+{
+  "name": "on2-interactive-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ON2 Interactive website with admin-managed project posts.",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

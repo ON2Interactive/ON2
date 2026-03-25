@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="ON2 Interactive" />
+    <meta name="description" content="Admin dashboard for ON2 Interactive." />
+    <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Admin | ON2 Interactive</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-nav">
+        <a class="brand-mark" href="/" aria-label="ON2 Interactive home">
+          <img class="brand-mark-icon" src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" />
+          <span class="brand-mark-text">
+            <span class="brand-mark-name">ON2 Interactive</span>
+            <span class="brand-mark-tag">Admin dashboard</span>
+          </span>
+        </a>
+        <nav class="site-nav-links" aria-label="Primary">
+          <a href="/">Public Site</a>
+          <a href="/contact">Contact</a>
+          <button id="logoutBtn" class="ghost-button" type="button">Log Out</button>
+        </nav>
+      </header>
+
+      <main class="admin-shell">
+        <section class="admin-head">
+          <div>
+            <div class="eyebrow">Publishing</div>
+            <h1 class="admin-heading">Manage ON2 projects.</h1>
+            <p class="admin-note">Create, revise, and remove the projects displayed on the homepage.</p>
+          </div>
+          <div class="admin-actions">
+            <button id="newProjectBtn" class="secondary-button" type="button">New Project</button>
+            <button id="refreshProjectsBtn" class="primary-button" type="button">Refresh</button>
+          </div>
+        </section>
+
+        <section class="admin-layout">
+          <aside class="admin-panel">
+            <div class="micro-label">Project list</div>
+            <div id="adminProjectList" class="admin-project-list">
+              <p class="empty-state">Loading projects...</p>
+            </div>
+          </aside>
+
+          <section class="admin-form">
+            <div class="micro-label">Editor</div>
+            <form id="projectForm" class="admin-form-grid">
+              <input id="projectId" type="hidden" />
+
+              <label class="form-label" for="projectTitle">
+                Title
+                <input class="text-input" id="projectTitle" type="text" maxlength="180" required />
+              </label>
+
+              <div class="split-grid">
+                <label class="form-label" for="projectYear">
+                  Year
+                  <input class="text-input" id="projectYear" type="text" maxlength="12" />
+                </label>
+
+                <label class="form-label" for="projectCategory">
+                  Category
+                  <input class="text-input" id="projectCategory" type="text" maxlength="80" required />
+                </label>
+              </div>
+
+              <div class="split-grid">
+                <label class="form-label" for="projectClient">
+                  Client
+                  <input class="text-input" id="projectClient" type="text" maxlength="120" />
+                </label>
+
+                <label class="form-label" for="projectLink">
+                  Project Link
+                  <input class="text-input" id="projectLink" type="url" maxlength="500" />
+                </label>
+              </div>
+
+              <label class="form-label" for="projectImage">
+                Image Path
+                <input class="text-input" id="projectImage" type="text" maxlength="500" placeholder="/Images/ON2-Banner-Social-YT.png" />
+              </label>
+
+              <label class="form-label" for="projectServices">
+                Services
+                <input class="text-input" id="projectServices" type="text" maxlength="180" placeholder="Strategy, Design, Development" />
+              </label>
+
+              <label class="form-label" for="projectSummary">
+                Summary
+                <textarea class="text-area" id="projectSummary" maxlength="1200" required></textarea>
+              </label>
+
+              <label class="checkbox-row" for="projectFeatured">
+                <input id="projectFeatured" type="checkbox" />
+                Feature this project in the larger homepage card
+              </label>
+
+              <div class="admin-toolbar">
+                <button class="primary-button" type="submit">Save Project</button>
+                <button id="deleteProjectBtn" class="ghost-button" type="button">Delete</button>
+                <button id="resetProjectBtn" class="ghost-button" type="button">Reset</button>
+              </div>
+              <p id="projectFormStatus" class="form-status" aria-live="polite"></p>
+            </form>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      (() => {
+        const listEl = document.getElementById("adminProjectList");
+        const form = document.getElementById("projectForm");
+        const statusEl = document.getElementById("projectFormStatus");
+        const refreshBtn = document.getElementById("refreshProjectsBtn");
+        const newBtn = document.getElementById("newProjectBtn");
+        const resetBtn = document.getElementById("resetProjectBtn");
+        const deleteBtn = document.getElementById("deleteProjectBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        if (!listEl || !form || !statusEl || !refreshBtn || !newBtn || !resetBtn || !deleteBtn || !logoutBtn) return;
+
+        const fields = {
+          id: document.getElementById("projectId"),
+          title: document.getElementById("projectTitle"),
+          year: document.getElementById("projectYear"),
+          category: document.getElementById("projectCategory"),
+          client: document.getElementById("projectClient"),
+          link: document.getElementById("projectLink"),
+          image: document.getElementById("projectImage"),
+          services: document.getElementById("projectServices"),
+          summary: document.getElementById("projectSummary"),
+          featured: document.getElementById("projectFeatured"),
+        };
+
+        let projects = [];
+        let activeProjectId = "";
+
+        const escapeHtml = (value) =>
+          String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+
+        const setStatus = (text) => {
+          statusEl.textContent = String(text || "");
+        };
+
+        const resetForm = () => {
+          activeProjectId = "";
+          fields.id.value = "";
+          fields.title.value = "";
+          fields.year.value = "";
+          fields.category.value = "";
+          fields.client.value = "";
+          fields.link.value = "";
+          fields.image.value = "/Images/ON2-Banner-Social-YT.png";
+          fields.services.value = "";
+          fields.summary.value = "";
+          fields.featured.checked = false;
+          setStatus("Ready for a new project.");
+          renderList();
+        };
+
+        const fillForm = (project) => {
+          activeProjectId = String(project.id || "");
+          fields.id.value = activeProjectId;
+          fields.title.value = project.title || "";
+          fields.year.value = project.year || "";
+          fields.category.value = project.category || "";
+          fields.client.value = project.client || "";
+          fields.link.value = project.link || "";
+          fields.image.value = project.image || "/Images/ON2-Banner-Social-YT.png";
+          fields.services.value = project.services || "";
+          fields.summary.value = project.summary || "";
+          fields.featured.checked = Boolean(project.featured);
+          setStatus(`Editing ${project.title || "project"}.`);
+          renderList();
+        };
+
+        const renderList = () => {
+          if (!projects.length) {
+            listEl.innerHTML = '<p class="empty-state">No projects yet. Create the first one.</p>';
+            return;
+          }
+          listEl.innerHTML = projects
+            .slice()
+            .sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime())
+            .map((project) => {
+              const activeClass = String(project.id) === activeProjectId ? " is-active" : "";
+              return `
+                <article class="admin-project-item${activeClass}" data-project-id="${escapeHtml(project.id)}">
+                  <strong>${escapeHtml(project.title)}</strong>
+                  <span>${escapeHtml(project.category)} ${project.year ? "• " + escapeHtml(project.year) : ""}</span>
+                </article>
+              `;
+            })
+            .join("");
+
+          Array.from(listEl.querySelectorAll("[data-project-id]")).forEach((item) => {
+            item.addEventListener("click", () => {
+              const project = projects.find((entry) => String(entry.id) === item.getAttribute("data-project-id"));
+              if (project) fillForm(project);
+            });
+          });
+        };
+
+        const fetchProjects = async () => {
+          setStatus("Loading projects...");
+          const response = await fetch("/api/admin/projects");
+          if (response.status === 401) {
+            window.location.replace("/adminlogin");
+            return;
+          }
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            setStatus(payload.error || "Unable to load projects.");
+            return;
+          }
+          projects = Array.isArray(payload.projects) ? payload.projects : [];
+          if (activeProjectId) {
+            const active = projects.find((project) => String(project.id) === activeProjectId);
+            if (active) fillForm(active);
+            else resetForm();
+          } else {
+            renderList();
+            setStatus("Projects loaded.");
+          }
+        };
+
+        const getPayload = () => ({
+          title: String(fields.title.value || "").trim(),
+          year: String(fields.year.value || "").trim(),
+          category: String(fields.category.value || "").trim(),
+          client: String(fields.client.value || "").trim(),
+          link: String(fields.link.value || "").trim(),
+          image: String(fields.image.value || "").trim(),
+          services: String(fields.services.value || "").trim(),
+          summary: String(fields.summary.value || "").trim(),
+          featured: Boolean(fields.featured.checked),
+        });
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const payload = getPayload();
+          if (!payload.title || !payload.category || !payload.summary) {
+            setStatus("Title, category, and summary are required.");
+            return;
+          }
+
+          const projectId = String(fields.id.value || "").trim();
+          const method = projectId ? "PUT" : "POST";
+          const url = projectId ? `/api/admin/projects/${encodeURIComponent(projectId)}` : "/api/admin/projects";
+          setStatus(projectId ? "Saving changes..." : "Creating project...");
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const result = await response.json().catch(() => ({}));
+            if (response.status === 401) {
+              window.location.replace("/adminlogin");
+              return;
+            }
+            if (!response.ok) {
+              setStatus(result.error || "Unable to save project.");
+              return;
+            }
+            activeProjectId = result.project?.id || activeProjectId;
+            await fetchProjects();
+            const active = projects.find((project) => String(project.id) === activeProjectId);
+            if (active) fillForm(active);
+            setStatus(projectId ? "Project updated." : "Project created.");
+          } catch {
+            setStatus("Network error. Please try again.");
+          }
+        });
+
+        deleteBtn.addEventListener("click", async () => {
+          const projectId = String(fields.id.value || "").trim();
+          if (!projectId) {
+            setStatus("Select a project before deleting.");
+            return;
+          }
+          const confirmed = window.confirm("Delete this project?");
+          if (!confirmed) return;
+
+          setStatus("Deleting project...");
+          try {
+            const response = await fetch(`/api/admin/projects/${encodeURIComponent(projectId)}`, { method: "DELETE" });
+            const payload = await response.json().catch(() => ({}));
+            if (response.status === 401) {
+              window.location.replace("/adminlogin");
+              return;
+            }
+            if (!response.ok) {
+              setStatus(payload.error || "Unable to delete project.");
+              return;
+            }
+            resetForm();
+            await fetchProjects();
+            setStatus("Project deleted.");
+          } catch {
+            setStatus("Network error. Please try again.");
+          }
+        });
+
+        resetBtn.addEventListener("click", () => resetForm());
+        newBtn.addEventListener("click", () => resetForm());
+        refreshBtn.addEventListener("click", () => fetchProjects());
+
+        logoutBtn.addEventListener("click", async () => {
+          await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
+          window.location.replace("/adminlogin");
+        });
+
+        fetch("/api/admin/session")
+          .then((response) => {
+            if (!response.ok) window.location.replace("/adminlogin");
+          })
+          .catch(() => {
+            window.location.replace("/adminlogin");
+          });
+
+        resetForm();
+        fetchProjects();
+      })();
+    </script>
+  </body>
+</html>

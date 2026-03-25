@@ -1,0 +1,1452 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="ON2 Interactive" />
+    <meta
+      name="description"
+      content="ON2 Interactive builds minimal brand systems, responsive websites, and campaign-ready digital experiences."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ON2 Interactive" />
+    <meta property="og:title" content="ON2 Interactive" />
+    <meta
+      property="og:description"
+      content="A minimal digital studio landing page with project publishing, responsive design, and admin-managed work."
+    />
+    <meta property="og:image" content="/Images/ON2-Banner-Social-YT.png" />
+    <meta property="og:image:alt" content="ON2 Interactive preview" />
+    <meta property="og:url" content="/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ON2 Interactive" />
+    <meta
+      name="twitter:description"
+      content="A minimal digital studio landing page with project publishing, responsive design, and admin-managed work."
+    />
+    <meta name="twitter:image" content="/Images/ON2-Banner-Social-YT.png" />
+    <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
+    <title>ON2 Interactive</title>
+    <style>
+      :root {
+        --bg: #f5f0e7;
+        --bg-soft: #faf7f1;
+        --bg-warm: #efe6d8;
+        --panel: rgba(255, 255, 255, 0.55);
+        --text: #171717;
+        --text-muted: rgba(23, 23, 23, 0.68);
+        --line: rgba(23, 23, 23, 0.12);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+      }
+      body {
+        font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--text);
+        background-color: var(--bg);
+        background-image:
+          linear-gradient(rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.035) 1px, transparent 1px);
+        background-size: 18px 18px;
+      }
+      .page {
+        min-height: 100vh;
+        padding-top: 60px;
+      }
+      .nav {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 4;
+        width: 100%;
+        height: 60px;
+        background: rgba(245, 240, 231, 0.82);
+        border-bottom: 1px solid rgba(23, 23, 23, 0.08);
+        backdrop-filter: blur(8px);
+        transform: translateY(0);
+        opacity: 1;
+        transition: transform 220ms ease, opacity 220ms ease, background-color 220ms ease;
+      }
+      .nav.is-hidden {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      .nav-inner {
+        width: 100%;
+        padding: 0 22px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        height: 60px;
+        text-decoration: none;
+        color: var(--text);
+      }
+      .logo img {
+        display: block;
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .nav-links a {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .nav-cta {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .hero-inner {
+        width: 100%;
+        max-width: 960px;
+        padding: 0 20px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+      .hero-copy {
+        max-width: 960px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .hero-copy h1 {
+        max-width: 860px;
+        font-size: 64px;
+        font-weight: 800;
+        line-height: 1.03;
+        letter-spacing: -0.03em;
+        color: #f7f2ea;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+      }
+      .hero {
+        --hero-shift-x: 0px;
+        --hero-shift-y: 0px;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        background: #ddd4c7;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: -48px;
+        background: url("/Assets/Hero-Latest.png") center center / cover no-repeat;
+        transform: translate3d(var(--hero-shift-x), var(--hero-shift-y), 0) scale(1.04);
+        transform-origin: center;
+        will-change: transform;
+        transition: transform 120ms ease-out;
+        pointer-events: none;
+        filter: grayscale(0.04) contrast(1.01);
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(26, 20, 15, 0.12) 0%, rgba(26, 20, 15, 0.08) 24%, rgba(245, 240, 231, 0.18) 52%, rgba(245, 240, 231, 0.42) 100%),
+          linear-gradient(90deg, rgba(30, 22, 16, 0.2) 0%, rgba(30, 22, 16, 0.03) 28%, rgba(30, 22, 16, 0.03) 72%, rgba(30, 22, 16, 0.22) 100%);
+        pointer-events: none;
+        z-index: 1;
+      }
+      .section-blank {
+        min-height: 600px;
+        background-color: var(--bg-soft);
+        background-image: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 20px;
+      }
+      .section-blank-inner {
+        width: 100%;
+        max-width: 1200px;
+      }
+      .section-blank-image {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin: 60px 0;
+        opacity: 0.18;
+        transform: translateY(22px);
+        transition: opacity 520ms ease, transform 520ms ease;
+      }
+      .section-blank-image.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .section-blank-title {
+        margin: 0 0 26px;
+        text-align: center;
+        font-size: 28px;
+        line-height: 1.2;
+        font-weight: 600;
+        color: #1b1b1b;
+      }
+      .section-blank-body {
+        margin: 0 auto;
+        max-width: 760px;
+        text-align: center;
+      }
+      .section-blank-body p {
+        margin: 0 0 12px;
+        font-size: 16px;
+        line-height: 1.55;
+        color: rgba(23, 23, 23, 0.74);
+        text-align: center;
+      }
+      .section-blank-body p:last-child {
+        margin-bottom: 0;
+      }
+      .landing-ai {
+        background-color: var(--bg-warm);
+        background-image:
+          linear-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.04) 1px, transparent 1px);
+        background-size: 24px 24px;
+        background-position: 0 0, 0 0;
+        padding: 120px 20px;
+      }
+      .landing-ai-inner {
+        width: min(1200px, 100%);
+        margin: 0 auto;
+      }
+      .landing-ai-title {
+        margin: 0 0 24px;
+        text-align: center;
+        font-size: 32px;
+        line-height: 1.1;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+      .landing-ai-shell {
+        min-height: 220px;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        padding: 28px 24px;
+      }
+      .landing-ai-feature {
+        max-width: 760px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .landing-ai-feature + .landing-ai-feature {
+        margin-top: 46px;
+      }
+      .landing-ai-feature h3 {
+        margin: 0 0 12px;
+        font-size: 30px;
+        line-height: 1.1;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+      .landing-ai-feature-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 12px;
+      }
+      .landing-ai-feature-head h3 {
+        margin: 0;
+      }
+      .landing-ai-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 24px;
+        padding: 0 10px;
+        border: 1px solid rgba(23, 23, 23, 0.18);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(23, 23, 23, 0.8);
+      }
+      .landing-ai-feature p {
+        margin: 0;
+        text-align: left;
+        color: rgba(23, 23, 23, 0.72);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .landing-page-turn {
+        background: #fbf8f2;
+        padding: 120px 20px;
+      }
+      .landing-page-turn-inner {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .landing-page-turn-title {
+        margin: 0;
+        font-size: 28px;
+        line-height: 1.2;
+        font-weight: 600;
+        color: #3c3c3c;
+        text-align: right;
+      }
+      .landing-page-turn-header {
+        width: 100%;
+        margin: 0 auto 22px;
+        padding: 0;
+      }
+      .landing-page-turn-shell {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .lpt-book {
+        position: relative;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        aspect-ratio: 3 / 2;
+        perspective: 1800px;
+      }
+      .lpt-underlay,
+      .lpt-page {
+        position: absolute;
+        inset: 0;
+        border-radius: 0;
+        border: 0;
+      }
+      .lpt-underlay {
+        background: #cfc4b6;
+        overflow: hidden;
+      }
+      .lpt-page-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .lpt-underlay::before,
+      .lpt-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(23, 23, 23, 0.08) 100%);
+        pointer-events: none;
+      }
+      .lpt-page {
+        background: #ddd2c4;
+        transform-origin: left center;
+        transform-style: preserve-3d;
+        overflow: hidden;
+      }
+      .lpt-page.is-turning-next {
+        animation: lpt-turn-next 640ms cubic-bezier(0.34, 0.86, 0.35, 1);
+      }
+      .lpt-page.is-turning-prev {
+        animation: lpt-turn-prev 640ms cubic-bezier(0.34, 0.86, 0.35, 1);
+      }
+      .lpt-controls {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+      .lpt-control-btn {
+        min-width: 44px;
+        height: 40px;
+        padding: 0;
+        border-radius: 8px;
+        border: 0;
+        background: transparent;
+        color: #252525;
+        font-size: 28px;
+        line-height: 1;
+        font-weight: 400;
+        cursor: pointer;
+      }
+      .lpt-control-btn:hover {
+        color: rgba(37, 37, 37, 0.68);
+      }
+      .lpt-page-index {
+        min-width: 82px;
+        text-align: center;
+        font-size: 14px;
+        color: rgba(20, 20, 20, 0.72);
+      }
+      @keyframes lpt-turn-next {
+        0% {
+          transform: rotateY(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: rotateY(-138deg);
+          opacity: 0.28;
+        }
+      }
+      @keyframes lpt-turn-prev {
+        0% {
+          transform: rotateY(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: rotateY(138deg);
+          opacity: 0.28;
+        }
+      }
+      .landing-features {
+        background: linear-gradient(180deg, #f8f4ec 0%, #efe7da 100%);
+        min-height: 800px;
+        padding: 160px 20px 0;
+      }
+      .landing-features-inner {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+      .landing-features-copy {
+        width: 100%;
+        margin: 0 auto 60px;
+        padding: 0;
+        text-align: left;
+      }
+      .landing-features-copy h1 {
+        margin: 0;
+        font-size: 56px;
+        line-height: 1.04;
+        color: #1a1a1a;
+        text-align: left;
+      }
+      .landing-products-list {
+        display: grid;
+        gap: 0;
+      }
+      .landing-product-row {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 22px;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        border-bottom: 1px solid rgba(23, 23, 23, 0.1);
+        padding: 18px 0;
+        transition: opacity 180ms ease;
+      }
+      .landing-product-row:hover {
+        opacity: 0.82;
+      }
+      .landing-product-thumb {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        display: block;
+        border-radius: 6px;
+      }
+      .landing-product-copy {
+        min-width: 0;
+      }
+      .landing-product-title {
+        margin: 0 0 8px;
+        font-size: 2rem;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        color: #1a1a1a;
+      }
+      .landing-product-summary {
+        margin: 0;
+        max-width: 760px;
+        color: rgba(23, 23, 23, 0.72);
+        font-size: 16px;
+        line-height: 1.6;
+        text-align: left;
+      }
+      .landing-history {
+        background: #faf6ef;
+        padding: 72px 20px 120px;
+      }
+      .landing-history-inner {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .landing-history-title {
+        margin: 0 0 28px;
+        font-size: 34px;
+        line-height: 1.2;
+        color: #1a1a1a;
+        font-weight: 600;
+      }
+      .landing-history-copy p {
+        margin: 0 0 22px;
+        font-size: 18px;
+        line-height: 1.8;
+        color: rgba(23, 23, 23, 0.74);
+        text-align: left;
+      }
+      .landing-history-copy p:last-child {
+        margin-bottom: 0;
+      }
+      .landing-testimonials {
+        background: #f3ecdf;
+        padding: 24px 20px 120px;
+      }
+      .landing-testimonials-inner {
+        width: min(1280px, 100%);
+        margin: 0 auto;
+      }
+      .landing-testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .landing-testimonial-card {
+        min-height: 220px;
+        padding: 26px 24px;
+        border: 1px solid rgba(23, 23, 23, 0.1);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.46);
+      }
+      .landing-testimonial-quote {
+        margin: 0 0 24px;
+        font-size: 18px;
+        line-height: 1.7;
+        color: rgba(23, 23, 23, 0.86);
+      }
+      .landing-testimonial-meta {
+        display: grid;
+        gap: 4px;
+      }
+      .landing-testimonial-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+      .landing-testimonial-role {
+        font-size: 14px;
+        color: rgba(23, 23, 23, 0.56);
+      }
+      .landing-quick-faqs {
+        background: #f8f4ec;
+        padding: 0 20px 120px;
+      }
+      .landing-quick-faqs-inner {
+        width: min(960px, 100%);
+        margin: 0 auto;
+      }
+      .landing-quick-faqs-title {
+        margin: 0 0 28px;
+        font-size: 34px;
+        line-height: 1.2;
+        color: #1a1a1a;
+        font-weight: 600;
+      }
+      .landing-quick-faq-list {
+        display: grid;
+        gap: 14px;
+      }
+      .landing-quick-faq-item {
+        border: 1px solid rgba(23, 23, 23, 0.1);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.5);
+        overflow: hidden;
+      }
+      .landing-quick-faq-item summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 22px 24px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .landing-quick-faq-item summary::-webkit-details-marker {
+        display: none;
+      }
+      .landing-quick-faq-item summary::after {
+        content: "+";
+        font-size: 26px;
+        line-height: 1;
+        color: rgba(23, 23, 23, 0.42);
+        transition: transform 180ms ease;
+      }
+      .landing-quick-faq-item[open] summary::after {
+        transform: rotate(45deg);
+      }
+      .landing-quick-faq-answer {
+        padding: 0 24px 24px;
+        color: rgba(23, 23, 23, 0.72);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+      .landing-legacy {
+        background: #ede4d6;
+        padding: 120px 20px;
+        border-top: 1px solid rgba(23, 23, 23, 0.08);
+      }
+      .landing-legacy-inner {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .landing-legacy-title {
+        margin: 0 0 28px;
+        font-size: 34px;
+        line-height: 1.2;
+        color: #1a1a1a;
+        font-weight: 600;
+        text-align: center;
+      }
+      .landing-legacy-cta,
+      .landing-legacy-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 220px;
+        height: 52px;
+        border: 1px solid rgba(23, 23, 23, 0.18);
+        border-radius: 12px;
+        text-decoration: none;
+        color: #1a1a1a;
+        font-size: 15px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.38);
+      }
+      .landing-legacy-cta:hover {
+        background: rgba(23, 23, 23, 0.06);
+      }
+      .landing-footer {
+        background-color: #efe6d8;
+        background-image:
+          linear-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.04) 1px, transparent 1px);
+        background-size: 24px 24px;
+        background-position: 0 0, 0 0;
+        min-height: 600px;
+        padding: 50px 20px;
+        border-top: 1px solid rgba(23, 23, 23, 0.08);
+      }
+      .landing-footer-inner {
+        width: min(1400px, 100%);
+        margin: 0 auto;
+        min-height: calc(600px - 136px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .landing-footer-top {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        width: 100%;
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+      }
+      .landing-footer-logo-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        color: #1a1a1a;
+      }
+      .landing-footer-logo {
+        display: block;
+        width: 72px;
+        height: 72px;
+      }
+      .landing-footer-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        text-align: right;
+      }
+      .landing-footer-links a {
+        color: rgba(23, 23, 23, 0.72);
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .landing-footer-links a:hover {
+        color: rgba(23, 23, 23, 0.5);
+      }
+      .landing-footer-social {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .landing-footer-social a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        color: rgba(23, 23, 23, 0.78);
+      }
+      .landing-footer-social a:hover {
+        color: rgba(23, 23, 23, 0.56);
+      }
+      .landing-footer-social svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .landing-footer-bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        width: 100%;
+      }
+      .landing-footer-bottom p {
+        margin: 0;
+        color: rgba(23, 23, 23, 0.62);
+        font-size: 0.92rem;
+        text-align: right;
+      }
+      .loading-card {
+        color: rgba(23, 23, 23, 0.62);
+      }
+      .landing-news {
+        background: linear-gradient(180deg, #f8f4ec 0%, #efe7da 100%);
+        padding: 160px 20px 120px;
+      }
+      .landing-news-inner {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+      .landing-news-copy {
+        width: 100%;
+        margin: 0 auto 60px;
+        padding: 0;
+        text-align: left;
+      }
+      .landing-news-copy h1 {
+        margin: 0;
+        font-size: 56px;
+        line-height: 1.04;
+        color: #1a1a1a;
+        text-align: left;
+      }
+      .landing-news-list {
+        display: grid;
+        gap: 0;
+      }
+      .landing-news-row {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 22px;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        border-bottom: 1px solid rgba(23, 23, 23, 0.1);
+        padding: 18px 0;
+        transition: opacity 180ms ease;
+      }
+      .landing-news-row:hover {
+        opacity: 0.82;
+      }
+      .landing-news-thumb {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        display: block;
+        border-radius: 6px;
+      }
+      .landing-news-title {
+        margin: 0 0 8px;
+        font-size: 2rem;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        color: #1a1a1a;
+      }
+      .landing-news-summary {
+        margin: 0;
+        max-width: 760px;
+        color: rgba(23, 23, 23, 0.72);
+        font-size: 16px;
+        line-height: 1.6;
+        text-align: left;
+      }
+      h1,
+      h2 {
+        margin: 0;
+        font-weight: 500;
+      }
+      h1 {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        max-width: 100%;
+        margin: 0;
+        text-align: left;
+        white-space: normal;
+        color: #171717;
+      }
+      h2 {
+        margin-top: 18px;
+        font-size: 18px;
+        line-height: 1.25;
+        color: #2b2b2b;
+        max-width: 100%;
+        text-align: left;
+      }
+      p {
+        margin: 26px 0 0;
+        font-size: 15px;
+        color: var(--text-muted);
+        max-width: 100%;
+        text-align: center;
+      }
+      @media (max-width: 992px) {
+        .hero {
+          min-height: 600px;
+        }
+        .hero-copy {
+          max-width: 100%;
+        }
+        h1 {
+          font-size: 48px;
+        }
+        .landing-testimonials-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .landing-product-row {
+          grid-template-columns: 180px minmax(0, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .page {
+          padding-top: 60px;
+        }
+        .nav {
+          height: 60px;
+        }
+        .nav-inner {
+          height: 60px;
+          padding: 0 14px;
+        }
+        .nav-links {
+          gap: 12px;
+        }
+        .hero {
+          min-height: 600px;
+        }
+        h1 {
+          font-size: 34px;
+        }
+        h2 {
+          font-size: 18px;
+        }
+        .section-blank-title {
+          font-size: 18px;
+          margin-bottom: 18px;
+        }
+        .section-blank-image {
+          margin: 60px 0;
+        }
+        .landing-ai {
+          padding: 96px 14px;
+        }
+        .landing-ai-title {
+          font-size: 24px;
+        }
+        .landing-ai-shell {
+          padding: 22px 18px;
+        }
+        .landing-ai-feature h3 {
+          font-size: 24px;
+        }
+        .landing-ai-feature-head {
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+        .landing-ai-pill {
+          min-height: 22px;
+          padding: 0 9px;
+          font-size: 10px;
+        }
+        .landing-page-turn {
+          padding: 96px 14px;
+        }
+        .landing-page-turn-title {
+          font-size: 20px;
+        }
+        .lpt-book {
+          max-width: 100%;
+        }
+        .lpt-control-btn {
+          min-width: 40px;
+          font-size: 24px;
+        }
+        .landing-features {
+          padding: 112px 14px 0;
+        }
+        .landing-history {
+          padding: 56px 14px 96px;
+        }
+        .landing-history-title {
+          font-size: 24px;
+          margin-bottom: 18px;
+        }
+        .landing-history-copy p {
+          font-size: 16px;
+          line-height: 1.7;
+          margin-bottom: 16px;
+        }
+        .landing-testimonials {
+          padding: 8px 14px 96px;
+        }
+        .landing-testimonials-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .landing-product-row {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .landing-product-title {
+          font-size: 18px;
+        }
+        .landing-news {
+          padding: 112px 14px 96px;
+        }
+        .landing-news-inner {
+          width: min(1100px, calc(100% - 32px));
+        }
+        .landing-news-copy {
+          margin-bottom: 24px;
+          padding: 0;
+        }
+        .landing-news-copy h1 {
+          font-size: 18px;
+        }
+        .landing-news-row {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .landing-news-title {
+          font-size: 18px;
+        }
+        .landing-testimonial-card {
+          min-height: 0;
+          padding: 22px 18px;
+        }
+        .landing-testimonial-quote {
+          font-size: 16px;
+          margin-bottom: 18px;
+        }
+        .landing-quick-faqs {
+          padding: 0 14px 96px;
+        }
+        .landing-quick-faqs-title {
+          font-size: 24px;
+          margin-bottom: 18px;
+        }
+        .landing-quick-faq-item summary {
+          padding: 18px;
+          font-size: 16px;
+        }
+        .landing-quick-faq-answer {
+          padding: 0 18px 18px;
+          font-size: 15px;
+        }
+        .landing-legacy {
+          padding: 96px 14px;
+        }
+        .landing-legacy-title {
+          font-size: 24px;
+        }
+        .landing-features-copy {
+          margin-bottom: 24px;
+          padding: 0;
+        }
+        .landing-features-copy h1 {
+          font-size: 18px;
+        }
+        .landing-features-inner {
+          width: min(1100px, calc(100% - 32px));
+        }
+      }
+      @media (max-width: 480px) {
+        .hero {
+          height: 100vh;
+        }
+        h1 {
+          font-size: 30px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .section-blank-image {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        .lpt-page {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="nav">
+        <div class="nav-inner">
+          <a class="logo" href="/" aria-label="ON2 Interactive Home">
+            <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="ON2 Interactive" />
+          </a>
+          <nav class="nav-links" aria-label="Primary">
+            <a href="/contact">Let's Talk</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="hero">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <h1>We build full-stack products powered by the latest AI technology.</h1>
+          </div>
+        </div>
+      </main>
+
+      <section class="landing-features" aria-label="Selected ON2 projects">
+        <div class="landing-features-inner">
+          <div class="landing-features-copy">
+            <h1>Products</h1>
+          </div>
+          <div class="landing-products-list" id="projectCards">
+            <article class="loading-card">Loading products...</article>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-news" aria-label="Latest industry news">
+        <div class="landing-news-inner">
+          <div class="landing-news-copy">
+            <h1>Latest AI News</h1>
+          </div>
+          <div class="landing-news-list" id="newsCards">
+            <article class="loading-card">Loading news...</article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-blank">
+        <div class="section-blank-inner">
+          <h2 class="section-blank-title">Built for Studio Work That Has to Launch.</h2>
+          <img class="section-blank-image" src="/Images/ON2-Banner-Social-YT.png" alt="ON2 Interactive preview" />
+          <div class="section-blank-body">
+            <p>ON2 Interactive is structured like a studio journal, not a noisy marketing page.</p>
+            <p>
+              It gives you a clean landing experience on the public side, then a private admin area where projects can be posted
+              and updated as the studio evolves.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-ai" aria-label="ON2 Interactive services">
+        <div class="landing-ai-inner">
+          <h2 class="landing-ai-title">In the Studio</h2>
+          <div class="landing-ai-shell">
+            <article class="landing-ai-feature">
+              <div class="landing-ai-feature-head">
+                <span class="landing-ai-pill">Current</span>
+                <h3>Brand Systems</h3>
+              </div>
+              <p>Identity direction, structure, and rollout thinking for brands that need more than a logo and a homepage.</p>
+            </article>
+            <article class="landing-ai-feature">
+              <h3>Responsive Websites</h3>
+              <p>Minimal public-facing experiences that keep the interface quiet and let the work, typography, and pacing carry the page.</p>
+            </article>
+            <article class="landing-ai-feature">
+              <h3>Project Publishing</h3>
+              <p>Admin-managed posting so ON2 projects can be added, updated, and removed without manually rewriting the landing page.</p>
+            </article>
+            <article class="landing-ai-feature">
+              <h3>Campaign Support</h3>
+              <p>Creative systems for launches, content runs, and digital materials that need consistency across multiple touchpoints.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-page-turn" aria-label="Project Preview">
+        <div class="landing-page-turn-inner">
+          <div class="landing-page-turn-header">
+            <h2 class="landing-page-turn-title">Project Preview</h2>
+          </div>
+          <div class="landing-page-turn-shell">
+            <div class="lpt-book" id="lptBook">
+              <div class="lpt-underlay" id="lptUnderlay"></div>
+              <div class="lpt-page" id="lptPage"></div>
+            </div>
+            <div class="lpt-controls">
+              <button class="lpt-control-btn" id="lptPrevBtn" type="button" aria-label="Previous project">‹</button>
+              <span class="lpt-page-index" id="lptPageIndex">1 / 1</span>
+              <button class="lpt-control-btn" id="lptNextBtn" type="button" aria-label="Next project">›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-history" aria-label="ON2 history">
+        <div class="landing-history-inner">
+          <h2 class="landing-history-title">ON2 Interactive - Studio Direction</h2>
+          <div class="landing-history-copy">
+            <p>
+              ON2 Interactive is being shaped as a minimal digital studio presence: direct, controlled, and easy to update as new
+              work is released.
+            </p>
+            <p>
+              The goal is not to over-design the website. It is to build a stronger frame around projects, capabilities, and
+              contact points so the work reads clearly on desktop and mobile.
+            </p>
+            <p>
+              This first version mirrors the FreehandNX landing-page structure on purpose. It gives ON2 a proven section flow,
+              then adapts it into a studio format with an admin-managed publishing layer behind it.
+            </p>
+            <p>
+              From here, the site can evolve section by section as the studio tone, case studies, and visual language get more
+              specific.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-testimonials" aria-label="Why this structure works">
+        <div class="landing-testimonials-inner">
+          <div class="landing-testimonials-grid">
+            <article class="landing-testimonial-card">
+              <p class="landing-testimonial-quote">“A strong landing page should give the studio a clear point of view without forcing every project into the same template.”</p>
+              <div class="landing-testimonial-meta">
+                <span class="landing-testimonial-name">Structure</span>
+                <span class="landing-testimonial-role">Editorial rhythm over clutter</span>
+              </div>
+            </article>
+            <article class="landing-testimonial-card">
+              <p class="landing-testimonial-quote">“Admin publishing matters because the site has to stay current without turning every update into a code task.”</p>
+              <div class="landing-testimonial-meta">
+                <span class="landing-testimonial-name">Workflow</span>
+                <span class="landing-testimonial-role">Projects managed from one place</span>
+              </div>
+            </article>
+            <article class="landing-testimonial-card">
+              <p class="landing-testimonial-quote">“Responsiveness is part of the build, not a later patch. The page needs to hold its shape on mobile from the first pass.”</p>
+              <div class="landing-testimonial-meta">
+                <span class="landing-testimonial-name">Delivery</span>
+                <span class="landing-testimonial-role">Desktop and mobile ready</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-quick-faqs" aria-label="FAQs">
+        <div class="landing-quick-faqs-inner">
+          <h2 class="landing-quick-faqs-title">FAQs</h2>
+          <div class="landing-quick-faq-list">
+            <details class="landing-quick-faq-item">
+              <summary>Can ON2 projects be updated without editing code?</summary>
+              <div class="landing-quick-faq-answer">Yes. The admin area lets you create, edit, and remove published projects that appear on the homepage.</div>
+            </details>
+            <details class="landing-quick-faq-item">
+              <summary>Is the site responsive?</summary>
+              <div class="landing-quick-faq-answer">Yes. The landing page and supporting pages are built to adjust for tablet and mobile layouts from the start.</div>
+            </details>
+            <details class="landing-quick-faq-item">
+              <summary>What pages exist right now?</summary>
+              <div class="landing-quick-faq-answer">The current build includes the landing page, contact page, admin login page, and protected admin page.</div>
+            </details>
+            <details class="landing-quick-faq-item">
+              <summary>Can we keep tweaking the homepage?</summary>
+              <div class="landing-quick-faq-answer">Yes. This version is a direct FreehandNX-based starting point meant to be refined as ON2 direction becomes more specific.</div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-legacy" aria-label="ON2 call to action">
+        <div class="landing-legacy-inner">
+          <h2 class="landing-legacy-title">ON2 Interactive - minimal digital systems for modern studio work.</h2>
+          <a class="landing-legacy-cta" href="/contact">Contact ON2</a>
+        </div>
+      </section>
+
+      <footer class="landing-footer" aria-label="ON2 Interactive footer">
+        <div class="landing-footer-inner">
+          <div class="landing-footer-top">
+            <a class="landing-footer-logo-link" href="/" aria-label="ON2 Interactive Home">
+              <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="ON2 Interactive" class="landing-footer-logo" />
+            </a>
+            <nav class="landing-footer-links" aria-label="Footer">
+              <a href="/">Home</a>
+              <a href="/contact">Contact</a>
+            </nav>
+            <div class="landing-footer-social" aria-label="Social links">
+              <a href="https://www.linkedin.com/company/on2interactive/" aria-label="LinkedIn" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M6.94 8.5H3.56V20h3.38V8.5Zm-1.69-5A1.96 1.96 0 0 0 3.25 5.45c0 1.07.79 1.94 1.96 1.94h.02c1.2 0 1.96-.87 1.96-1.94A1.92 1.92 0 0 0 5.27 3.5h-.02ZM20.75 12.9c0-3.46-1.85-5.07-4.31-5.07-1.99 0-2.88 1.09-3.38 1.86V8.5H9.69c.04.79 0 11.5 0 11.5h3.37v-6.42c0-.34.03-.68.12-.93.27-.68.89-1.38 1.92-1.38 1.35 0 1.89 1.03 1.89 2.54V20H20.75l-.01-7.1Z"/>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/ON2Interactive/" aria-label="Facebook" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M13.5 21v-8.05h2.7l.4-3.15h-3.1V7.79c0-.91.25-1.53 1.56-1.53H16.7V3.44c-.29-.04-1.28-.12-2.43-.12-2.4 0-4.04 1.46-4.04 4.15v2.33H7.5v3.15h2.73V21h3.27Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="landing-footer-bottom">
+            <p>© <span id="footerYear"></span> ON2 Interactive. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const footerYear = document.getElementById("footerYear");
+        if (footerYear) footerYear.textContent = String(new Date().getFullYear());
+      })();
+
+      (() => {
+        const hero = document.querySelector(".hero");
+        if (!hero) return;
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        const maxShift = 28;
+
+        hero.addEventListener("pointermove", (event) => {
+          const rect = hero.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          hero.style.setProperty("--hero-shift-x", `${(x * maxShift).toFixed(2)}px`);
+          hero.style.setProperty("--hero-shift-y", `${(y * maxShift).toFixed(2)}px`);
+        });
+
+        hero.addEventListener("pointerleave", () => {
+          hero.style.setProperty("--hero-shift-x", "0px");
+          hero.style.setProperty("--hero-shift-y", "0px");
+        });
+      })();
+
+      (() => {
+        const nav = document.querySelector(".nav");
+        if (!nav) return;
+
+        let lastY = window.scrollY || 0;
+
+        const syncNav = () => {
+          const currentY = window.scrollY || 0;
+          const delta = currentY - lastY;
+
+          if (currentY <= 24 || delta < -6) {
+            nav.classList.remove("is-hidden");
+          } else if (delta > 6 && currentY > 96) {
+            nav.classList.add("is-hidden");
+          }
+
+          lastY = currentY;
+        };
+
+        window.addEventListener("scroll", syncNav, { passive: true });
+      })();
+
+      (() => {
+        const image = document.querySelector(".section-blank-image");
+        if (!image) return;
+        if (!("IntersectionObserver" in window)) {
+          image.classList.add("is-visible");
+          return;
+        }
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              image.classList.toggle("is-visible", entry.isIntersecting);
+            });
+          },
+          { threshold: 0.2 }
+        );
+        observer.observe(image);
+      })();
+
+      (() => {
+        const page = document.getElementById("lptPage");
+        const underlay = document.getElementById("lptUnderlay");
+        const prevBtn = document.getElementById("lptPrevBtn");
+        const nextBtn = document.getElementById("lptNextBtn");
+        const pageIndex = document.getElementById("lptPageIndex");
+        const projectCards = document.getElementById("projectCards");
+        const newsCards = document.getElementById("newsCards");
+        if (!page || !underlay || !prevBtn || !nextBtn || !pageIndex || !projectCards || !newsCards) return;
+
+        const escapeHtml = (value) =>
+          String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+
+        let pages = [{ title: "ON2 Interactive", category: "Studio", summary: "Projects will appear here.", image: "/Images/ON2-Banner-Social-YT.png" }];
+        let currentIndex = 0;
+        let isAnimating = false;
+        const newsItems = [
+          {
+            slug: "openai-operators-reshape-workflows",
+            title: "OpenAI Operators Reshape Product Workflows",
+            summary: "AI operator-style tooling is shifting how teams handle repetitive product, support, and operations tasks.",
+            image: "/Assets/Hero-Latest.png",
+          },
+          {
+            slug: "ai-native-ux-becoming-standard",
+            title: "AI-Native UX Is Becoming the New Standard",
+            summary: "Interfaces are increasingly being designed around suggestions, generation, and adaptive flows rather than static menus.",
+            image: "/Images/ON2-Banner-Social-YT.png",
+          },
+          {
+            slug: "full-stack-teams-adopt-embedded-ai",
+            title: "Full-Stack Teams Are Adopting Embedded AI Faster Than Expected",
+            summary: "Teams are moving beyond experiments and shipping AI-infused features directly into production products.",
+            image: "/Assets/Hero-Latest.png",
+          }
+        ];
+
+        const renderCard = (target, payload) => {
+          const imageSrc = encodeURI(payload.image || "/Images/ON2-Banner-Social-YT.png");
+          target.innerHTML = `
+            <img class="lpt-page-image" src="${imageSrc}" alt="${escapeHtml(payload.title || "Project preview")}" loading="lazy" />
+          `;
+        };
+
+        const refreshMeta = () => {
+          pageIndex.textContent = `${currentIndex + 1} / ${pages.length}`;
+        };
+
+        const goTo = (direction) => {
+          if (isAnimating || pages.length < 2) return;
+          isAnimating = true;
+          const nextIndex = (currentIndex + direction + pages.length) % pages.length;
+          renderCard(underlay, pages[nextIndex]);
+          page.classList.remove("is-turning-next", "is-turning-prev");
+          void page.offsetWidth;
+          page.classList.add(direction > 0 ? "is-turning-next" : "is-turning-prev");
+
+          window.setTimeout(() => {
+            currentIndex = nextIndex;
+            renderCard(page, pages[currentIndex]);
+            page.classList.remove("is-turning-next", "is-turning-prev");
+            refreshMeta();
+            isAnimating = false;
+          }, 640);
+        };
+
+        prevBtn.addEventListener("click", () => goTo(-1));
+        nextBtn.addEventListener("click", () => goTo(1));
+
+        const renderProjects = (projects) => {
+          if (!Array.isArray(projects) || !projects.length) {
+            projectCards.innerHTML = '<article class="loading-card">No products yet. This section will populate from Supabase-backed product data later.</article>';
+            return;
+          }
+
+          pages = projects.map((project) => ({
+            title: project.title,
+            category: project.category,
+            summary: project.summary,
+            image: project.image || "/Images/ON2-Banner-Social-YT.png",
+          }));
+
+          currentIndex = 0;
+          renderCard(page, pages[currentIndex]);
+          renderCard(underlay, pages[(currentIndex + 1) % pages.length]);
+          refreshMeta();
+
+          projectCards.innerHTML = projects
+            .map((project) => {
+              const title = escapeHtml(project.title);
+              const summary = escapeHtml(project.summary || "");
+              const image = escapeHtml(project.image || "/Images/ON2-Banner-Social-YT.png");
+              const slug = encodeURIComponent(project.slug || project.id || "");
+              return `
+                <a class="landing-product-row" href="/products/${slug}">
+                  <img class="landing-product-thumb" src="${image}" alt="${title}" loading="lazy" />
+                  <div class="landing-product-copy">
+                    <h3 class="landing-product-title">${title}</h3>
+                    <p class="landing-product-summary">${summary}</p>
+                  </div>
+                </a>
+              `;
+            })
+            .join("");
+        };
+
+        const renderNews = (items) => {
+          if (!Array.isArray(items) || !items.length) {
+            newsCards.innerHTML = '<article class="loading-card">No news yet. This section will populate from a separate Supabase news table later.</article>';
+            return;
+          }
+
+          newsCards.innerHTML = items
+            .map((item) => {
+              const title = escapeHtml(item.title);
+              const summary = escapeHtml(item.summary || "");
+              const image = escapeHtml(item.image || "/Assets/Hero-Latest.png");
+              const slug = encodeURIComponent(item.slug || "");
+              return `
+                <a class="landing-news-row" href="/news/${slug}">
+                  <img class="landing-news-thumb" src="${image}" alt="${title}" loading="lazy" />
+                  <div>
+                    <h3 class="landing-news-title">${title}</h3>
+                    <p class="landing-news-summary">${summary}</p>
+                  </div>
+                </a>
+              `;
+            })
+            .join("");
+        };
+
+        renderCard(page, pages[currentIndex]);
+        renderCard(underlay, pages[currentIndex]);
+        refreshMeta();
+
+        fetch("/api/projects")
+          .then((response) => response.json())
+          .then((payload) => renderProjects(payload.projects || []))
+          .catch(() => {
+            projectCards.innerHTML = '<article class="loading-card">Products unavailable. The project feed could not be loaded.</article>';
+          });
+
+        renderNews(newsItems);
+      })();
+    </script>
+  </body>
+</html>

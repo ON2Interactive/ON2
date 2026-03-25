@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="ON2 Interactive" />
+    <meta name="description" content="Admin login for ON2 Interactive." />
+    <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Admin Login | ON2 Interactive</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-nav">
+        <a class="brand-mark" href="/" aria-label="ON2 Interactive home">
+          <img class="brand-mark-icon" src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" />
+          <span class="brand-mark-text">
+            <span class="brand-mark-name">ON2 Interactive</span>
+            <span class="brand-mark-tag">Digital studio journal</span>
+          </span>
+        </a>
+        <nav class="site-nav-links" aria-label="Primary">
+          <a href="/">Home</a>
+          <a href="/contact">Contact</a>
+        </nav>
+      </header>
+
+      <main class="login-shell">
+        <section class="login-visual" aria-hidden="true">
+          <img src="/Images/ON2-Banner-Social-YT.png" alt="" />
+        </section>
+
+        <section class="login-panel">
+          <div>
+            <div class="eyebrow">Admin Access</div>
+            <h1 class="page-title">Publish projects without touching the homepage markup.</h1>
+          </div>
+
+          <p class="admin-note">
+            Only configured admins can access the project dashboard. Credentials are validated by the site backend.
+          </p>
+
+          <form id="adminLoginForm" class="login-form" autocomplete="off">
+            <label class="form-label" for="adminEmail">
+              Email
+              <input class="text-input" id="adminEmail" name="email" type="email" required />
+            </label>
+
+            <label class="form-label" for="adminPassword">
+              Password
+              <input class="text-input" id="adminPassword" name="password" type="password" required />
+            </label>
+
+            <button id="adminLoginSubmit" class="primary-button" type="submit">Sign In</button>
+            <p id="adminLoginStatus" class="form-status" aria-live="polite"></p>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      (() => {
+        const form = document.getElementById("adminLoginForm");
+        const statusEl = document.getElementById("adminLoginStatus");
+        const submitBtn = document.getElementById("adminLoginSubmit");
+        if (!form || !statusEl || !submitBtn) return;
+
+        fetch("/api/admin/session")
+          .then((response) => {
+            if (response.ok) window.location.replace("/admin");
+          })
+          .catch(() => {});
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const email = String(document.getElementById("adminEmail")?.value || "").trim();
+          const password = String(document.getElementById("adminPassword")?.value || "");
+
+          if (!email || !password) {
+            statusEl.textContent = "Email and password are required.";
+            return;
+          }
+
+          submitBtn.setAttribute("disabled", "disabled");
+          statusEl.textContent = "Signing in...";
+
+          try {
+            const response = await fetch("/api/admin/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              statusEl.textContent = payload.error || "Login failed.";
+              return;
+            }
+            window.location.replace("/admin");
+          } catch {
+            statusEl.textContent = "Network error. Please try again.";
+          } finally {
+            submitBtn.removeAttribute("disabled");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
