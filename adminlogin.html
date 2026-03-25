@@ -70,6 +70,14 @@
         padding: 56px 64px 44px;
       }
 
+      .admin-login-wordmark {
+        margin: 0 0 14px;
+        font-size: clamp(2.8rem, 4.2vw, 4.3rem);
+        line-height: 0.92;
+        letter-spacing: -0.07em;
+        font-weight: 700;
+      }
+
       .admin-login-form {
         width: min(420px, 100%);
         display: grid;
@@ -136,7 +144,9 @@
         .admin-login-panel {
           padding: 28px 24px 24px;
         }
-
+        .admin-login-wordmark {
+          font-size: 2.6rem;
+        }
       }
     </style>
   </head>
@@ -144,6 +154,8 @@
     <main class="admin-login-shell" aria-label="Admin login">
       <section class="admin-login-media" aria-hidden="true"></section>
       <section class="admin-login-panel">
+        <div class="admin-login-wordmark">ON2 Interactive</div>
+
         <form id="adminLoginForm" class="admin-login-form" autocomplete="off">
           <label for="adminUsername">Username</label>
           <input id="adminUsername" name="username" type="text" required />
