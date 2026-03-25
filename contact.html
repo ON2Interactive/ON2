@@ -115,58 +115,11 @@
         margin: 0 auto;
         padding: 44px 0 96px;
       }
-      .contact-intro {
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
-        gap: 36px;
-        padding-bottom: 36px;
-        border-bottom: 1px solid var(--line);
-      }
-      .contact-summary {
-        margin: 0;
-        max-width: 760px;
-        color: var(--text-muted);
-        font-size: 16px;
-        line-height: 1.8;
-      }
-      .contact-meta {
-        display: grid;
-        gap: 18px;
-      }
-      .contact-meta-item {
-        padding-top: 18px;
-        border-top: 1px solid var(--line);
-      }
-      .contact-meta-item:first-child {
-        padding-top: 0;
-        border-top: 0;
-      }
-      .contact-meta-label {
-        margin: 0 0 8px;
-        color: var(--text-muted);
-        font-size: 14px;
-        line-height: 1.4;
-      }
-      .contact-meta-value {
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.55;
-      }
       .contact-sections {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
-        gap: 36px;
-        margin-top: 36px;
-      }
-      .contact-main {
-        display: grid;
-        gap: 34px;
+        width: min(760px, 100%);
+        margin: 0;
       }
       .contact-block {
-        padding-top: 24px;
-        border-top: 1px solid var(--line);
-      }
-      .contact-block:first-child {
         padding-top: 0;
         border-top: 0;
       }
@@ -244,25 +197,6 @@
         color: var(--text-muted);
         font-size: 15px;
         line-height: 1.6;
-      }
-      .contact-side {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        padding: 22px;
-        align-self: start;
-      }
-      .contact-side-title {
-        margin: 0 0 14px;
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1.2;
-        color: #1a1a1a;
-      }
-      .contact-side p {
-        margin: 0;
-        color: var(--text-muted);
-        font-size: 16px;
-        line-height: 1.7;
       }
       .site-footer {
         background-color: #efe6d8;
@@ -345,17 +279,6 @@
         color: rgba(23, 23, 23, 0.56);
         font-size: 14px;
       }
-      @media (max-width: 900px) {
-        .contact-intro,
-        .contact-sections {
-          grid-template-columns: 1fr;
-        }
-        .contact-side {
-          background: transparent;
-          border: 0;
-          padding: 0;
-        }
-      }
       @media (max-width: 720px) {
         .page {
           padding-top: 56px;
@@ -381,8 +304,7 @@
         .contact-body {
           padding: 32px 0 72px;
         }
-        .contact-block-title,
-        .contact-side-title {
+        .contact-block-title {
           font-size: 18px;
         }
         .site-footer {
@@ -412,60 +334,35 @@
           <div class="contact-hero-overlay"></div>
           <div class="contact-hero-inner">
             <p class="contact-hero-kicker">Contact</p>
-            <h1 class="contact-hero-title">Tell us what you want to build.</h1>
+            <h1 class="contact-hero-title">Let's Talk.</h1>
           </div>
         </section>
 
         <section class="contact-body">
-          <div class="contact-intro">
-            <p class="contact-summary">If you are planning a new AI product, modernizing an existing workflow, or need a technical partner to build something end to end, send a short brief and we will take it from there.</p>
-            <aside class="contact-meta">
-              <div class="contact-meta-item">
-                <p class="contact-meta-label">Focus</p>
-                <p class="contact-meta-value">AI development, product builds, web platforms</p>
-              </div>
-              <div class="contact-meta-item">
-                <p class="contact-meta-label">Format</p>
-                <p class="contact-meta-value">Simple inquiry form, followed by direct outreach</p>
-              </div>
-              <div class="contact-meta-item">
-                <p class="contact-meta-label">Spam control</p>
-                <p class="contact-meta-value">reCAPTCHA will be added in the next phase</p>
-              </div>
-            </aside>
-          </div>
-
           <div class="contact-sections">
-            <div class="contact-main">
-              <section class="contact-block">
-                <h2 class="contact-block-title">Start the conversation</h2>
-                <p class="contact-block-copy">Keep it simple. A few lines on the project, the problem you are solving, or the type of system you want to launch is enough to get started.</p>
-                <form id="contactForm" class="contact-form" novalidate>
-                  <div class="form-field">
-                    <label class="form-label" for="contactName">Name</label>
-                    <input class="text-input" id="contactName" name="name" type="text" maxlength="120" placeholder="Your name" required />
-                  </div>
+            <section class="contact-block">
+              <h2 class="contact-block-title">Let's Get Started</h2>
+              <p class="contact-block-copy">Keep it simple. A few lines on the project, the problem you are solving, or the type of system you want to launch is enough to get started.</p>
+              <form id="contactForm" class="contact-form" novalidate>
+                <div class="form-field">
+                  <label class="form-label" for="contactName">Name</label>
+                  <input class="text-input" id="contactName" name="name" type="text" maxlength="120" placeholder="Your name" required />
+                </div>
 
-                  <div class="form-field">
-                    <label class="form-label" for="contactSubject">Subject</label>
-                    <input class="text-input" id="contactSubject" name="subject" type="text" maxlength="180" placeholder="What are you reaching out about?" required />
-                  </div>
+                <div class="form-field">
+                  <label class="form-label" for="contactSubject">Subject</label>
+                  <input class="text-input" id="contactSubject" name="subject" type="text" maxlength="180" placeholder="What are you reaching out about?" required />
+                </div>
 
-                  <div class="form-field">
-                    <label class="form-label" for="contactMessage">Message</label>
-                    <textarea class="text-area" id="contactMessage" name="message" maxlength="4000" placeholder="Tell us about the project, team, or problem you want to solve." required></textarea>
-                  </div>
+                <div class="form-field">
+                  <label class="form-label" for="contactMessage">Message</label>
+                  <textarea class="text-area" id="contactMessage" name="message" maxlength="4000" placeholder="Tell us about the project, team, or problem you want to solve." required></textarea>
+                </div>
 
-                  <button id="contactSubmit" class="form-submit" type="submit">Send message</button>
-                  <p id="contactStatus" class="form-status" aria-live="polite"></p>
-                </form>
-              </section>
-            </div>
-
-            <aside class="contact-side">
-              <h2 class="contact-side-title">Notes</h2>
-              <p>This page now matches the same editorial structure as the product and news slug pages. The next step after layout is wiring in reCAPTCHA and the final contact handling flow for production.</p>
-            </aside>
+                <button id="contactSubmit" class="form-submit" type="submit">Send message</button>
+                <p id="contactStatus" class="form-status" aria-live="polite"></p>
+              </form>
+            </section>
           </div>
         </section>
       </main>
@@ -536,7 +433,7 @@
               return;
             }
             form.reset();
-            statusEl.textContent = payload.message || "Message sent.";
+            statusEl.textContent = payload.message || "Thanks. Your message has been sent.";
           } catch {
             statusEl.textContent = "Contact handling will be finalized when reCAPTCHA and production form processing are connected.";
           } finally {

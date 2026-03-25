@@ -223,7 +223,7 @@ async function handleApi(request, response, pathname) {
     await writeJson(messagesPath, messages);
     sendJson(response, 200, {
       success: true,
-      message: `Message received. Replies will be sent to ${env.CONTACT_EMAIL || process.env.CONTACT_EMAIL || "hello@on2interactive.com"}.`,
+      message: `Thanks. Your message has been received and will be sent to ${env.CONTACT_EMAIL || process.env.CONTACT_EMAIL || "on2@on2interactive.com"}.`,
     });
     return true;
   }
