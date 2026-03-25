@@ -80,7 +80,13 @@ function getSession(request) {
 function isValidAdmin(username, password) {
   const adminUsername = getEnv("ADMIN_USERNAME").toLowerCase();
   const adminPassword = getEnv("ADMIN_PASSWORD");
-  return String(username || "").trim().toLowerCase() === adminUsername && String(password || "") === adminPassword;
+  const normalizedUsername = String(username || "").trim().toLowerCase();
+  const normalizedPassword = String(password || "").trim();
+  return normalizedUsername === adminUsername && normalizedPassword === adminPassword;
+}
+
+function hasAdminCredentials() {
+  return Boolean(getEnv("ADMIN_USERNAME") && getEnv("ADMIN_PASSWORD"));
 }
 
 function sendJson(response, status, payload, headers = {}) {
@@ -103,6 +109,7 @@ function requireAdmin(request, response) {
 module.exports = {
   clearSessionCookie,
   createSessionCookie,
+  hasAdminCredentials,
   getSession,
   isValidAdmin,
   requireAdmin,

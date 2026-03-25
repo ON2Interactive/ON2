@@ -1,4 +1,4 @@
-const { createSessionCookie, isValidAdmin, sendJson } = require("./_lib/admin");
+const { createSessionCookie, hasAdminCredentials, isValidAdmin, sendJson } = require("./_lib/admin");
 
 module.exports = async (request, response) => {
   if (request.method !== "POST") {
@@ -8,7 +8,11 @@ module.exports = async (request, response) => {
 
   const body = typeof request.body === "string" ? JSON.parse(request.body || "{}") : request.body || {};
   const username = String(body.username || body.email || "").trim();
-  const password = String(body.password || "");
+  const password = String(body.password || "").trim();
+
+  if (!hasAdminCredentials()) {
+    return sendJson(response, 500, { error: "Admin credentials are not configured in Vercel." });
+  }
 
   if (!username || !password) {
     return sendJson(response, 400, { error: "Username and password are required." });
