@@ -128,6 +128,12 @@
         border-bottom: 1px solid var(--line);
       }
 
+      .admin-utility-actions {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
       .utility-button,
       .toolbar-button {
         appearance: none;
@@ -135,6 +141,16 @@
         background: transparent;
         color: var(--text);
         padding: 0;
+      }
+
+      .utility-button-add {
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        line-height: 1;
       }
 
       .admin-view {
@@ -229,9 +245,7 @@
       }
 
       .admin-list-actions {
-        display: flex;
-        gap: 18px;
-        padding-top: 24px;
+        display: none;
       }
 
       .admin-form-grid {
@@ -395,7 +409,10 @@
 
       <main class="admin-shell">
         <section class="admin-utility">
-          <button id="refreshAllBtn" class="utility-button" type="button">Refresh</button>
+          <div class="admin-utility-actions">
+            <button id="refreshAllBtn" class="utility-button" type="button">Refresh</button>
+            <button id="newItemBtn" class="utility-button utility-button-add" type="button" aria-label="Create new item">+</button>
+          </div>
         </section>
 
         <section id="productsView" class="admin-view is-active" data-view="products">
@@ -404,9 +421,6 @@
               <h2 class="admin-list-title">Products</h2>
               <div id="productList" class="admin-list">
                 <p class="empty-state">Loading products...</p>
-              </div>
-              <div class="admin-list-actions">
-                <button id="newProductBtn" class="toolbar-button" type="button">New product</button>
               </div>
             </aside>
 
@@ -499,9 +513,6 @@
               <h2 class="admin-list-title">News</h2>
               <div id="newsList" class="admin-list">
                 <p class="empty-state">Loading news...</p>
-              </div>
-              <div class="admin-list-actions">
-                <button id="newNewsBtn" class="toolbar-button" type="button">New news item</button>
               </div>
             </aside>
 
@@ -636,10 +647,9 @@
 
         const productStatus = document.getElementById("productStatus");
         const newsStatus = document.getElementById("newsStatus");
-        const newProductBtn = document.getElementById("newProductBtn");
+        const newItemBtn = document.getElementById("newItemBtn");
         const resetProductBtn = document.getElementById("resetProductBtn");
         const deleteProductBtn = document.getElementById("deleteProductBtn");
-        const newNewsBtn = document.getElementById("newNewsBtn");
         const resetNewsBtn = document.getElementById("resetNewsBtn");
         const deleteNewsBtn = document.getElementById("deleteNewsBtn");
 
@@ -1047,9 +1057,14 @@
         });
 
         resetProductBtn.addEventListener("click", resetProductForm);
-        newProductBtn.addEventListener("click", resetProductForm);
         resetNewsBtn.addEventListener("click", resetNewsForm);
-        newNewsBtn.addEventListener("click", resetNewsForm);
+        newItemBtn.addEventListener("click", () => {
+          if (activeView === "news") {
+            resetNewsForm();
+            return;
+          }
+          resetProductForm();
+        });
         refreshAllBtn.addEventListener("click", fetchAll);
 
         logoutBtn.addEventListener("click", async () => {
