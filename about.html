@@ -4,18 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="application-name" content="ON2 Interactive" />
-    <meta name="description" content="Contact ON2 Interactive." />
+    <meta name="description" content="About ON2 Interactive." />
     <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
-    <script src="https://www.google.com/recaptcha/api.js?render=6Let-JcsAAAAAGXJ_7SESdNgQXRsH33SiQNltcWz"></script>
-    <title>Contact | ON2 Interactive</title>
+    <title>About | ON2 Interactive</title>
     <style>
       :root {
         --bg: #f5f0e7;
-        --bg-soft: #fbf8f2;
         --text: #171717;
         --text-muted: rgba(23, 23, 23, 0.66);
         --line: rgba(23, 23, 23, 0.1);
-        --panel: rgba(255, 255, 255, 0.48);
       }
       * {
         box-sizing: border-box;
@@ -71,7 +68,7 @@
         text-decoration: none;
         font-size: 15px;
       }
-      .contact-hero {
+      .page-hero {
         position: relative;
         min-height: 50vh;
         display: flex;
@@ -79,125 +76,53 @@
         background: #d7ccbe;
         overflow: hidden;
       }
-      .contact-hero-media {
+      .page-hero-media {
         position: absolute;
         inset: 0;
         background: url("/Assets/Hero-Latest.png") center center / cover no-repeat;
       }
-      .contact-hero-overlay {
+      .page-hero-overlay {
         position: absolute;
         inset: 0;
         background:
           linear-gradient(180deg, rgba(18, 13, 10, 0.32) 0%, rgba(18, 13, 10, 0.22) 28%, rgba(245, 240, 231, 0.24) 62%, rgba(245, 240, 231, 0.82) 100%),
           linear-gradient(90deg, rgba(18, 13, 10, 0.28) 0%, rgba(18, 13, 10, 0.08) 22%, rgba(18, 13, 10, 0.08) 78%, rgba(18, 13, 10, 0.3) 100%);
       }
-      .contact-hero-inner {
+      .page-hero-inner {
         position: relative;
         z-index: 1;
         width: min(1100px, calc(100% - 40px));
         margin: 0 auto;
         padding: 0 0 34px;
       }
-      .contact-hero-kicker {
+      .page-hero-kicker {
         margin: 0 0 10px;
         color: rgba(23, 23, 23, 0.62);
         font-size: 14px;
         line-height: 1.4;
       }
-      .contact-hero-title {
+      .page-hero-title {
         margin: 0;
         max-width: 860px;
         font-size: clamp(3.2rem, 7vw, 6rem);
         line-height: 0.94;
         letter-spacing: -0.05em;
       }
-      .contact-body {
+      .page-body {
         width: min(1100px, calc(100% - 40px));
         margin: 0 auto;
         padding: 44px 0 96px;
       }
-      .contact-sections {
+      .page-sections {
         width: min(760px, 100%);
         margin: 0;
       }
-      .contact-block {
-        padding-top: 0;
-        border-top: 0;
-      }
-      .contact-block-title {
-        margin: 0 0 14px;
+      .page-block-title {
+        margin: 0;
         font-size: 24px;
         font-weight: 700;
         line-height: 1.2;
         color: #1a1a1a;
-      }
-      .contact-block-copy {
-        margin: 0 0 28px;
-        color: var(--text-muted);
-        font-size: 16px;
-        line-height: 1.8;
-      }
-      .contact-form {
-        display: grid;
-        gap: 26px;
-      }
-      .form-field {
-        display: grid;
-        gap: 10px;
-      }
-      .form-label {
-        margin: 0;
-        color: rgba(23, 23, 23, 0.62);
-        font-size: 14px;
-        line-height: 1.4;
-      }
-      .text-input,
-      .text-area {
-        width: 100%;
-        border: 0;
-        border-bottom: 1px solid var(--line);
-        border-radius: 0;
-        background: transparent;
-        padding: 0 0 14px;
-        color: var(--text);
-        font: inherit;
-        font-size: 16px;
-        line-height: 1.6;
-        appearance: none;
-        outline: none;
-      }
-      .text-input:focus,
-      .text-area:focus {
-        border-bottom-color: rgba(23, 23, 23, 0.55);
-      }
-      .text-input::placeholder,
-      .text-area::placeholder {
-        color: rgba(23, 23, 23, 0.34);
-      }
-      .text-area {
-        min-height: 160px;
-        resize: vertical;
-      }
-      .form-submit {
-        width: fit-content;
-        border: 0;
-        background: #171717;
-        color: #f7f2ea;
-        padding: 14px 22px;
-        font: inherit;
-        font-size: 15px;
-        line-height: 1;
-        cursor: pointer;
-      }
-      .form-submit[disabled] {
-        opacity: 0.5;
-        cursor: wait;
-      }
-      .form-status {
-        margin: 0;
-        color: var(--text-muted);
-        font-size: 15px;
-        line-height: 1.6;
       }
       .site-footer {
         background-color: #efe6d8;
@@ -205,7 +130,6 @@
           linear-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 1px),
           linear-gradient(90deg, rgba(23, 23, 23, 0.04) 1px, transparent 1px);
         background-size: 24px 24px;
-        background-position: 0 0, 0 0;
         min-height: 600px;
         padding: 50px 20px;
         border-top: 1px solid rgba(23, 23, 23, 0.08);
@@ -289,24 +213,18 @@
         .logo {
           height: 56px;
         }
-        .contact-hero {
-          min-height: 50vh;
-        }
-        .contact-hero-inner,
-        .contact-body {
+        .page-hero-inner,
+        .page-body {
           width: min(1100px, calc(100% - 32px));
         }
-        .contact-hero-title {
+        .page-hero-title,
+        .page-block-title {
           font-size: 18px;
           line-height: 1.15;
           letter-spacing: -0.01em;
-          max-width: 300px;
         }
-        .contact-body {
+        .page-body {
           padding: 32px 0 72px;
-        }
-        .contact-block-title {
-          font-size: 18px;
         }
         .site-footer {
           min-height: 420px;
@@ -330,40 +248,18 @@
       </header>
 
       <main>
-        <section class="contact-hero">
-          <div class="contact-hero-media"></div>
-          <div class="contact-hero-overlay"></div>
-          <div class="contact-hero-inner">
-            <p class="contact-hero-kicker">Contact</p>
-            <h1 class="contact-hero-title">Let's Talk.</h1>
+        <section class="page-hero">
+          <div class="page-hero-media"></div>
+          <div class="page-hero-overlay"></div>
+          <div class="page-hero-inner">
+            <p class="page-hero-kicker">About</p>
+            <h1 class="page-hero-title">ON2</h1>
           </div>
         </section>
 
-        <section class="contact-body">
-          <div class="contact-sections">
-            <section class="contact-block">
-              <h2 class="contact-block-title">Let's Get Started</h2>
-              <p class="contact-block-copy">Keep it simple. A few lines on the project, the problem you are solving, or the type of system you want to launch is enough to get started.</p>
-              <form id="contactForm" class="contact-form" novalidate>
-                <div class="form-field">
-                  <label class="form-label" for="contactName">Name</label>
-                  <input class="text-input" id="contactName" name="name" type="text" maxlength="120" placeholder="Your name" required />
-                </div>
-
-                <div class="form-field">
-                  <label class="form-label" for="contactSubject">Subject</label>
-                  <input class="text-input" id="contactSubject" name="subject" type="text" maxlength="180" placeholder="What are you reaching out about?" required />
-                </div>
-
-                <div class="form-field">
-                  <label class="form-label" for="contactMessage">Message</label>
-                  <textarea class="text-area" id="contactMessage" name="message" maxlength="4000" placeholder="Tell us about the project, team, or problem you want to solve." required></textarea>
-                </div>
-
-                <button id="contactSubmit" class="form-submit" type="submit">Send message</button>
-                <p id="contactStatus" class="form-status" aria-live="polite"></p>
-              </form>
-            </section>
+        <section class="page-body">
+          <div class="page-sections">
+            <h2 class="page-block-title">ON2</h2>
           </div>
         </section>
       </main>
@@ -403,54 +299,6 @@
       (() => {
         const footerYear = document.getElementById("footerYear");
         if (footerYear) footerYear.textContent = String(new Date().getFullYear());
-
-        const recaptchaSiteKey = "6Let-JcsAAAAAGXJ_7SESdNgQXRsH33SiQNltcWz";
-        const form = document.getElementById("contactForm");
-        const submitBtn = document.getElementById("contactSubmit");
-        const statusEl = document.getElementById("contactStatus");
-        if (!form || !submitBtn || !statusEl) return;
-
-        form.addEventListener("submit", async (event) => {
-          event.preventDefault();
-          const name = String(document.getElementById("contactName")?.value || "").trim();
-          const subject = String(document.getElementById("contactSubject")?.value || "").trim();
-          const message = String(document.getElementById("contactMessage")?.value || "").trim();
-
-          if (!name || !subject || !message) {
-            statusEl.textContent = "Please complete all fields.";
-            return;
-          }
-
-          submitBtn.setAttribute("disabled", "disabled");
-          statusEl.textContent = "Sending...";
-
-          try {
-            if (!window.grecaptcha || typeof window.grecaptcha.execute !== "function") {
-              statusEl.textContent = "Spam protection failed to load. Please refresh and try again.";
-              return;
-            }
-
-            await new Promise((resolve) => window.grecaptcha.ready(resolve));
-            const token = await window.grecaptcha.execute(recaptchaSiteKey, { action: "contact_form_submit" });
-
-            const response = await fetch("/api/contact", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, subject, message, recaptchaToken: token }),
-            });
-            const payload = await response.json().catch(() => ({}));
-            if (!response.ok) {
-              statusEl.textContent = payload.error || "Unable to send message.";
-              return;
-            }
-            form.reset();
-            statusEl.textContent = payload.message || "Thanks. Your message has been sent.";
-          } catch {
-            statusEl.textContent = "Contact handling will be finalized when reCAPTCHA and production form processing are connected.";
-          } finally {
-            submitBtn.removeAttribute("disabled");
-          }
-        });
       })();
     </script>
   </body>
