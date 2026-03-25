@@ -14,14 +14,11 @@
       <header class="site-nav">
         <a class="brand-mark" href="/" aria-label="ON2 Interactive home">
           <img class="brand-mark-icon" src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" />
-          <span class="brand-mark-text">
-            <span class="brand-mark-name">ON2 Interactive</span>
-            <span class="brand-mark-tag">Admin dashboard</span>
-          </span>
         </a>
         <nav class="site-nav-links" aria-label="Primary">
+          <a href="#products">Products</a>
+          <a href="#news">News</a>
           <a href="/">Public Site</a>
-          <a href="/contact">Contact</a>
           <button id="logoutBtn" class="ghost-button" type="button">Log Out</button>
         </nav>
       </header>
@@ -38,7 +35,7 @@
           </div>
         </section>
 
-        <section class="admin-layout">
+        <section id="products" class="admin-layout">
           <aside class="admin-panel">
             <div class="micro-label">Products</div>
             <div id="productList" class="admin-project-list">
@@ -77,7 +74,7 @@
           </section>
         </section>
 
-        <section class="admin-layout" style="margin-top: 32px;">
+        <section id="news" class="admin-layout" style="margin-top: 32px;">
           <aside class="admin-panel">
             <div class="micro-label">Latest AI News</div>
             <div id="newsList" class="admin-project-list">
