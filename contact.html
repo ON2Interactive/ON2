@@ -6,6 +6,7 @@
     <meta name="application-name" content="ON2 Interactive" />
     <meta name="description" content="Contact ON2 Interactive." />
     <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
+    <script src="https://www.google.com/recaptcha/api.js?render=6Let-JcsAAAAAGXJ_7SESdNgQXRsH33SiQNltcWz"></script>
     <title>Contact | ON2 Interactive</title>
     <style>
       :root {
@@ -402,6 +403,7 @@
         const footerYear = document.getElementById("footerYear");
         if (footerYear) footerYear.textContent = String(new Date().getFullYear());
 
+        const recaptchaSiteKey = "6Let-JcsAAAAAGXJ_7SESdNgQXRsH33SiQNltcWz";
         const form = document.getElementById("contactForm");
         const submitBtn = document.getElementById("contactSubmit");
         const statusEl = document.getElementById("contactStatus");
@@ -422,10 +424,18 @@
           statusEl.textContent = "Sending...";
 
           try {
+            if (!window.grecaptcha || typeof window.grecaptcha.execute !== "function") {
+              statusEl.textContent = "Spam protection failed to load. Please refresh and try again.";
+              return;
+            }
+
+            await new Promise((resolve) => window.grecaptcha.ready(resolve));
+            const token = await window.grecaptcha.execute(recaptchaSiteKey, { action: "contact_form_submit" });
+
             const response = await fetch("/api/contact", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, subject, message }),
+              body: JSON.stringify({ name, subject, message, recaptchaToken: token }),
             });
             const payload = await response.json().catch(() => ({}));
             if (!response.ok) {
