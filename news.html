@@ -414,6 +414,13 @@
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
+        const supabaseUrl = "https://xgfymnoajuajdskjiimz.supabase.co";
+        const supabaseAnonKey =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhnZnltbm9hanVhamRza2ppaW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NjQ3NTgsImV4cCI6MjA5MDA0MDc1OH0.qvveHEGo_qFeIR3zaateleWGjqxaTn4v_kFV01xBM3c";
+        const supabaseHeaders = {
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+        };
 
         const toSentenceCase = (value) => {
           const text = String(value || "").trim();
@@ -422,59 +429,43 @@
           return normalized.charAt(0).toUpperCase() + normalized.slice(1);
         };
 
-        const newsItems = [
-          {
-            slug: "openai-operators-reshape-workflows",
-            title: "OpenAI Operators Reshape Product Workflows",
-            summary: "AI operator-style tooling is shifting how teams handle repetitive product, support, and operations tasks.",
-            source: "Industry Watch",
-            publishedAt: "March 2026",
-            category: "AI",
-            image: "/Assets/Hero-Latest.png"
-          },
-          {
-            slug: "ai-native-ux-becoming-standard",
-            title: "AI-Native UX Is Becoming the New Standard",
-            summary: "Interfaces are increasingly being designed around suggestions, generation, and adaptive flows rather than static menus.",
-            source: "Design Signals",
-            publishedAt: "March 2026",
-            category: "Product design",
-            image: "/Assets/Hero-Latest.png"
-          },
-          {
-            slug: "full-stack-teams-adopt-embedded-ai",
-            title: "Full-Stack Teams Are Adopting Embedded AI Faster Than Expected",
-            summary: "Teams are moving beyond experiments and shipping AI-infused features directly into production products.",
-            source: "Technology Briefing",
-            publishedAt: "March 2026",
-            category: "Engineering",
-            image: "/Assets/Hero-Latest.png"
-          }
-        ];
-
         const slug = decodeURIComponent(String(window.location.pathname || "").split("/").pop() || "").trim().toLowerCase();
-        const item = newsItems.find((entry) => entry.slug === slug);
+        fetch(
+          `${supabaseUrl}/rest/v1/ai_news?select=title,slug,summary,content,source_name,source_url,image_url,published_at&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+          { headers: supabaseHeaders }
+        )
+          .then((response) => response.json())
+          .then((payload) => {
+            const item = Array.isArray(payload) ? payload[0] : null;
+            if (!item) {
+              root.innerHTML = `
+                <section class="news-empty">
+                  <p class="news-hero-kicker">Latest AI news</p>
+                  <h1 class="news-hero-title">News item not found.</h1>
+                </section>
+              `;
+              return;
+            }
 
-        if (!item) {
-          root.innerHTML = `
-            <section class="news-empty">
-              <p class="news-hero-kicker">Latest AI news</p>
-              <h1 class="news-hero-title">News item not found.</h1>
-            </section>
-          `;
-          return;
-        }
+            const title = escapeHtml(item.title);
+            const summary = escapeHtml(item.summary || "");
+            const source = escapeHtml(toSentenceCase(item.source_name || "Source"));
+            const publishedAt = escapeHtml(
+              item.published_at
+                ? new Date(item.published_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                : "Current"
+            );
+            const category = "Latest AI News";
+            const image = escapeHtml(item.image_url || "/Assets/Hero-Latest.png");
+            const content = escapeHtml(item.content || "");
 
-        const title = escapeHtml(item.title);
-        const summary = escapeHtml(item.summary);
-        const source = escapeHtml(toSentenceCase(item.source));
-        const publishedAt = escapeHtml(item.publishedAt);
-        const category = escapeHtml(toSentenceCase(item.category || "Ai"));
-        const image = escapeHtml(item.image || "/Assets/Hero-Latest.png");
+            document.title = `${title} | ON2 Interactive`;
 
-        document.title = `${title} | ON2 Interactive`;
-
-        root.innerHTML = `
+            root.innerHTML = `
           <section class="news-hero">
             <div class="news-hero-media" style="background-image: url('${image}')"></div>
             <div class="news-hero-overlay"></div>
@@ -508,7 +499,7 @@
                 <section class="news-block">
                   <h2 class="news-block-title">Overview</h2>
                   <p>${summary}</p>
-                  <p>This news detail page now follows the same structure as the product slug page so the system stays visually consistent. The hero leads, the summary and metadata sit below, and the article body continues in a calm editorial flow.</p>
+                  <p>${content || "This news detail page now follows the same structure as the product slug page so the system stays visually consistent. The hero leads, the summary and metadata sit below, and the article body continues in a calm editorial flow."}</p>
                 </section>
 
                 <section class="news-block">
@@ -525,6 +516,15 @@
             </div>
           </section>
         `;
+          })
+          .catch(() => {
+            root.innerHTML = `
+              <section class="news-empty">
+                <p class="news-hero-kicker">Latest AI news</p>
+                <h1 class="news-hero-title">News item not found.</h1>
+              </section>
+            `;
+          });
       })();
     </script>
   </body>

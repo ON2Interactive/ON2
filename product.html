@@ -416,6 +416,13 @@
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
+        const supabaseUrl = "https://xgfymnoajuajdskjiimz.supabase.co";
+        const supabaseAnonKey =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhnZnltbm9hanVhamRza2ppaW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NjQ3NTgsImV4cCI6MjA5MDA0MDc1OH0.qvveHEGo_qFeIR3zaateleWGjqxaTn4v_kFV01xBM3c";
+        const supabaseHeaders = {
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+        };
         const toSentenceCase = (value) => {
           const text = String(value || "").trim();
           if (!text) return "";
@@ -434,11 +441,14 @@
           `;
         };
 
-        fetch("/data/projects.json")
+        fetch(
+          `${supabaseUrl}/rest/v1/products?select=title,slug,summary,content,category,client,solutions,year,image_url&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+          { headers: supabaseHeaders }
+        )
           .then((response) => response.json())
           .then((payload) => {
-            const projects = Array.isArray(payload) ? payload : Array.isArray(payload.projects) ? payload.projects : [];
-            const project = projects.find((entry) => String(entry.slug || "").toLowerCase() === slug);
+            const projects = Array.isArray(payload) ? payload : [];
+            const project = projects[0];
             if (!project) {
               renderMissing();
               return;
@@ -448,9 +458,10 @@
             const category = escapeHtml(toSentenceCase(project.category || "Product"));
             const summary = escapeHtml(project.summary || "");
             const client = escapeHtml(project.client || "Internal");
-            const services = escapeHtml(toSentenceCase(project.services || "Product strategy, design, engineering"));
+            const services = escapeHtml(toSentenceCase(project.solutions || "Product strategy, design, engineering"));
             const year = escapeHtml(project.year || "Current");
-            const image = "/Assets/Hero-Latest.png";
+            const image = escapeHtml(project.image_url || "/Assets/Hero-Latest.png");
+            const content = escapeHtml(project.content || "");
 
             document.title = `${title} | ON2 Interactive`;
 
@@ -488,7 +499,7 @@
                     <section class="product-block">
                       <h2 class="product-block-title">Overview</h2>
                       <p>${summary}</p>
-                      <p>This is the rebuilt placeholder structure for the product slug page. The direction is now image-led first, with the content flowing underneath in a calmer editorial layout rather than a boxed data sheet.</p>
+                      <p>${content || "This is the rebuilt placeholder structure for the product slug page. The direction is now image-led first, with the content flowing underneath in a calmer editorial layout rather than a boxed data sheet."}</p>
                     </section>
 
                     <section class="product-block">

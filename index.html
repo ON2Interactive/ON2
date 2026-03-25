@@ -1142,6 +1142,13 @@
         const projectCards = document.getElementById("projectCards");
         const newsCards = document.getElementById("newsCards");
         if (!projectCards || !newsCards) return;
+        const supabaseUrl = "https://xgfymnoajuajdskjiimz.supabase.co";
+        const supabaseAnonKey =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhnZnltbm9hanVhamRza2ppaW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NjQ3NTgsImV4cCI6MjA5MDA0MDc1OH0.qvveHEGo_qFeIR3zaateleWGjqxaTn4v_kFV01xBM3c";
+        const supabaseHeaders = {
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+        };
 
         const escapeHtml = (value) =>
           String(value || "")
@@ -1151,30 +1158,9 @@
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
 
-        const newsItems = [
-          {
-            slug: "openai-operators-reshape-workflows",
-            title: "OpenAI Operators Reshape Product Workflows",
-            summary: "AI operator-style tooling is shifting how teams handle repetitive product, support, and operations tasks.",
-            image: "/Assets/Hero-Latest.png",
-          },
-          {
-            slug: "ai-native-ux-becoming-standard",
-            title: "AI-Native UX Is Becoming the New Standard",
-            summary: "Interfaces are increasingly being designed around suggestions, generation, and adaptive flows rather than static menus.",
-            image: "/Images/ON2-Banner-Social-YT.png",
-          },
-          {
-            slug: "full-stack-teams-adopt-embedded-ai",
-            title: "Full-Stack Teams Are Adopting Embedded AI Faster Than Expected",
-            summary: "Teams are moving beyond experiments and shipping AI-infused features directly into production products.",
-            image: "/Assets/Hero-Latest.png",
-          }
-        ];
-
         const renderProjects = (projects) => {
           if (!Array.isArray(projects) || !projects.length) {
-            projectCards.innerHTML = '<article class="loading-card">No products yet. This section will populate from Supabase-backed product data later.</article>';
+            projectCards.innerHTML = '<article class="loading-card">No products available yet.</article>';
             return;
           }
 
@@ -1182,7 +1168,7 @@
             .map((project) => {
               const title = escapeHtml(project.title);
               const summary = escapeHtml(project.summary || "");
-              const image = escapeHtml(project.image || "/Images/ON2-Banner-Social-YT.png");
+              const image = escapeHtml(project.image_url || "/Images/ON2-Banner-Social-YT.png");
               const slug = encodeURIComponent(project.slug || project.id || "");
               return `
                 <a class="landing-product-row" href="/products/${slug}">
@@ -1199,7 +1185,7 @@
 
         const renderNews = (items) => {
           if (!Array.isArray(items) || !items.length) {
-            newsCards.innerHTML = '<article class="loading-card">No news yet. This section will populate from a separate Supabase news table later.</article>';
+            newsCards.innerHTML = '<article class="loading-card">No AI news available yet.</article>';
             return;
           }
 
@@ -1207,7 +1193,7 @@
             .map((item) => {
               const title = escapeHtml(item.title);
               const summary = escapeHtml(item.summary || "");
-              const image = escapeHtml(item.image || "/Assets/Hero-Latest.png");
+              const image = escapeHtml(item.image_url || "/Assets/Hero-Latest.png");
               const slug = encodeURIComponent(item.slug || "");
               return `
                 <a class="landing-news-row" href="/news/${slug}">
@@ -1222,14 +1208,25 @@
             .join("");
         };
 
-        fetch("/data/projects.json")
+        fetch(
+          `${supabaseUrl}/rest/v1/products?select=title,slug,summary,image_url&published=eq.true&order=sort_order.asc`,
+          { headers: supabaseHeaders }
+        )
           .then((response) => response.json())
-          .then((payload) => renderProjects(Array.isArray(payload) ? payload : payload.projects || []))
+          .then((payload) => renderProjects(Array.isArray(payload) ? payload : []))
           .catch(() => {
             projectCards.innerHTML = '<article class="loading-card">Products unavailable. The project feed could not be loaded.</article>';
           });
 
-        renderNews(newsItems);
+        fetch(
+          `${supabaseUrl}/rest/v1/ai_news?select=title,slug,summary,image_url&published=eq.true&order=published_at.desc`,
+          { headers: supabaseHeaders }
+        )
+          .then((response) => response.json())
+          .then((payload) => renderNews(Array.isArray(payload) ? payload : []))
+          .catch(() => {
+            newsCards.innerHTML = '<article class="loading-card">AI news unavailable. The news feed could not be loaded.</article>';
+          });
       })();
     </script>
   </body>
