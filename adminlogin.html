@@ -70,32 +70,6 @@
         padding: 56px 64px 44px;
       }
 
-      .admin-login-logo {
-        display: grid;
-        gap: 6px;
-        margin-bottom: 14px;
-      }
-
-      .admin-login-mark {
-        width: 36px;
-        height: 36px;
-      }
-
-      .admin-login-wordmark {
-        font-size: clamp(2.8rem, 4.2vw, 4.3rem);
-        line-height: 0.92;
-        letter-spacing: -0.07em;
-        font-weight: 700;
-      }
-
-      .admin-login-subtitle {
-        font-size: 13px;
-        line-height: 1.4;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-
       .admin-login-form {
         width: min(420px, 100%);
         display: grid;
@@ -163,9 +137,6 @@
           padding: 28px 24px 24px;
         }
 
-        .admin-login-wordmark {
-          font-size: 2.6rem;
-        }
       }
     </style>
   </head>
@@ -173,12 +144,6 @@
     <main class="admin-login-shell" aria-label="Admin login">
       <section class="admin-login-media" aria-hidden="true"></section>
       <section class="admin-login-panel">
-        <div class="admin-login-logo">
-          <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" class="admin-login-mark" />
-          <div class="admin-login-wordmark">ON2 Interactive</div>
-          <div class="admin-login-subtitle">Admin dashboard</div>
-        </div>
-
         <form id="adminLoginForm" class="admin-login-form" autocomplete="off">
           <label for="adminUsername">Username</label>
           <input id="adminUsername" name="username" type="text" required />
