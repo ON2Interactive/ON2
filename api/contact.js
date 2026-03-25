@@ -108,7 +108,7 @@ module.exports = async (request, response) => {
 
     return json(response, 200, {
       success: true,
-      message: `Thanks. Your message has been received and will be sent to ${destination}.`,
+      message: "Thanks. Your message has been sent. We will be in touch shortly.",
     });
   } catch (error) {
     console.error("Contact submission failed", error);
