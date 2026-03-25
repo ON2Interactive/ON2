@@ -42,9 +42,9 @@
           </p>
 
           <form id="adminLoginForm" class="login-form" autocomplete="off">
-            <label class="form-label" for="adminEmail">
-              Email
-              <input class="text-input" id="adminEmail" name="email" type="email" required />
+            <label class="form-label" for="adminUsername">
+              Username
+              <input class="text-input" id="adminUsername" name="username" type="text" required />
             </label>
 
             <label class="form-label" for="adminPassword">
@@ -66,7 +66,7 @@
         const submitBtn = document.getElementById("adminLoginSubmit");
         if (!form || !statusEl || !submitBtn) return;
 
-        fetch("/api/admin/session")
+        fetch("/api/admin-session")
           .then((response) => {
             if (response.ok) window.location.replace("/admin");
           })
@@ -75,11 +75,11 @@
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
 
-          const email = String(document.getElementById("adminEmail")?.value || "").trim();
+          const username = String(document.getElementById("adminUsername")?.value || "").trim();
           const password = String(document.getElementById("adminPassword")?.value || "");
 
-          if (!email || !password) {
-            statusEl.textContent = "Email and password are required.";
+          if (!username || !password) {
+            statusEl.textContent = "Username and password are required.";
             return;
           }
 
@@ -87,10 +87,10 @@
           statusEl.textContent = "Signing in...";
 
           try {
-            const response = await fetch("/api/admin/login", {
+            const response = await fetch("/api/admin-login", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email, password }),
+              body: JSON.stringify({ username, password }),
             });
             const payload = await response.json().catch(() => ({}));
             if (!response.ok) {

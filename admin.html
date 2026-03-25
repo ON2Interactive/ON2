@@ -6,7 +6,6 @@
     <meta name="application-name" content="ON2 Interactive" />
     <meta name="description" content="Admin dashboard for ON2 Interactive." />
     <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" />
     <link rel="stylesheet" href="/styles.css" />
     <title>Admin | ON2 Interactive</title>
   </head>
@@ -31,83 +30,82 @@
         <section class="admin-head">
           <div>
             <div class="eyebrow">Publishing</div>
-            <h1 class="admin-heading">Manage ON2 projects.</h1>
-            <p class="admin-note">Create, revise, and remove the projects displayed on the homepage.</p>
+            <h1 class="admin-heading">Manage products and AI news.</h1>
+            <p class="admin-note">This dashboard writes directly to Supabase through the protected admin API.</p>
           </div>
           <div class="admin-actions">
-            <button id="newProjectBtn" class="secondary-button" type="button">New Project</button>
-            <button id="refreshProjectsBtn" class="primary-button" type="button">Refresh</button>
+            <button id="refreshAllBtn" class="primary-button" type="button">Refresh</button>
           </div>
         </section>
 
         <section class="admin-layout">
           <aside class="admin-panel">
-            <div class="micro-label">Project list</div>
-            <div id="adminProjectList" class="admin-project-list">
-              <p class="empty-state">Loading projects...</p>
+            <div class="micro-label">Products</div>
+            <div id="productList" class="admin-project-list">
+              <p class="empty-state">Loading products...</p>
             </div>
+            <button id="newProductBtn" class="secondary-button" type="button">New Product</button>
           </aside>
 
           <section class="admin-form">
-            <div class="micro-label">Editor</div>
-            <form id="projectForm" class="admin-form-grid">
-              <input id="projectId" type="hidden" />
-
-              <label class="form-label" for="projectTitle">
-                Title
-                <input class="text-input" id="projectTitle" type="text" maxlength="180" required />
-              </label>
-
+            <div class="micro-label">Product editor</div>
+            <form id="productForm" class="admin-form-grid">
+              <input id="productId" type="hidden" />
+              <label class="form-label" for="productTitle">Title<input class="text-input" id="productTitle" type="text" required /></label>
+              <label class="form-label" for="productSlug">Slug<input class="text-input" id="productSlug" type="text" /></label>
               <div class="split-grid">
-                <label class="form-label" for="projectYear">
-                  Year
-                  <input class="text-input" id="projectYear" type="text" maxlength="12" />
-                </label>
-
-                <label class="form-label" for="projectCategory">
-                  Category
-                  <input class="text-input" id="projectCategory" type="text" maxlength="80" required />
-                </label>
+                <label class="form-label" for="productYear">Year<input class="text-input" id="productYear" type="text" /></label>
+                <label class="form-label" for="productCategory">Category<input class="text-input" id="productCategory" type="text" required /></label>
               </div>
-
               <div class="split-grid">
-                <label class="form-label" for="projectClient">
-                  Client
-                  <input class="text-input" id="projectClient" type="text" maxlength="120" />
-                </label>
-
-                <label class="form-label" for="projectLink">
-                  Project Link
-                  <input class="text-input" id="projectLink" type="url" maxlength="500" />
-                </label>
+                <label class="form-label" for="productClient">Client<input class="text-input" id="productClient" type="text" /></label>
+                <label class="form-label" for="productSortOrder">Sort Order<input class="text-input" id="productSortOrder" type="number" value="0" /></label>
               </div>
-
-              <label class="form-label" for="projectImage">
-                Image Path
-                <input class="text-input" id="projectImage" type="text" maxlength="500" placeholder="/Images/ON2-Banner-Social-YT.png" />
-              </label>
-
-              <label class="form-label" for="projectServices">
-                Services
-                <input class="text-input" id="projectServices" type="text" maxlength="180" placeholder="Strategy, Design, Development" />
-              </label>
-
-              <label class="form-label" for="projectSummary">
-                Summary
-                <textarea class="text-area" id="projectSummary" maxlength="1200" required></textarea>
-              </label>
-
-              <label class="checkbox-row" for="projectFeatured">
-                <input id="projectFeatured" type="checkbox" />
-                Feature this project in the larger homepage card
-              </label>
-
+              <label class="form-label" for="productImage">Image URL<input class="text-input" id="productImage" type="text" /></label>
+              <label class="form-label" for="productSolutions">Solutions<input class="text-input" id="productSolutions" type="text" /></label>
+              <label class="form-label" for="productSummary">Summary<textarea class="text-area" id="productSummary" required></textarea></label>
+              <label class="form-label" for="productContent">Content<textarea class="text-area" id="productContent"></textarea></label>
+              <label class="checkbox-row" for="productPublished"><input id="productPublished" type="checkbox" checked /> Published</label>
+              <label class="checkbox-row" for="productFeatured"><input id="productFeatured" type="checkbox" /> Featured</label>
               <div class="admin-toolbar">
-                <button class="primary-button" type="submit">Save Project</button>
-                <button id="deleteProjectBtn" class="ghost-button" type="button">Delete</button>
-                <button id="resetProjectBtn" class="ghost-button" type="button">Reset</button>
+                <button class="primary-button" type="submit">Save Product</button>
+                <button id="deleteProductBtn" class="ghost-button" type="button">Delete</button>
+                <button id="resetProductBtn" class="ghost-button" type="button">Reset</button>
               </div>
-              <p id="projectFormStatus" class="form-status" aria-live="polite"></p>
+              <p id="productStatus" class="form-status" aria-live="polite"></p>
+            </form>
+          </section>
+        </section>
+
+        <section class="admin-layout" style="margin-top: 32px;">
+          <aside class="admin-panel">
+            <div class="micro-label">Latest AI News</div>
+            <div id="newsList" class="admin-project-list">
+              <p class="empty-state">Loading news...</p>
+            </div>
+            <button id="newNewsBtn" class="secondary-button" type="button">New News Item</button>
+          </aside>
+
+          <section class="admin-form">
+            <div class="micro-label">AI news editor</div>
+            <form id="newsForm" class="admin-form-grid">
+              <input id="newsId" type="hidden" />
+              <label class="form-label" for="newsTitle">Title<input class="text-input" id="newsTitle" type="text" required /></label>
+              <label class="form-label" for="newsSlug">Slug<input class="text-input" id="newsSlug" type="text" /></label>
+              <label class="form-label" for="newsSource">Source Name<input class="text-input" id="newsSource" type="text" /></label>
+              <label class="form-label" for="newsSourceUrl">Source URL<input class="text-input" id="newsSourceUrl" type="url" /></label>
+              <label class="form-label" for="newsImage">Image URL<input class="text-input" id="newsImage" type="text" /></label>
+              <label class="form-label" for="newsPublishedAt">Published At<input class="text-input" id="newsPublishedAt" type="datetime-local" /></label>
+              <label class="form-label" for="newsSummary">Summary<textarea class="text-area" id="newsSummary" required></textarea></label>
+              <label class="form-label" for="newsContent">Content<textarea class="text-area" id="newsContent"></textarea></label>
+              <label class="checkbox-row" for="newsPublished"><input id="newsPublished" type="checkbox" checked /> Published</label>
+              <label class="checkbox-row" for="newsFeatured"><input id="newsFeatured" type="checkbox" /> Featured</label>
+              <div class="admin-toolbar">
+                <button class="primary-button" type="submit">Save News</button>
+                <button id="deleteNewsBtn" class="ghost-button" type="button">Delete</button>
+                <button id="resetNewsBtn" class="ghost-button" type="button">Reset</button>
+              </div>
+              <p id="newsStatus" class="form-status" aria-live="polite"></p>
             </form>
           </section>
         </section>
@@ -116,32 +114,13 @@
 
     <script>
       (() => {
-        const listEl = document.getElementById("adminProjectList");
-        const form = document.getElementById("projectForm");
-        const statusEl = document.getElementById("projectFormStatus");
-        const refreshBtn = document.getElementById("refreshProjectsBtn");
-        const newBtn = document.getElementById("newProjectBtn");
-        const resetBtn = document.getElementById("resetProjectBtn");
-        const deleteBtn = document.getElementById("deleteProjectBtn");
         const logoutBtn = document.getElementById("logoutBtn");
-
-        if (!listEl || !form || !statusEl || !refreshBtn || !newBtn || !resetBtn || !deleteBtn || !logoutBtn) return;
-
-        const fields = {
-          id: document.getElementById("projectId"),
-          title: document.getElementById("projectTitle"),
-          year: document.getElementById("projectYear"),
-          category: document.getElementById("projectCategory"),
-          client: document.getElementById("projectClient"),
-          link: document.getElementById("projectLink"),
-          image: document.getElementById("projectImage"),
-          services: document.getElementById("projectServices"),
-          summary: document.getElementById("projectSummary"),
-          featured: document.getElementById("projectFeatured"),
-        };
-
-        let projects = [];
-        let activeProjectId = "";
+        const refreshAllBtn = document.getElementById("refreshAllBtn");
+        const productList = document.getElementById("productList");
+        const newsList = document.getElementById("newsList");
+        const productForm = document.getElementById("productForm");
+        const newsForm = document.getElementById("newsForm");
+        if (!logoutBtn || !refreshAllBtn || !productList || !newsList || !productForm || !newsForm) return;
 
         const escapeHtml = (value) =>
           String(value || "")
@@ -151,190 +130,330 @@
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
 
-        const setStatus = (text) => {
-          statusEl.textContent = String(text || "");
+        const productFields = {
+          id: document.getElementById("productId"),
+          title: document.getElementById("productTitle"),
+          slug: document.getElementById("productSlug"),
+          year: document.getElementById("productYear"),
+          category: document.getElementById("productCategory"),
+          client: document.getElementById("productClient"),
+          sortOrder: document.getElementById("productSortOrder"),
+          image: document.getElementById("productImage"),
+          solutions: document.getElementById("productSolutions"),
+          summary: document.getElementById("productSummary"),
+          content: document.getElementById("productContent"),
+          published: document.getElementById("productPublished"),
+          featured: document.getElementById("productFeatured"),
         };
 
-        const resetForm = () => {
-          activeProjectId = "";
-          fields.id.value = "";
-          fields.title.value = "";
-          fields.year.value = "";
-          fields.category.value = "";
-          fields.client.value = "";
-          fields.link.value = "";
-          fields.image.value = "/Images/ON2-Banner-Social-YT.png";
-          fields.services.value = "";
-          fields.summary.value = "";
-          fields.featured.checked = false;
-          setStatus("Ready for a new project.");
-          renderList();
+        const newsFields = {
+          id: document.getElementById("newsId"),
+          title: document.getElementById("newsTitle"),
+          slug: document.getElementById("newsSlug"),
+          source: document.getElementById("newsSource"),
+          sourceUrl: document.getElementById("newsSourceUrl"),
+          image: document.getElementById("newsImage"),
+          publishedAt: document.getElementById("newsPublishedAt"),
+          summary: document.getElementById("newsSummary"),
+          content: document.getElementById("newsContent"),
+          published: document.getElementById("newsPublished"),
+          featured: document.getElementById("newsFeatured"),
         };
 
-        const fillForm = (project) => {
-          activeProjectId = String(project.id || "");
-          fields.id.value = activeProjectId;
-          fields.title.value = project.title || "";
-          fields.year.value = project.year || "";
-          fields.category.value = project.category || "";
-          fields.client.value = project.client || "";
-          fields.link.value = project.link || "";
-          fields.image.value = project.image || "/Images/ON2-Banner-Social-YT.png";
-          fields.services.value = project.services || "";
-          fields.summary.value = project.summary || "";
-          fields.featured.checked = Boolean(project.featured);
-          setStatus(`Editing ${project.title || "project"}.`);
-          renderList();
+        const productStatus = document.getElementById("productStatus");
+        const newsStatus = document.getElementById("newsStatus");
+        const newProductBtn = document.getElementById("newProductBtn");
+        const resetProductBtn = document.getElementById("resetProductBtn");
+        const deleteProductBtn = document.getElementById("deleteProductBtn");
+        const newNewsBtn = document.getElementById("newNewsBtn");
+        const resetNewsBtn = document.getElementById("resetNewsBtn");
+        const deleteNewsBtn = document.getElementById("deleteNewsBtn");
+
+        let products = [];
+        let newsItems = [];
+        let activeProductId = "";
+        let activeNewsId = "";
+
+        const setStatus = (element, text) => {
+          element.textContent = String(text || "");
         };
 
-        const renderList = () => {
-          if (!projects.length) {
-            listEl.innerHTML = '<p class="empty-state">No projects yet. Create the first one.</p>';
-            return;
-          }
-          listEl.innerHTML = projects
-            .slice()
-            .sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime())
-            .map((project) => {
-              const activeClass = String(project.id) === activeProjectId ? " is-active" : "";
-              return `
-                <article class="admin-project-item${activeClass}" data-project-id="${escapeHtml(project.id)}">
-                  <strong>${escapeHtml(project.title)}</strong>
-                  <span>${escapeHtml(project.category)} ${project.year ? "• " + escapeHtml(project.year) : ""}</span>
-                </article>
-              `;
-            })
-            .join("");
+        const slugify = (value) =>
+          String(value || "")
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
 
-          Array.from(listEl.querySelectorAll("[data-project-id]")).forEach((item) => {
-            item.addEventListener("click", () => {
-              const project = projects.find((entry) => String(entry.id) === item.getAttribute("data-project-id"));
-              if (project) fillForm(project);
-            });
-          });
+        const toDatetimeLocal = (value) => {
+          if (!value) return "";
+          const date = new Date(value);
+          if (Number.isNaN(date.getTime())) return "";
+          const offset = date.getTimezoneOffset();
+          const local = new Date(date.getTime() - offset * 60000);
+          return local.toISOString().slice(0, 16);
         };
 
-        const fetchProjects = async () => {
-          setStatus("Loading projects...");
-          const response = await fetch("/api/admin/projects");
+        const api = async (url, options = {}) => {
+          const response = await fetch(url, options);
           if (response.status === 401) {
             window.location.replace("/adminlogin");
-            return;
+            return null;
           }
           const payload = await response.json().catch(() => ({}));
           if (!response.ok) {
-            setStatus(payload.error || "Unable to load projects.");
+            throw new Error(payload.error || "Request failed.");
+          }
+          return payload;
+        };
+
+        const renderProductList = () => {
+          if (!products.length) {
+            productList.innerHTML = '<p class="empty-state">No products yet.</p>';
             return;
           }
-          projects = Array.isArray(payload.projects) ? payload.projects : [];
-          if (activeProjectId) {
-            const active = projects.find((project) => String(project.id) === activeProjectId);
-            if (active) fillForm(active);
-            else resetForm();
-          } else {
-            renderList();
-            setStatus("Projects loaded.");
+          productList.innerHTML = products
+            .map((item) => {
+              const activeClass = item.id === activeProductId ? " is-active" : "";
+              return `<article class="admin-project-item${activeClass}" data-product-id="${escapeHtml(item.id)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.category || "")}</span></article>`;
+            })
+            .join("");
+
+          productList.querySelectorAll("[data-product-id]").forEach((node) => {
+            node.addEventListener("click", () => {
+              const item = products.find((entry) => entry.id === node.getAttribute("data-product-id"));
+              if (item) fillProductForm(item);
+            });
+          });
+        };
+
+        const renderNewsList = () => {
+          if (!newsItems.length) {
+            newsList.innerHTML = '<p class="empty-state">No AI news yet.</p>';
+            return;
+          }
+          newsList.innerHTML = newsItems
+            .map((item) => {
+              const activeClass = item.id === activeNewsId ? " is-active" : "";
+              return `<article class="admin-project-item${activeClass}" data-news-id="${escapeHtml(item.id)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.source_name || "")}</span></article>`;
+            })
+            .join("");
+
+          newsList.querySelectorAll("[data-news-id]").forEach((node) => {
+            node.addEventListener("click", () => {
+              const item = newsItems.find((entry) => entry.id === node.getAttribute("data-news-id"));
+              if (item) fillNewsForm(item);
+            });
+          });
+        };
+
+        const resetProductForm = () => {
+          activeProductId = "";
+          productFields.id.value = "";
+          productFields.title.value = "";
+          productFields.slug.value = "";
+          productFields.year.value = "";
+          productFields.category.value = "";
+          productFields.client.value = "";
+          productFields.sortOrder.value = "0";
+          productFields.image.value = "/Images/ON2-Banner-Social-YT.png";
+          productFields.solutions.value = "";
+          productFields.summary.value = "";
+          productFields.content.value = "";
+          productFields.published.checked = true;
+          productFields.featured.checked = false;
+          renderProductList();
+          setStatus(productStatus, "Ready for a new product.");
+        };
+
+        const resetNewsForm = () => {
+          activeNewsId = "";
+          newsFields.id.value = "";
+          newsFields.title.value = "";
+          newsFields.slug.value = "";
+          newsFields.source.value = "";
+          newsFields.sourceUrl.value = "";
+          newsFields.image.value = "/Assets/Hero-Latest.png";
+          newsFields.publishedAt.value = "";
+          newsFields.summary.value = "";
+          newsFields.content.value = "";
+          newsFields.published.checked = true;
+          newsFields.featured.checked = false;
+          renderNewsList();
+          setStatus(newsStatus, "Ready for a new AI news item.");
+        };
+
+        const fillProductForm = (item) => {
+          activeProductId = item.id;
+          productFields.id.value = item.id || "";
+          productFields.title.value = item.title || "";
+          productFields.slug.value = item.slug || "";
+          productFields.year.value = item.year || "";
+          productFields.category.value = item.category || "";
+          productFields.client.value = item.client || "";
+          productFields.sortOrder.value = String(item.sort_order || 0);
+          productFields.image.value = item.image_url || "";
+          productFields.solutions.value = item.solutions || "";
+          productFields.summary.value = item.summary || "";
+          productFields.content.value = item.content || "";
+          productFields.published.checked = Boolean(item.published);
+          productFields.featured.checked = Boolean(item.featured);
+          renderProductList();
+          setStatus(productStatus, `Editing ${item.title}.`);
+        };
+
+        const fillNewsForm = (item) => {
+          activeNewsId = item.id;
+          newsFields.id.value = item.id || "";
+          newsFields.title.value = item.title || "";
+          newsFields.slug.value = item.slug || "";
+          newsFields.source.value = item.source_name || "";
+          newsFields.sourceUrl.value = item.source_url || "";
+          newsFields.image.value = item.image_url || "";
+          newsFields.publishedAt.value = toDatetimeLocal(item.published_at);
+          newsFields.summary.value = item.summary || "";
+          newsFields.content.value = item.content || "";
+          newsFields.published.checked = Boolean(item.published);
+          newsFields.featured.checked = Boolean(item.featured);
+          renderNewsList();
+          setStatus(newsStatus, `Editing ${item.title}.`);
+        };
+
+        const fetchAll = async () => {
+          try {
+            const [productPayload, newsPayload] = await Promise.all([
+              api("/api/admin-products"),
+              api("/api/admin-news"),
+            ]);
+            if (!productPayload || !newsPayload) return;
+            products = Array.isArray(productPayload.projects) ? productPayload.projects : [];
+            newsItems = Array.isArray(newsPayload.news) ? newsPayload.news : [];
+            renderProductList();
+            renderNewsList();
+            if (activeProductId) {
+              const active = products.find((item) => item.id === activeProductId);
+              if (active) fillProductForm(active);
+            }
+            if (activeNewsId) {
+              const active = newsItems.find((item) => item.id === activeNewsId);
+              if (active) fillNewsForm(active);
+            }
+          } catch (error) {
+            setStatus(productStatus, error.message);
+            setStatus(newsStatus, error.message);
           }
         };
 
-        const getPayload = () => ({
-          title: String(fields.title.value || "").trim(),
-          year: String(fields.year.value || "").trim(),
-          category: String(fields.category.value || "").trim(),
-          client: String(fields.client.value || "").trim(),
-          link: String(fields.link.value || "").trim(),
-          image: String(fields.image.value || "").trim(),
-          services: String(fields.services.value || "").trim(),
-          summary: String(fields.summary.value || "").trim(),
-          featured: Boolean(fields.featured.checked),
-        });
-
-        form.addEventListener("submit", async (event) => {
+        productForm.addEventListener("submit", async (event) => {
           event.preventDefault();
-          const payload = getPayload();
-          if (!payload.title || !payload.category || !payload.summary) {
-            setStatus("Title, category, and summary are required.");
-            return;
-          }
-
-          const projectId = String(fields.id.value || "").trim();
-          const method = projectId ? "PUT" : "POST";
-          const url = projectId ? `/api/admin/projects/${encodeURIComponent(projectId)}` : "/api/admin/projects";
-          setStatus(projectId ? "Saving changes..." : "Creating project...");
+          const payload = {
+            title: productFields.title.value.trim(),
+            slug: productFields.slug.value.trim() || slugify(productFields.title.value),
+            year: productFields.year.value.trim(),
+            category: productFields.category.value.trim(),
+            client: productFields.client.value.trim(),
+            sort_order: Number(productFields.sortOrder.value || 0) || 0,
+            image_url: productFields.image.value.trim(),
+            solutions: productFields.solutions.value.trim(),
+            summary: productFields.summary.value.trim(),
+            content: productFields.content.value.trim(),
+            published: productFields.published.checked,
+            featured: productFields.featured.checked,
+          };
 
           try {
-            const response = await fetch(url, {
-              method,
+            const id = productFields.id.value.trim();
+            const result = await api(id ? `/api/admin-products/${encodeURIComponent(id)}` : "/api/admin-products", {
+              method: id ? "PUT" : "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(payload),
             });
-            const result = await response.json().catch(() => ({}));
-            if (response.status === 401) {
-              window.location.replace("/adminlogin");
-              return;
-            }
-            if (!response.ok) {
-              setStatus(result.error || "Unable to save project.");
-              return;
-            }
-            activeProjectId = result.project?.id || activeProjectId;
-            await fetchProjects();
-            const active = projects.find((project) => String(project.id) === activeProjectId);
-            if (active) fillForm(active);
-            setStatus(projectId ? "Project updated." : "Project created.");
-          } catch {
-            setStatus("Network error. Please try again.");
+            activeProductId = result.project?.id || activeProductId;
+            await fetchAll();
+            setStatus(productStatus, id ? "Product updated." : "Product created.");
+          } catch (error) {
+            setStatus(productStatus, error.message);
           }
         });
 
-        deleteBtn.addEventListener("click", async () => {
-          const projectId = String(fields.id.value || "").trim();
-          if (!projectId) {
-            setStatus("Select a project before deleting.");
-            return;
-          }
-          const confirmed = window.confirm("Delete this project?");
-          if (!confirmed) return;
+        newsForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const payload = {
+            title: newsFields.title.value.trim(),
+            slug: newsFields.slug.value.trim() || slugify(newsFields.title.value),
+            source_name: newsFields.source.value.trim(),
+            source_url: newsFields.sourceUrl.value.trim(),
+            image_url: newsFields.image.value.trim(),
+            published_at: newsFields.publishedAt.value ? new Date(newsFields.publishedAt.value).toISOString() : new Date().toISOString(),
+            summary: newsFields.summary.value.trim(),
+            content: newsFields.content.value.trim(),
+            published: newsFields.published.checked,
+            featured: newsFields.featured.checked,
+          };
 
-          setStatus("Deleting project...");
           try {
-            const response = await fetch(`/api/admin/projects/${encodeURIComponent(projectId)}`, { method: "DELETE" });
-            const payload = await response.json().catch(() => ({}));
-            if (response.status === 401) {
-              window.location.replace("/adminlogin");
-              return;
-            }
-            if (!response.ok) {
-              setStatus(payload.error || "Unable to delete project.");
-              return;
-            }
-            resetForm();
-            await fetchProjects();
-            setStatus("Project deleted.");
-          } catch {
-            setStatus("Network error. Please try again.");
+            const id = newsFields.id.value.trim();
+            const result = await api(id ? `/api/admin-news/${encodeURIComponent(id)}` : "/api/admin-news", {
+              method: id ? "PUT" : "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            activeNewsId = result.item?.id || activeNewsId;
+            await fetchAll();
+            setStatus(newsStatus, id ? "News item updated." : "News item created.");
+          } catch (error) {
+            setStatus(newsStatus, error.message);
           }
         });
 
-        resetBtn.addEventListener("click", () => resetForm());
-        newBtn.addEventListener("click", () => resetForm());
-        refreshBtn.addEventListener("click", () => fetchProjects());
+        deleteProductBtn.addEventListener("click", async () => {
+          const id = productFields.id.value.trim();
+          if (!id) return setStatus(productStatus, "Select a product first.");
+          if (!window.confirm("Delete this product?")) return;
+          try {
+            await api(`/api/admin-products/${encodeURIComponent(id)}`, { method: "DELETE" });
+            resetProductForm();
+            await fetchAll();
+            setStatus(productStatus, "Product deleted.");
+          } catch (error) {
+            setStatus(productStatus, error.message);
+          }
+        });
+
+        deleteNewsBtn.addEventListener("click", async () => {
+          const id = newsFields.id.value.trim();
+          if (!id) return setStatus(newsStatus, "Select a news item first.");
+          if (!window.confirm("Delete this AI news item?")) return;
+          try {
+            await api(`/api/admin-news/${encodeURIComponent(id)}`, { method: "DELETE" });
+            resetNewsForm();
+            await fetchAll();
+            setStatus(newsStatus, "News item deleted.");
+          } catch (error) {
+            setStatus(newsStatus, error.message);
+          }
+        });
+
+        resetProductBtn.addEventListener("click", resetProductForm);
+        newProductBtn.addEventListener("click", resetProductForm);
+        resetNewsBtn.addEventListener("click", resetNewsForm);
+        newNewsBtn.addEventListener("click", resetNewsForm);
+        refreshAllBtn.addEventListener("click", fetchAll);
 
         logoutBtn.addEventListener("click", async () => {
-          await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
+          await fetch("/api/admin-logout", { method: "POST" }).catch(() => {});
           window.location.replace("/adminlogin");
         });
 
-        fetch("/api/admin/session")
+        fetch("/api/admin-session")
           .then((response) => {
             if (!response.ok) window.location.replace("/adminlogin");
           })
-          .catch(() => {
-            window.location.replace("/adminlogin");
-          });
+          .catch(() => window.location.replace("/adminlogin"));
 
-        resetForm();
-        fetchProjects();
+        resetProductForm();
+        resetNewsForm();
+        fetchAll();
       })();
     </script>
   </body>
