@@ -1438,9 +1438,9 @@
         renderCard(underlay, pages[currentIndex]);
         refreshMeta();
 
-        fetch("/api/projects")
+        fetch("/data/projects.json")
           .then((response) => response.json())
-          .then((payload) => renderProjects(payload.projects || []))
+          .then((payload) => renderProjects(Array.isArray(payload) ? payload : payload.projects || []))
           .catch(() => {
             projectCards.innerHTML = '<article class="loading-card">Products unavailable. The project feed could not be loaded.</article>';
           });
