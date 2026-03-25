@@ -187,7 +187,7 @@
         background: transparent;
         padding: 20px 0;
         display: grid;
-        grid-template-columns: 120px minmax(0, 1fr);
+        grid-template-columns: 120px minmax(0, 1fr) auto;
         gap: 20px;
         text-align: left;
         color: var(--text);
@@ -223,6 +223,23 @@
         color: var(--muted);
         font-size: 15px;
         line-height: 1.6;
+      }
+
+      .admin-list-delete {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+      }
+
+      .admin-list-delete svg {
+        width: 18px;
+        height: 18px;
       }
 
       .admin-list-actions {
@@ -275,6 +292,35 @@
       .text-input:focus,
       .text-area:focus {
         border-bottom-color: rgba(23, 23, 23, 0.42);
+      }
+
+      .upload-field {
+        display: grid;
+        gap: 12px;
+      }
+
+      .upload-button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+      }
+
+      .upload-button svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .upload-meta {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+        word-break: break-word;
       }
 
       .checkbox-group {
@@ -336,7 +382,7 @@
         }
 
         .admin-list-item {
-          grid-template-columns: 88px minmax(0, 1fr);
+          grid-template-columns: 88px minmax(0, 1fr) auto;
           gap: 16px;
         }
 
@@ -409,9 +455,20 @@
                   <textarea class="text-area" id="productContent"></textarea>
                 </label>
 
-                <label class="form-label" for="productImage">Image URL
-                  <input class="text-input" id="productImage" type="text" />
-                </label>
+                <div class="form-label upload-field">
+                  <span>Image</span>
+                  <input id="productImage" type="hidden" />
+                  <input id="productImageFile" type="file" accept="image/*" hidden />
+                  <button id="productImageUpload" class="upload-button" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M12 16V4"></path>
+                      <path d="M8 8l4-4 4 4"></path>
+                      <path d="M4 18h16"></path>
+                    </svg>
+                    <span>Upload image</span>
+                  </button>
+                  <div id="productImageMeta" class="upload-meta"></div>
+                </div>
 
                 <label class="form-label" for="productSolutions">Solutions
                   <input class="text-input" id="productSolutions" type="text" />
@@ -493,9 +550,20 @@
                   <textarea class="text-area" id="newsContent"></textarea>
                 </label>
 
-                <label class="form-label" for="newsImage">Image URL
-                  <input class="text-input" id="newsImage" type="text" />
-                </label>
+                <div class="form-label upload-field">
+                  <span>Image</span>
+                  <input id="newsImage" type="hidden" />
+                  <input id="newsImageFile" type="file" accept="image/*" hidden />
+                  <button id="newsImageUpload" class="upload-button" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M12 16V4"></path>
+                      <path d="M8 8l4-4 4 4"></path>
+                      <path d="M4 18h16"></path>
+                    </svg>
+                    <span>Upload image</span>
+                  </button>
+                  <div id="newsImageMeta" class="upload-meta"></div>
+                </div>
 
                 <label class="form-label" for="newsSource">Source name
                   <input class="text-input" id="newsSource" type="text" />
@@ -569,6 +637,9 @@
           client: document.getElementById("productClient"),
           sortOrder: document.getElementById("productSortOrder"),
           image: document.getElementById("productImage"),
+          imageFile: document.getElementById("productImageFile"),
+          imageUpload: document.getElementById("productImageUpload"),
+          imageMeta: document.getElementById("productImageMeta"),
           solutions: document.getElementById("productSolutions"),
           summary: document.getElementById("productSummary"),
           content: document.getElementById("productContent"),
@@ -583,6 +654,9 @@
           source: document.getElementById("newsSource"),
           sourceUrl: document.getElementById("newsSourceUrl"),
           image: document.getElementById("newsImage"),
+          imageFile: document.getElementById("newsImageFile"),
+          imageUpload: document.getElementById("newsImageUpload"),
+          imageMeta: document.getElementById("newsImageMeta"),
           publishedAt: document.getElementById("newsPublishedAt"),
           summary: document.getElementById("newsSummary"),
           content: document.getElementById("newsContent"),
@@ -630,6 +704,10 @@
           element.textContent = String(text || "");
         };
 
+        const setImageMeta = (node, value) => {
+          node.textContent = value ? String(value) : "No image selected.";
+        };
+
         const slugify = (value) =>
           String(value || "")
             .trim()
@@ -659,6 +737,44 @@
           return payload;
         };
 
+        const fileToBase64 = (file) =>
+          new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const result = String(reader.result || "");
+              const [, base64 = ""] = result.split(",");
+              resolve(base64);
+            };
+            reader.onerror = () => reject(new Error("Unable to read the selected file."));
+            reader.readAsDataURL(file);
+          });
+
+        const uploadImage = async ({ file, folder, hiddenInput, metaNode, statusNode, buttonNode }) => {
+          if (!file) return;
+          buttonNode.setAttribute("disabled", "disabled");
+          setStatus(statusNode, "Uploading image...");
+          try {
+            const base64Data = await fileToBase64(file);
+            const result = await api("/api/admin-upload", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                folder,
+                fileName: file.name,
+                contentType: file.type,
+                base64Data,
+              }),
+            });
+            hiddenInput.value = result.url || "";
+            setImageMeta(metaNode, hiddenInput.value);
+            setStatus(statusNode, "Image uploaded.");
+          } catch (error) {
+            setStatus(statusNode, error.message);
+          } finally {
+            buttonNode.removeAttribute("disabled");
+          }
+        };
+
         const renderProductList = () => {
           if (!products.length) {
             productList.innerHTML = '<p class="empty-state">No products yet.</p>';
@@ -675,6 +791,15 @@
                     <span class="admin-list-item-title">${escapeHtml(item.title)}</span>
                     <span class="admin-list-item-summary">${escapeHtml(item.summary || "")}</span>
                   </span>
+                  <span class="admin-list-delete" data-product-delete="${escapeHtml(item.id)}" aria-label="Delete ${escapeHtml(item.title)}" title="Delete product">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3 6h18"></path>
+                      <path d="M8 6V4h8v2"></path>
+                      <path d="M19 6l-1 14H6L5 6"></path>
+                      <path d="M10 11v6"></path>
+                      <path d="M14 11v6"></path>
+                    </svg>
+                  </span>
                 </button>
               `;
             })
@@ -684,6 +809,24 @@
             node.addEventListener("click", () => {
               const item = products.find((entry) => entry.id === node.getAttribute("data-product-id"));
               if (item) fillProductForm(item);
+            });
+          });
+
+          productList.querySelectorAll("[data-product-delete]").forEach((node) => {
+            node.addEventListener("click", async (event) => {
+              event.stopPropagation();
+              const id = node.getAttribute("data-product-delete");
+              const item = products.find((entry) => entry.id === id);
+              if (!id || !item) return;
+              if (!window.confirm(`Delete ${item.title}?`)) return;
+              try {
+                await api(`/api/admin-products/${encodeURIComponent(id)}`, { method: "DELETE" });
+                if (activeProductId === id) resetProductForm();
+                await fetchAll();
+                setStatus(productStatus, "Product deleted.");
+              } catch (error) {
+                setStatus(productStatus, error.message);
+              }
             });
           });
         };
@@ -704,6 +847,15 @@
                     <span class="admin-list-item-title">${escapeHtml(item.title)}</span>
                     <span class="admin-list-item-summary">${escapeHtml(item.summary || "")}</span>
                   </span>
+                  <span class="admin-list-delete" data-news-delete="${escapeHtml(item.id)}" aria-label="Delete ${escapeHtml(item.title)}" title="Delete news item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3 6h18"></path>
+                      <path d="M8 6V4h8v2"></path>
+                      <path d="M19 6l-1 14H6L5 6"></path>
+                      <path d="M10 11v6"></path>
+                      <path d="M14 11v6"></path>
+                    </svg>
+                  </span>
                 </button>
               `;
             })
@@ -713,6 +865,24 @@
             node.addEventListener("click", () => {
               const item = newsItems.find((entry) => entry.id === node.getAttribute("data-news-id"));
               if (item) fillNewsForm(item);
+            });
+          });
+
+          newsList.querySelectorAll("[data-news-delete]").forEach((node) => {
+            node.addEventListener("click", async (event) => {
+              event.stopPropagation();
+              const id = node.getAttribute("data-news-delete");
+              const item = newsItems.find((entry) => entry.id === id);
+              if (!id || !item) return;
+              if (!window.confirm(`Delete ${item.title}?`)) return;
+              try {
+                await api(`/api/admin-news/${encodeURIComponent(id)}`, { method: "DELETE" });
+                if (activeNewsId === id) resetNewsForm();
+                await fetchAll();
+                setStatus(newsStatus, "News item deleted.");
+              } catch (error) {
+                setStatus(newsStatus, error.message);
+              }
             });
           });
         };
@@ -727,6 +897,8 @@
           productFields.client.value = "";
           productFields.sortOrder.value = "0";
           productFields.image.value = "/Images/ON2-Banner-Social-YT.png";
+          productFields.imageFile.value = "";
+          setImageMeta(productFields.imageMeta, productFields.image.value);
           productFields.solutions.value = "";
           productFields.summary.value = "";
           productFields.content.value = "";
@@ -744,6 +916,8 @@
           newsFields.source.value = "";
           newsFields.sourceUrl.value = "";
           newsFields.image.value = "/Assets/Hero-Latest.png";
+          newsFields.imageFile.value = "";
+          setImageMeta(newsFields.imageMeta, newsFields.image.value);
           newsFields.publishedAt.value = "";
           newsFields.summary.value = "";
           newsFields.content.value = "";
@@ -763,6 +937,7 @@
           productFields.client.value = item.client || "";
           productFields.sortOrder.value = String(item.sort_order || 0);
           productFields.image.value = item.image_url || "";
+          setImageMeta(productFields.imageMeta, productFields.image.value);
           productFields.solutions.value = item.solutions || "";
           productFields.summary.value = item.summary || "";
           productFields.content.value = item.content || "";
@@ -780,6 +955,7 @@
           newsFields.source.value = item.source_name || "";
           newsFields.sourceUrl.value = item.source_url || "";
           newsFields.image.value = item.image_url || "";
+          setImageMeta(newsFields.imageMeta, newsFields.image.value);
           newsFields.publishedAt.value = toDatetimeLocal(item.published_at);
           newsFields.summary.value = item.summary || "";
           newsFields.content.value = item.content || "";
