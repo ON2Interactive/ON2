@@ -1,4 +1,5 @@
 const RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
+const SENDGRID_SEND_URL = "https://api.sendgrid.com/v3/mail/send";
 
 function json(response, status, payload) {
   response.status(status).json(payload);
@@ -50,9 +51,54 @@ module.exports = async (request, response) => {
     }
 
     const destination = String(process.env.CONTACT_EMAIL || "on2@on2interactive.com").trim();
+    const sendgridApiKey = String(process.env.SENDGRID_API_KEY || "").trim();
+    const fromEmail = String(process.env.SENDGRID_FROM_EMAIL || "").trim();
+
+    if (!sendgridApiKey || !fromEmail) {
+      return json(response, 500, { error: "Email delivery is not configured." });
+    }
+
+    const emailResponse = await fetch(SENDGRID_SEND_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sendgridApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        personalizations: [
+          {
+            to: [{ email: destination }],
+            subject: `[ON2 Contact] ${subject}`,
+          },
+        ],
+        from: { email: fromEmail },
+        reply_to: { email: fromEmail },
+        content: [
+          {
+            type: "text/plain",
+            value: [
+              `Name: ${name}`,
+              `Subject: ${subject}`,
+              "",
+              "Message:",
+              message,
+              "",
+              `reCAPTCHA score: ${score}`,
+            ].join("\n"),
+          },
+        ],
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      const sendgridError = await emailResponse.text().catch(() => "");
+      console.error("SendGrid delivery failed", sendgridError);
+      return json(response, 500, { error: "Unable to deliver your message right now." });
+    }
 
     console.log("ON2 contact submission accepted", {
       to: destination,
+      from: fromEmail,
       name,
       subject,
       message,
