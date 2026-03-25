@@ -1,11 +1,12 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/about", "destination": "/about.html" },
-    { "source": "/contact", "destination": "/contact.html" },
-    { "source": "/adminlogin", "destination": "/adminlogin.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/products/:path*", "destination": "/product.html" },
-    { "source": "/news/:path*", "destination": "/news.html" }
+  "version": 2,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "^/about/?$", "dest": "/about.html" },
+    { "src": "^/contact/?$", "dest": "/contact.html" },
+    { "src": "^/adminlogin/?$", "dest": "/adminlogin.html" },
+    { "src": "^/admin/?$", "dest": "/admin.html" },
+    { "src": "^/products/[^/]+/?$", "dest": "/product.html" },
+    { "src": "^/news/[^/]+/?$", "dest": "/news.html" }
   ]
 }
