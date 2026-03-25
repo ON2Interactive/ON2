@@ -5,7 +5,7 @@
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/adminlogin", "destination": "/adminlogin.html" },
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/products/:slug", "destination": "/product.html" },
-    { "source": "/news/:slug", "destination": "/news.html" }
+    { "source": "/products/:path*", "destination": "/product.html" },
+    { "source": "/news/:path*", "destination": "/news.html" }
   ]
 }
