@@ -71,7 +71,12 @@ function getSession(request) {
 
   const secret = getEnv("SESSION_SECRET", "on2-interactive-session-secret");
   const expectedSignature = signValue(encoded, secret);
-  if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+  const actualBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expectedSignature);
+  if (actualBuffer.length !== expectedBuffer.length) {
+    return null;
+  }
+  if (!crypto.timingSafeEqual(actualBuffer, expectedBuffer)) {
     return null;
   }
 
@@ -97,11 +102,13 @@ function hasAdminCredentials() {
 }
 
 function sendJson(response, status, payload, headers = {}) {
-  response.status(status).set({
+  Object.entries({
     "Cache-Control": "no-store",
     ...headers,
+  }).forEach(([key, value]) => {
+    response.setHeader(key, value);
   });
-  response.json(payload);
+  response.status(status).json(payload);
 }
 
 function requireAdmin(request, response) {
