@@ -214,8 +214,8 @@ async function handleApi(request, response, pathname) {
       message: String(body.message || "").trim(),
       createdAt: new Date().toISOString(),
     };
-    if (!message.name || !message.email || !message.subject || !message.message) {
-      sendJson(response, 400, { error: "All fields are required." });
+    if (!message.name || !message.subject || !message.message) {
+      sendJson(response, 400, { error: "Name, subject, and message are required." });
       return true;
     }
     const messages = await readJson(messagesPath);

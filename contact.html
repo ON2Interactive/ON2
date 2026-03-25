@@ -6,94 +6,504 @@
     <meta name="application-name" content="ON2 Interactive" />
     <meta name="description" content="Contact ON2 Interactive." />
     <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" />
-    <link rel="stylesheet" href="/styles.css" />
     <title>Contact | ON2 Interactive</title>
+    <style>
+      :root {
+        --bg: #f5f0e7;
+        --bg-soft: #fbf8f2;
+        --text: #171717;
+        --text-muted: rgba(23, 23, 23, 0.66);
+        --line: rgba(23, 23, 23, 0.1);
+        --panel: rgba(255, 255, 255, 0.48);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+      }
+      body {
+        font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+        color: var(--text);
+        background:
+          linear-gradient(rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          var(--bg);
+        background-size: 18px 18px;
+      }
+      .page {
+        min-height: 100vh;
+        padding-top: 60px;
+      }
+      .nav {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 10;
+        width: 100%;
+        height: 60px;
+        background: rgba(245, 240, 231, 0.82);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(8px);
+      }
+      .nav-inner {
+        width: 100%;
+        height: 60px;
+        padding: 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        height: 60px;
+        text-decoration: none;
+      }
+      .logo img {
+        width: 32px;
+        height: 32px;
+      }
+      .nav-link {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .contact-hero {
+        position: relative;
+        min-height: 50vh;
+        display: flex;
+        align-items: flex-end;
+        background: #d7ccbe;
+        overflow: hidden;
+      }
+      .contact-hero-media {
+        position: absolute;
+        inset: 0;
+        background: url("/Assets/Hero-Latest.png") center center / cover no-repeat;
+      }
+      .contact-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(18, 13, 10, 0.32) 0%, rgba(18, 13, 10, 0.22) 28%, rgba(245, 240, 231, 0.24) 62%, rgba(245, 240, 231, 0.82) 100%),
+          linear-gradient(90deg, rgba(18, 13, 10, 0.28) 0%, rgba(18, 13, 10, 0.08) 22%, rgba(18, 13, 10, 0.08) 78%, rgba(18, 13, 10, 0.3) 100%);
+      }
+      .contact-hero-inner {
+        position: relative;
+        z-index: 1;
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 0 0 34px;
+      }
+      .contact-hero-kicker {
+        margin: 0 0 10px;
+        color: rgba(23, 23, 23, 0.62);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .contact-hero-title {
+        margin: 0;
+        max-width: 860px;
+        font-size: clamp(3.2rem, 7vw, 6rem);
+        line-height: 0.94;
+        letter-spacing: -0.05em;
+      }
+      .contact-body {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 44px 0 96px;
+      }
+      .contact-intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+        gap: 36px;
+        padding-bottom: 36px;
+        border-bottom: 1px solid var(--line);
+      }
+      .contact-summary {
+        margin: 0;
+        max-width: 760px;
+        color: var(--text-muted);
+        font-size: 16px;
+        line-height: 1.8;
+      }
+      .contact-meta {
+        display: grid;
+        gap: 18px;
+      }
+      .contact-meta-item {
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+      .contact-meta-item:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+      .contact-meta-label {
+        margin: 0 0 8px;
+        color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .contact-meta-value {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .contact-sections {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 36px;
+        margin-top: 36px;
+      }
+      .contact-main {
+        display: grid;
+        gap: 34px;
+      }
+      .contact-block {
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+      }
+      .contact-block:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+      .contact-block-title {
+        margin: 0 0 14px;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #1a1a1a;
+      }
+      .contact-block-copy {
+        margin: 0 0 28px;
+        color: var(--text-muted);
+        font-size: 16px;
+        line-height: 1.8;
+      }
+      .contact-form {
+        display: grid;
+        gap: 26px;
+      }
+      .form-field {
+        display: grid;
+        gap: 10px;
+      }
+      .form-label {
+        margin: 0;
+        color: rgba(23, 23, 23, 0.62);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .text-input,
+      .text-area {
+        width: 100%;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        border-radius: 0;
+        background: transparent;
+        padding: 0 0 14px;
+        color: var(--text);
+        font: inherit;
+        font-size: 16px;
+        line-height: 1.6;
+        appearance: none;
+        outline: none;
+      }
+      .text-input:focus,
+      .text-area:focus {
+        border-bottom-color: rgba(23, 23, 23, 0.55);
+      }
+      .text-input::placeholder,
+      .text-area::placeholder {
+        color: rgba(23, 23, 23, 0.34);
+      }
+      .text-area {
+        min-height: 160px;
+        resize: vertical;
+      }
+      .form-submit {
+        width: fit-content;
+        border: 0;
+        background: #171717;
+        color: #f7f2ea;
+        padding: 14px 22px;
+        font: inherit;
+        font-size: 15px;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .form-submit[disabled] {
+        opacity: 0.5;
+        cursor: wait;
+      }
+      .form-status {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .contact-side {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 22px;
+        align-self: start;
+      }
+      .contact-side-title {
+        margin: 0 0 14px;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #1a1a1a;
+      }
+      .contact-side p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+      .site-footer {
+        background-color: #efe6d8;
+        background-image:
+          linear-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.04) 1px, transparent 1px);
+        background-size: 24px 24px;
+        background-position: 0 0, 0 0;
+        min-height: 600px;
+        padding: 50px 20px;
+        border-top: 1px solid rgba(23, 23, 23, 0.08);
+      }
+      .site-footer-inner {
+        width: min(1400px, 100%);
+        margin: 0 auto;
+        min-height: calc(600px - 136px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .site-footer-top {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        width: 100%;
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+      }
+      .site-footer-logo-link {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        margin-bottom: 20px;
+        color: #1a1a1a;
+      }
+      .site-footer-logo {
+        display: block;
+        width: 72px;
+        height: 72px;
+      }
+      .site-footer-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        text-align: right;
+      }
+      .site-footer-links a {
+        color: rgba(23, 23, 23, 0.72);
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .site-footer-social {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .site-footer-social a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        color: #2a2a2a;
+      }
+      .site-footer-social svg {
+        width: 18px;
+        height: 18px;
+      }
+      .site-footer-bottom {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+      }
+      .site-footer-bottom p {
+        margin: 0;
+        color: rgba(23, 23, 23, 0.56);
+        font-size: 14px;
+      }
+      @media (max-width: 900px) {
+        .contact-intro,
+        .contact-sections {
+          grid-template-columns: 1fr;
+        }
+        .contact-side {
+          background: transparent;
+          border: 0;
+          padding: 0;
+        }
+      }
+      @media (max-width: 720px) {
+        .page {
+          padding-top: 56px;
+        }
+        .nav,
+        .nav-inner,
+        .logo {
+          height: 56px;
+        }
+        .contact-hero {
+          min-height: 50vh;
+        }
+        .contact-hero-inner,
+        .contact-body {
+          width: min(1100px, calc(100% - 32px));
+        }
+        .contact-hero-title {
+          font-size: 18px;
+          line-height: 1.15;
+          letter-spacing: -0.01em;
+          max-width: 300px;
+        }
+        .contact-body {
+          padding: 32px 0 72px;
+        }
+        .contact-block-title,
+        .contact-side-title {
+          font-size: 18px;
+        }
+        .site-footer {
+          min-height: 420px;
+          padding: 36px 16px;
+        }
+        .site-footer-inner {
+          min-height: calc(420px - 96px);
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="site-shell">
-      <header class="site-nav">
-        <a class="brand-mark" href="/" aria-label="ON2 Interactive home">
-          <img class="brand-mark-icon" src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" />
-          <span class="brand-mark-text">
-            <span class="brand-mark-name">ON2 Interactive</span>
-            <span class="brand-mark-tag">Digital studio journal</span>
-          </span>
-        </a>
-        <nav class="site-nav-links" aria-label="Primary">
-          <a href="/">Home</a>
-          <a href="/#projects">Projects</a>
-          <a class="nav-cta" href="/adminlogin">Admin</a>
-        </nav>
+    <div class="page">
+      <header class="nav">
+        <div class="nav-inner">
+          <a class="logo" href="/" aria-label="ON2 Interactive Home">
+            <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="ON2 Interactive" />
+          </a>
+          <a class="nav-link" href="/">Back</a>
+        </div>
       </header>
 
-      <main class="page-section">
-        <section class="page-hero">
-          <div class="eyebrow">Contact</div>
-          <h1 class="page-title">Start with the brief. We can shape the system after that.</h1>
-          <p class="contact-intro">
-            Use this page for project inquiries, collaborations, or general questions. Messages are stored for admin review.
-          </p>
+      <main>
+        <section class="contact-hero">
+          <div class="contact-hero-media"></div>
+          <div class="contact-hero-overlay"></div>
+          <div class="contact-hero-inner">
+            <p class="contact-hero-kicker">Contact</p>
+            <h1 class="contact-hero-title">Tell us what you want to build.</h1>
+          </div>
         </section>
 
-        <section class="contact-layout">
-          <aside class="contact-card">
-            <div class="micro-label">Studio</div>
-            <div class="contact-detail-list">
-              <div>
-                <div class="detail-label">Email</div>
-                <div class="detail-value">hello@on2interactive.com</div>
+        <section class="contact-body">
+          <div class="contact-intro">
+            <p class="contact-summary">If you are planning a new AI product, modernizing an existing workflow, or need a technical partner to build something end to end, send a short brief and we will take it from there.</p>
+            <aside class="contact-meta">
+              <div class="contact-meta-item">
+                <p class="contact-meta-label">Focus</p>
+                <p class="contact-meta-value">AI development, product builds, web platforms</p>
               </div>
-              <div>
-                <div class="detail-label">Focus</div>
-                <div class="detail-value">Brand systems, responsive web, and editorial publishing structures.</div>
+              <div class="contact-meta-item">
+                <p class="contact-meta-label">Format</p>
+                <p class="contact-meta-value">Simple inquiry form, followed by direct outreach</p>
               </div>
-              <div>
-                <div class="detail-label">Response</div>
-                <div class="detail-value">Messages submitted here are captured by the site backend for admin review.</div>
+              <div class="contact-meta-item">
+                <p class="contact-meta-label">Spam control</p>
+                <p class="contact-meta-value">reCAPTCHA will be added in the next phase</p>
               </div>
+            </aside>
+          </div>
+
+          <div class="contact-sections">
+            <div class="contact-main">
+              <section class="contact-block">
+                <h2 class="contact-block-title">Start the conversation</h2>
+                <p class="contact-block-copy">Keep it simple. A few lines on the project, the problem you are solving, or the type of system you want to launch is enough to get started.</p>
+                <form id="contactForm" class="contact-form" novalidate>
+                  <div class="form-field">
+                    <label class="form-label" for="contactName">Name</label>
+                    <input class="text-input" id="contactName" name="name" type="text" maxlength="120" placeholder="Your name" required />
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="contactSubject">Subject</label>
+                    <input class="text-input" id="contactSubject" name="subject" type="text" maxlength="180" placeholder="What are you reaching out about?" required />
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="contactMessage">Message</label>
+                    <textarea class="text-area" id="contactMessage" name="message" maxlength="4000" placeholder="Tell us about the project, team, or problem you want to solve." required></textarea>
+                  </div>
+
+                  <button id="contactSubmit" class="form-submit" type="submit">Send message</button>
+                  <p id="contactStatus" class="form-status" aria-live="polite"></p>
+                </form>
+              </section>
             </div>
-          </aside>
 
-          <section class="contact-card">
-            <form id="contactForm" class="contact-form" novalidate>
-              <label class="form-label" for="contactName">
-                Name
-                <input class="text-input" id="contactName" name="name" type="text" maxlength="120" required />
-              </label>
-
-              <label class="form-label" for="contactEmail">
-                Email
-                <input class="text-input" id="contactEmail" name="email" type="email" maxlength="180" required />
-              </label>
-
-              <label class="form-label" for="contactSubject">
-                Subject
-                <input class="text-input" id="contactSubject" name="subject" type="text" maxlength="180" required />
-              </label>
-
-              <label class="form-label" for="contactMessage">
-                Message
-                <textarea class="text-area" id="contactMessage" name="message" maxlength="4000" required></textarea>
-              </label>
-
-              <button id="contactSubmit" class="primary-button" type="submit">Send Message</button>
-              <p id="contactStatus" class="form-status" aria-live="polite"></p>
-            </form>
-          </section>
+            <aside class="contact-side">
+              <h2 class="contact-side-title">Notes</h2>
+              <p>This page now matches the same editorial structure as the product and news slug pages. The next step after layout is wiring in reCAPTCHA and the final contact handling flow for production.</p>
+            </aside>
+          </div>
         </section>
       </main>
 
-      <footer class="site-footer">
-        <span>© <span id="year"></span> ON2 Interactive</span>
-        <span>Projects, contact, and admin publishing.</span>
+      <footer class="site-footer" aria-label="ON2 Interactive footer">
+        <div class="site-footer-inner">
+          <div class="site-footer-top">
+            <a class="site-footer-logo-link" href="/" aria-label="ON2 Interactive Home">
+              <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="ON2 Interactive" class="site-footer-logo" />
+            </a>
+            <nav class="site-footer-links" aria-label="Footer">
+              <a href="/">Home</a>
+              <a href="/contact">Contact</a>
+            </nav>
+            <div class="site-footer-social" aria-label="Social links">
+              <a href="https://www.linkedin.com/company/on2interactive/" aria-label="LinkedIn" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M6.94 8.5H3.56V20h3.38V8.5Zm-1.69-5A1.96 1.96 0 0 0 3.25 5.45c0 1.07.79 1.94 1.96 1.94h.02c1.2 0 1.96-.87 1.96-1.94A1.92 1.92 0 0 0 5.27 3.5h-.02ZM20.75 12.9c0-3.46-1.85-5.07-4.31-5.07-1.99 0-2.88 1.09-3.38 1.86V8.5H9.69c.04.79 0 11.5 0 11.5h3.37v-6.42c0-.34.03-.68.12-.93.27-.68.89-1.38 1.92-1.38 1.35 0 1.89 1.03 1.89 2.54V20H20.75l-.01-7.1Z"/>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/ON2Interactive/" aria-label="Facebook" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M13.5 21v-8.05h2.7l.4-3.15h-3.1V7.79c0-.91.25-1.53 1.56-1.53H16.7V3.44c-.29-.04-1.28-.12-2.43-.12-2.4 0-4.04 1.46-4.04 4.15v2.33H7.5v3.15h2.73V21h3.27Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="site-footer-bottom">
+            <p>© <span id="footerYear"></span> ON2 Interactive. All rights reserved.</p>
+          </div>
+        </div>
       </footer>
     </div>
 
     <script>
       (() => {
-        const yearEl = document.getElementById("year");
-        if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+        const footerYear = document.getElementById("footerYear");
+        if (footerYear) footerYear.textContent = String(new Date().getFullYear());
 
         const form = document.getElementById("contactForm");
         const submitBtn = document.getElementById("contactSubmit");
@@ -103,11 +513,10 @@
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
           const name = String(document.getElementById("contactName")?.value || "").trim();
-          const email = String(document.getElementById("contactEmail")?.value || "").trim();
           const subject = String(document.getElementById("contactSubject")?.value || "").trim();
           const message = String(document.getElementById("contactMessage")?.value || "").trim();
 
-          if (!name || !email || !subject || !message) {
+          if (!name || !subject || !message) {
             statusEl.textContent = "Please complete all fields.";
             return;
           }
@@ -119,7 +528,7 @@
             const response = await fetch("/api/contact", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, email, subject, message }),
+              body: JSON.stringify({ name, subject, message }),
             });
             const payload = await response.json().catch(() => ({}));
             if (!response.ok) {
@@ -129,7 +538,7 @@
             form.reset();
             statusEl.textContent = payload.message || "Message sent.";
           } catch {
-            statusEl.textContent = "Network error. Please try again.";
+            statusEl.textContent = "Contact handling will be finalized when reCAPTCHA and production form processing are connected.";
           } finally {
             submitBtn.removeAttribute("disabled");
           }
