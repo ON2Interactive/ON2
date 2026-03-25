@@ -6,58 +6,191 @@
     <meta name="application-name" content="ON2 Interactive" />
     <meta name="description" content="Admin login for ON2 Interactive." />
     <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" />
-    <link rel="stylesheet" href="/styles.css" />
     <title>Admin Login | ON2 Interactive</title>
+    <style>
+      :root {
+        --bg: #f4eee3;
+        --panel: #f7f1e7;
+        --text: #171717;
+        --text-muted: rgba(23, 23, 23, 0.7);
+        --line: rgba(23, 23, 23, 0.16);
+        --field: rgba(255, 255, 255, 0.55);
+        --shadow: rgba(53, 41, 28, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .admin-login-shell {
+        width: 100vw;
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        overflow: hidden;
+      }
+
+      .admin-login-media {
+        position: relative;
+        background: #d8cbbb url("/Assets/Hero-Latest.png") center center / cover no-repeat;
+      }
+
+      .admin-login-media::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(18, 13, 10, 0.16) 0%, rgba(18, 13, 10, 0.04) 34%, rgba(244, 238, 227, 0.08) 62%, rgba(244, 238, 227, 0.2) 100%),
+          linear-gradient(90deg, rgba(18, 13, 10, 0.08) 0%, rgba(18, 13, 10, 0) 26%, rgba(18, 13, 10, 0) 74%, rgba(18, 13, 10, 0.12) 100%);
+      }
+
+      .admin-login-panel {
+        background:
+          linear-gradient(rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          var(--panel);
+        background-size: 18px 18px;
+        display: grid;
+        align-content: center;
+        justify-items: start;
+        gap: 18px;
+        padding: 56px 64px 44px;
+      }
+
+      .admin-login-logo {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+
+      .admin-login-mark {
+        width: 36px;
+        height: 36px;
+      }
+
+      .admin-login-wordmark {
+        font-size: clamp(2.8rem, 4.2vw, 4.3rem);
+        line-height: 0.92;
+        letter-spacing: -0.07em;
+        font-weight: 700;
+      }
+
+      .admin-login-subtitle {
+        font-size: 13px;
+        line-height: 1.4;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .admin-login-form {
+        width: min(420px, 100%);
+        display: grid;
+        gap: 12px;
+      }
+
+      .admin-login-form label {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      .admin-login-form input {
+        width: 100%;
+        height: 42px;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        background: var(--field);
+        color: var(--text);
+        padding: 0 12px;
+        font: inherit;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      }
+
+      .admin-login-form input:focus {
+        outline: none;
+        border-color: rgba(23, 23, 23, 0.35);
+      }
+
+      .admin-login-submit {
+        margin-top: 8px;
+        height: 42px;
+        border-radius: 6px;
+        border: 1px solid rgba(23, 23, 23, 0.28);
+        background: #171717;
+        color: rgba(255, 255, 255, 0.94);
+        font: inherit;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 10px 30px var(--shadow);
+      }
+
+      .admin-login-submit:disabled {
+        opacity: 0.58;
+        cursor: default;
+      }
+
+      .admin-login-status {
+        margin: 4px 0 0;
+        min-height: 20px;
+        font-size: 0.92rem;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 960px) {
+        .admin-login-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .admin-login-media {
+          min-height: 280px;
+        }
+
+        .admin-login-panel {
+          padding: 28px 24px 24px;
+        }
+
+        .admin-login-wordmark {
+          font-size: 2.6rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="site-shell">
-      <header class="site-nav">
-        <a class="brand-mark" href="/" aria-label="ON2 Interactive home">
-          <img class="brand-mark-icon" src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" />
-          <span class="brand-mark-text">
-            <span class="brand-mark-name">ON2 Interactive</span>
-            <span class="brand-mark-tag">Digital studio journal</span>
-          </span>
-        </a>
-        <nav class="site-nav-links" aria-label="Primary">
-          <a href="/">Home</a>
-          <a href="/contact">Contact</a>
-        </nav>
-      </header>
+    <main class="admin-login-shell" aria-label="Admin login">
+      <section class="admin-login-media" aria-hidden="true"></section>
+      <section class="admin-login-panel">
+        <div class="admin-login-logo">
+          <img src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" class="admin-login-mark" />
+          <div class="admin-login-wordmark">ON2 Interactive</div>
+          <div class="admin-login-subtitle">Admin dashboard</div>
+        </div>
 
-      <main class="login-shell">
-        <section class="login-visual" aria-hidden="true">
-          <img src="/Images/ON2-Banner-Social-YT.png" alt="" />
-        </section>
+        <form id="adminLoginForm" class="admin-login-form" autocomplete="off">
+          <label for="adminUsername">Username</label>
+          <input id="adminUsername" name="username" type="text" required />
 
-        <section class="login-panel">
-          <div>
-            <div class="eyebrow">Admin Access</div>
-            <h1 class="page-title">Publish projects without touching the homepage markup.</h1>
-          </div>
+          <label for="adminPassword">Password</label>
+          <input id="adminPassword" name="password" type="password" required />
 
-          <p class="admin-note">
-            Only configured admins can access the project dashboard. Credentials are validated by the site backend.
-          </p>
-
-          <form id="adminLoginForm" class="login-form" autocomplete="off">
-            <label class="form-label" for="adminUsername">
-              Username
-              <input class="text-input" id="adminUsername" name="username" type="text" required />
-            </label>
-
-            <label class="form-label" for="adminPassword">
-              Password
-              <input class="text-input" id="adminPassword" name="password" type="password" required />
-            </label>
-
-            <button id="adminLoginSubmit" class="primary-button" type="submit">Sign In</button>
-            <p id="adminLoginStatus" class="form-status" aria-live="polite"></p>
-          </form>
-        </section>
-      </main>
-    </div>
+          <button id="adminLoginSubmit" class="admin-login-submit" type="submit">Sign In</button>
+          <p id="adminLoginStatus" class="admin-login-status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
 
     <script>
       (() => {
@@ -100,10 +233,7 @@
               payload = {};
             }
             if (!response.ok) {
-              statusEl.textContent =
-                payload.error ||
-                rawText ||
-                `Login failed (${response.status}).`;
+              statusEl.textContent = payload.error || rawText || `Login failed (${response.status}).`;
               return;
             }
             window.location.replace("/admin");
