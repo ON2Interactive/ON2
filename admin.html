@@ -111,20 +111,6 @@
         padding: 48px 0 96px;
       }
 
-      .admin-head {
-        display: grid;
-        gap: 12px;
-        padding-bottom: 40px;
-      }
-
-      .admin-heading {
-        margin: 0;
-        font-size: 56px;
-        line-height: 0.94;
-        letter-spacing: -0.05em;
-        font-weight: 800;
-      }
-
       .admin-note,
       .form-status,
       .empty-state {
@@ -363,10 +349,6 @@
           padding: 34px 0 72px;
         }
 
-        .admin-heading {
-          font-size: 18px;
-        }
-
         .admin-utility {
           align-items: start;
           flex-direction: column;
@@ -412,13 +394,7 @@
       </header>
 
       <main class="admin-shell">
-        <section class="admin-head">
-          <h1 class="admin-heading">Publishing</h1>
-          <p class="admin-note">Manage products and latest AI news in the same system used by the live site.</p>
-        </section>
-
         <section class="admin-utility">
-          <p id="adminViewIntro" class="admin-note">Products are shown on the landing page and open into their own detail pages.</p>
           <button id="refreshAllBtn" class="utility-button" type="button">Refresh</button>
         </section>
 
@@ -612,13 +588,7 @@
         const newsForm = document.getElementById("newsForm");
         const viewLinks = [...document.querySelectorAll("[data-view-link]")];
         const views = [...document.querySelectorAll("[data-view]")];
-        const adminViewIntro = document.getElementById("adminViewIntro");
-        if (!logoutBtn || !refreshAllBtn || !productList || !newsList || !productForm || !newsForm || !adminViewIntro) return;
-
-        const viewCopy = {
-          products: "Products are shown on the landing page and open into their own detail pages.",
-          news: "News items power the latest AI news section and link to their own detail pages.",
-        };
+        if (!logoutBtn || !refreshAllBtn || !productList || !newsList || !productForm || !newsForm) return;
 
         const escapeHtml = (value) =>
           String(value || "")
@@ -687,7 +657,6 @@
           viewLinks.forEach((node) => {
             node.classList.toggle("is-active", node.dataset.viewLink === view);
           });
-          adminViewIntro.textContent = viewCopy[view] || "";
           if (window.location.hash !== `#${view}`) {
             history.replaceState(null, "", `#${view}`);
           }
