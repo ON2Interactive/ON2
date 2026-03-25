@@ -6,8 +6,350 @@
     <meta name="application-name" content="ON2 Interactive" />
     <meta name="description" content="Admin dashboard for ON2 Interactive." />
     <link rel="icon" type="image/png" href="/Favicon/1x/ON2Icon-32x32.png" />
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" />
     <title>Admin | ON2 Interactive</title>
+    <style>
+      :root {
+        --bg: #f5f0e7;
+        --text: #171717;
+        --muted: rgba(23, 23, 23, 0.64);
+        --line: rgba(23, 23, 23, 0.12);
+        --line-strong: rgba(23, 23, 23, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+      }
+
+      body {
+        min-width: 320px;
+        font-family: "Manrope", "Helvetica Neue", sans-serif;
+        color: var(--text);
+        background:
+          linear-gradient(rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+          var(--bg);
+        background-size: 18px 18px;
+      }
+
+      a,
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .site-shell {
+        min-height: 100vh;
+      }
+
+      .site-nav {
+        position: sticky;
+        inset: 0 0 auto 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 18px 28px;
+        background: rgba(245, 240, 231, 0.88);
+        border-bottom: 1px solid rgba(23, 23, 23, 0.08);
+        backdrop-filter: blur(12px);
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+      }
+
+      .brand-mark-icon {
+        width: 32px;
+        height: 32px;
+      }
+
+      .site-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .site-nav-links a,
+      .site-nav-links button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        text-decoration: none;
+        padding: 0;
+        min-height: auto;
+        border-radius: 0;
+      }
+
+      .site-nav-links a.is-active {
+        color: var(--text);
+      }
+
+      .site-nav-links .logout-button {
+        color: var(--text);
+      }
+
+      .admin-shell {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 48px 0 96px;
+      }
+
+      .admin-head {
+        display: grid;
+        gap: 12px;
+        padding-bottom: 40px;
+      }
+
+      .admin-heading {
+        margin: 0;
+        font-size: 56px;
+        line-height: 0.94;
+        letter-spacing: -0.05em;
+        font-weight: 800;
+      }
+
+      .admin-note,
+      .form-status,
+      .empty-state {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .admin-utility {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .utility-button,
+      .toolbar-button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        padding: 0;
+      }
+
+      .admin-view {
+        display: none;
+        padding-top: 44px;
+      }
+
+      .admin-view.is-active {
+        display: block;
+      }
+
+      .admin-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 44px;
+        align-items: start;
+      }
+
+      .admin-list-title,
+      .admin-form-title {
+        margin: 0 0 22px;
+        font-size: 24px;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .admin-list {
+        border-top: 1px solid var(--line-strong);
+      }
+
+      .admin-list-item {
+        width: 100%;
+        appearance: none;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: transparent;
+        padding: 20px 0;
+        display: grid;
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 20px;
+        text-align: left;
+        color: var(--text);
+      }
+
+      .admin-list-item.is-active .admin-list-item-title {
+        color: #000;
+      }
+
+      .admin-list-thumb {
+        width: 120px;
+        height: 84px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+
+      .admin-list-item-copy {
+        display: grid;
+        align-content: center;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .admin-list-item-title {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.15;
+        font-weight: 700;
+      }
+
+      .admin-list-item-summary {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .admin-list-actions {
+        display: flex;
+        gap: 18px;
+        padding-top: 24px;
+      }
+
+      .admin-form-grid {
+        display: grid;
+        gap: 20px;
+      }
+
+      .form-label {
+        display: grid;
+        gap: 10px;
+        color: var(--text);
+        font-size: 16px;
+        line-height: 1.4;
+      }
+
+      .split-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .text-input,
+      .text-area {
+        width: 100%;
+        padding: 0 0 12px;
+        border: 0;
+        border-bottom: 1px solid var(--line-strong);
+        background: transparent;
+        color: var(--text);
+        outline: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .text-input {
+        height: 40px;
+      }
+
+      .text-area {
+        min-height: 140px;
+        resize: vertical;
+      }
+
+      .text-input:focus,
+      .text-area:focus {
+        border-bottom-color: rgba(23, 23, 23, 0.42);
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding-top: 8px;
+      }
+
+      .checkbox-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+        font-size: 15px;
+      }
+
+      .checkbox-row input {
+        margin: 0;
+      }
+
+      .admin-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding-top: 10px;
+      }
+
+      .form-status {
+        min-height: 24px;
+      }
+
+      @media (max-width: 960px) {
+        .site-nav {
+          padding: 16px;
+        }
+
+        .admin-shell {
+          width: calc(100% - 32px);
+          padding: 34px 0 72px;
+        }
+
+        .admin-heading {
+          font-size: 18px;
+        }
+
+        .admin-utility {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        .admin-layout {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+
+        .split-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .admin-list-item {
+          grid-template-columns: 88px minmax(0, 1fr);
+          gap: 16px;
+        }
+
+        .admin-list-thumb {
+          width: 88px;
+          height: 68px;
+        }
+
+        .admin-list-item-title {
+          font-size: 18px;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="site-shell">
@@ -16,95 +358,178 @@
           <img class="brand-mark-icon" src="/Favicon/SVG/ON2Icon-32x32.svg" alt="" />
         </a>
         <nav class="site-nav-links" aria-label="Primary">
-          <a href="#products">Products</a>
-          <a href="#news">News</a>
+          <a href="#products" data-view-link="products" class="is-active">Products</a>
+          <a href="#news" data-view-link="news">News</a>
           <a href="/">Public Site</a>
-          <button id="logoutBtn" class="ghost-button" type="button">Log Out</button>
+          <button id="logoutBtn" class="logout-button" type="button">Log out</button>
         </nav>
       </header>
 
       <main class="admin-shell">
         <section class="admin-head">
-          <div>
-            <div class="eyebrow">Publishing</div>
-            <h1 class="admin-heading">Manage products and AI news.</h1>
-            <p class="admin-note">This dashboard writes directly to Supabase through the protected admin API.</p>
-          </div>
-          <div class="admin-actions">
-            <button id="refreshAllBtn" class="primary-button" type="button">Refresh</button>
+          <h1 class="admin-heading">Publishing</h1>
+          <p class="admin-note">Manage products and latest AI news in the same system used by the live site.</p>
+        </section>
+
+        <section class="admin-utility">
+          <p id="adminViewIntro" class="admin-note">Products are shown on the landing page and open into their own detail pages.</p>
+          <button id="refreshAllBtn" class="utility-button" type="button">Refresh</button>
+        </section>
+
+        <section id="productsView" class="admin-view is-active" data-view="products">
+          <div class="admin-layout">
+            <aside>
+              <h2 class="admin-list-title">Products</h2>
+              <div id="productList" class="admin-list">
+                <p class="empty-state">Loading products...</p>
+              </div>
+              <div class="admin-list-actions">
+                <button id="newProductBtn" class="toolbar-button" type="button">New product</button>
+              </div>
+            </aside>
+
+            <section>
+              <h2 class="admin-form-title">Product editor</h2>
+              <form id="productForm" class="admin-form-grid">
+                <input id="productId" type="hidden" />
+
+                <label class="form-label" for="productTitle">Title
+                  <input class="text-input" id="productTitle" type="text" required />
+                </label>
+
+                <label class="form-label" for="productSlug">Slug
+                  <input class="text-input" id="productSlug" type="text" />
+                </label>
+
+                <label class="form-label" for="productSummary">Summary
+                  <textarea class="text-area" id="productSummary" required></textarea>
+                </label>
+
+                <label class="form-label" for="productContent">Content
+                  <textarea class="text-area" id="productContent"></textarea>
+                </label>
+
+                <label class="form-label" for="productImage">Image URL
+                  <input class="text-input" id="productImage" type="text" />
+                </label>
+
+                <label class="form-label" for="productSolutions">Solutions
+                  <input class="text-input" id="productSolutions" type="text" />
+                </label>
+
+                <div class="split-grid">
+                  <label class="form-label" for="productCategory">Category
+                    <input class="text-input" id="productCategory" type="text" required />
+                  </label>
+
+                  <label class="form-label" for="productClient">Client
+                    <input class="text-input" id="productClient" type="text" />
+                  </label>
+                </div>
+
+                <div class="split-grid">
+                  <label class="form-label" for="productYear">Year
+                    <input class="text-input" id="productYear" type="text" />
+                  </label>
+
+                  <label class="form-label" for="productSortOrder">Sort order
+                    <input class="text-input" id="productSortOrder" type="number" value="0" />
+                  </label>
+                </div>
+
+                <div class="checkbox-group">
+                  <label class="checkbox-row" for="productPublished">
+                    <input id="productPublished" type="checkbox" checked />
+                    Published
+                  </label>
+                  <label class="checkbox-row" for="productFeatured">
+                    <input id="productFeatured" type="checkbox" />
+                    Featured
+                  </label>
+                </div>
+
+                <div class="admin-toolbar">
+                  <button class="toolbar-button" type="submit">Save product</button>
+                  <button id="deleteProductBtn" class="toolbar-button" type="button">Delete</button>
+                  <button id="resetProductBtn" class="toolbar-button" type="button">Reset</button>
+                </div>
+
+                <p id="productStatus" class="form-status" aria-live="polite"></p>
+              </form>
+            </section>
           </div>
         </section>
 
-        <section id="products" class="admin-layout">
-          <aside class="admin-panel">
-            <div class="micro-label">Products</div>
-            <div id="productList" class="admin-project-list">
-              <p class="empty-state">Loading products...</p>
-            </div>
-            <button id="newProductBtn" class="secondary-button" type="button">New Product</button>
-          </aside>
+        <section id="newsView" class="admin-view" data-view="news">
+          <div class="admin-layout">
+            <aside>
+              <h2 class="admin-list-title">News</h2>
+              <div id="newsList" class="admin-list">
+                <p class="empty-state">Loading news...</p>
+              </div>
+              <div class="admin-list-actions">
+                <button id="newNewsBtn" class="toolbar-button" type="button">New news item</button>
+              </div>
+            </aside>
 
-          <section class="admin-form">
-            <div class="micro-label">Product editor</div>
-            <form id="productForm" class="admin-form-grid">
-              <input id="productId" type="hidden" />
-              <label class="form-label" for="productTitle">Title<input class="text-input" id="productTitle" type="text" required /></label>
-              <label class="form-label" for="productSlug">Slug<input class="text-input" id="productSlug" type="text" /></label>
-              <div class="split-grid">
-                <label class="form-label" for="productYear">Year<input class="text-input" id="productYear" type="text" /></label>
-                <label class="form-label" for="productCategory">Category<input class="text-input" id="productCategory" type="text" required /></label>
-              </div>
-              <div class="split-grid">
-                <label class="form-label" for="productClient">Client<input class="text-input" id="productClient" type="text" /></label>
-                <label class="form-label" for="productSortOrder">Sort Order<input class="text-input" id="productSortOrder" type="number" value="0" /></label>
-              </div>
-              <label class="form-label" for="productImage">Image URL<input class="text-input" id="productImage" type="text" /></label>
-              <label class="form-label" for="productSolutions">Solutions<input class="text-input" id="productSolutions" type="text" /></label>
-              <label class="form-label" for="productSummary">Summary<textarea class="text-area" id="productSummary" required></textarea></label>
-              <label class="form-label" for="productContent">Content<textarea class="text-area" id="productContent"></textarea></label>
-              <label class="checkbox-row" for="productPublished"><input id="productPublished" type="checkbox" checked /> Published</label>
-              <label class="checkbox-row" for="productFeatured"><input id="productFeatured" type="checkbox" /> Featured</label>
-              <div class="admin-toolbar">
-                <button class="primary-button" type="submit">Save Product</button>
-                <button id="deleteProductBtn" class="ghost-button" type="button">Delete</button>
-                <button id="resetProductBtn" class="ghost-button" type="button">Reset</button>
-              </div>
-              <p id="productStatus" class="form-status" aria-live="polite"></p>
-            </form>
-          </section>
-        </section>
+            <section>
+              <h2 class="admin-form-title">News editor</h2>
+              <form id="newsForm" class="admin-form-grid">
+                <input id="newsId" type="hidden" />
 
-        <section id="news" class="admin-layout" style="margin-top: 32px;">
-          <aside class="admin-panel">
-            <div class="micro-label">Latest AI News</div>
-            <div id="newsList" class="admin-project-list">
-              <p class="empty-state">Loading news...</p>
-            </div>
-            <button id="newNewsBtn" class="secondary-button" type="button">New News Item</button>
-          </aside>
+                <label class="form-label" for="newsTitle">Title
+                  <input class="text-input" id="newsTitle" type="text" required />
+                </label>
 
-          <section class="admin-form">
-            <div class="micro-label">AI news editor</div>
-            <form id="newsForm" class="admin-form-grid">
-              <input id="newsId" type="hidden" />
-              <label class="form-label" for="newsTitle">Title<input class="text-input" id="newsTitle" type="text" required /></label>
-              <label class="form-label" for="newsSlug">Slug<input class="text-input" id="newsSlug" type="text" /></label>
-              <label class="form-label" for="newsSource">Source Name<input class="text-input" id="newsSource" type="text" /></label>
-              <label class="form-label" for="newsSourceUrl">Source URL<input class="text-input" id="newsSourceUrl" type="url" /></label>
-              <label class="form-label" for="newsImage">Image URL<input class="text-input" id="newsImage" type="text" /></label>
-              <label class="form-label" for="newsPublishedAt">Published At<input class="text-input" id="newsPublishedAt" type="datetime-local" /></label>
-              <label class="form-label" for="newsSummary">Summary<textarea class="text-area" id="newsSummary" required></textarea></label>
-              <label class="form-label" for="newsContent">Content<textarea class="text-area" id="newsContent"></textarea></label>
-              <label class="checkbox-row" for="newsPublished"><input id="newsPublished" type="checkbox" checked /> Published</label>
-              <label class="checkbox-row" for="newsFeatured"><input id="newsFeatured" type="checkbox" /> Featured</label>
-              <div class="admin-toolbar">
-                <button class="primary-button" type="submit">Save News</button>
-                <button id="deleteNewsBtn" class="ghost-button" type="button">Delete</button>
-                <button id="resetNewsBtn" class="ghost-button" type="button">Reset</button>
-              </div>
-              <p id="newsStatus" class="form-status" aria-live="polite"></p>
-            </form>
-          </section>
+                <label class="form-label" for="newsSlug">Slug
+                  <input class="text-input" id="newsSlug" type="text" />
+                </label>
+
+                <label class="form-label" for="newsSummary">Summary
+                  <textarea class="text-area" id="newsSummary" required></textarea>
+                </label>
+
+                <label class="form-label" for="newsContent">Content
+                  <textarea class="text-area" id="newsContent"></textarea>
+                </label>
+
+                <label class="form-label" for="newsImage">Image URL
+                  <input class="text-input" id="newsImage" type="text" />
+                </label>
+
+                <label class="form-label" for="newsSource">Source name
+                  <input class="text-input" id="newsSource" type="text" />
+                </label>
+
+                <label class="form-label" for="newsSourceUrl">Source URL
+                  <input class="text-input" id="newsSourceUrl" type="url" />
+                </label>
+
+                <label class="form-label" for="newsPublishedAt">Published at
+                  <input class="text-input" id="newsPublishedAt" type="datetime-local" />
+                </label>
+
+                <div class="checkbox-group">
+                  <label class="checkbox-row" for="newsPublished">
+                    <input id="newsPublished" type="checkbox" checked />
+                    Published
+                  </label>
+                  <label class="checkbox-row" for="newsFeatured">
+                    <input id="newsFeatured" type="checkbox" />
+                    Featured
+                  </label>
+                </div>
+
+                <div class="admin-toolbar">
+                  <button class="toolbar-button" type="submit">Save news</button>
+                  <button id="deleteNewsBtn" class="toolbar-button" type="button">Delete</button>
+                  <button id="resetNewsBtn" class="toolbar-button" type="button">Reset</button>
+                </div>
+
+                <p id="newsStatus" class="form-status" aria-live="polite"></p>
+              </form>
+            </section>
+          </div>
         </section>
       </main>
     </div>
@@ -117,7 +542,15 @@
         const newsList = document.getElementById("newsList");
         const productForm = document.getElementById("productForm");
         const newsForm = document.getElementById("newsForm");
-        if (!logoutBtn || !refreshAllBtn || !productList || !newsList || !productForm || !newsForm) return;
+        const viewLinks = [...document.querySelectorAll("[data-view-link]")];
+        const views = [...document.querySelectorAll("[data-view]")];
+        const adminViewIntro = document.getElementById("adminViewIntro");
+        if (!logoutBtn || !refreshAllBtn || !productList || !newsList || !productForm || !newsForm || !adminViewIntro) return;
+
+        const viewCopy = {
+          products: "Products are shown on the landing page and open into their own detail pages.",
+          news: "News items power the latest AI news section and link to their own detail pages.",
+        };
 
         const escapeHtml = (value) =>
           String(value || "")
@@ -170,6 +603,28 @@
         let newsItems = [];
         let activeProductId = "";
         let activeNewsId = "";
+        let activeView = "products";
+
+        const setActiveView = (view) => {
+          activeView = view;
+          views.forEach((node) => {
+            node.classList.toggle("is-active", node.dataset.view === view);
+          });
+          viewLinks.forEach((node) => {
+            node.classList.toggle("is-active", node.dataset.viewLink === view);
+          });
+          adminViewIntro.textContent = viewCopy[view] || "";
+          if (window.location.hash !== `#${view}`) {
+            history.replaceState(null, "", `#${view}`);
+          }
+        };
+
+        viewLinks.forEach((link) => {
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            setActiveView(link.dataset.viewLink || "products");
+          });
+        });
 
         const setStatus = (element, text) => {
           element.textContent = String(text || "");
@@ -212,7 +667,16 @@
           productList.innerHTML = products
             .map((item) => {
               const activeClass = item.id === activeProductId ? " is-active" : "";
-              return `<article class="admin-project-item${activeClass}" data-product-id="${escapeHtml(item.id)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.category || "")}</span></article>`;
+              const imageUrl = escapeHtml(item.image_url || "/Images/ON2-Banner-Social-YT.png");
+              return `
+                <button class="admin-list-item${activeClass}" type="button" data-product-id="${escapeHtml(item.id)}">
+                  <img class="admin-list-thumb" src="${imageUrl}" alt="" />
+                  <span class="admin-list-item-copy">
+                    <span class="admin-list-item-title">${escapeHtml(item.title)}</span>
+                    <span class="admin-list-item-summary">${escapeHtml(item.summary || "")}</span>
+                  </span>
+                </button>
+              `;
             })
             .join("");
 
@@ -226,13 +690,22 @@
 
         const renderNewsList = () => {
           if (!newsItems.length) {
-            newsList.innerHTML = '<p class="empty-state">No AI news yet.</p>';
+            newsList.innerHTML = '<p class="empty-state">No news yet.</p>';
             return;
           }
           newsList.innerHTML = newsItems
             .map((item) => {
               const activeClass = item.id === activeNewsId ? " is-active" : "";
-              return `<article class="admin-project-item${activeClass}" data-news-id="${escapeHtml(item.id)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.source_name || "")}</span></article>`;
+              const imageUrl = escapeHtml(item.image_url || "/Assets/Hero-Latest.png");
+              return `
+                <button class="admin-list-item${activeClass}" type="button" data-news-id="${escapeHtml(item.id)}">
+                  <img class="admin-list-thumb" src="${imageUrl}" alt="" />
+                  <span class="admin-list-item-copy">
+                    <span class="admin-list-item-title">${escapeHtml(item.title)}</span>
+                    <span class="admin-list-item-summary">${escapeHtml(item.summary || "")}</span>
+                  </span>
+                </button>
+              `;
             })
             .join("");
 
@@ -277,7 +750,7 @@
           newsFields.published.checked = true;
           newsFields.featured.checked = false;
           renderNewsList();
-          setStatus(newsStatus, "Ready for a new AI news item.");
+          setStatus(newsStatus, "Ready for a new news item.");
         };
 
         const fillProductForm = (item) => {
@@ -318,10 +791,7 @@
 
         const fetchAll = async () => {
           try {
-            const [productPayload, newsPayload] = await Promise.all([
-              api("/api/admin-products"),
-              api("/api/admin-news"),
-            ]);
+            const [productPayload, newsPayload] = await Promise.all([api("/api/admin-products"), api("/api/admin-news")]);
             if (!productPayload || !newsPayload) return;
             products = Array.isArray(productPayload.projects) ? productPayload.projects : [];
             newsItems = Array.isArray(newsPayload.news) ? newsPayload.news : [];
@@ -420,7 +890,7 @@
         deleteNewsBtn.addEventListener("click", async () => {
           const id = newsFields.id.value.trim();
           if (!id) return setStatus(newsStatus, "Select a news item first.");
-          if (!window.confirm("Delete this AI news item?")) return;
+          if (!window.confirm("Delete this news item?")) return;
           try {
             await api(`/api/admin-news/${encodeURIComponent(id)}`, { method: "DELETE" });
             resetNewsForm();
@@ -450,6 +920,9 @@
 
         resetProductForm();
         resetNewsForm();
+
+        const initialView = window.location.hash === "#news" ? "news" : "products";
+        setActiveView(initialView);
         fetchAll();
       })();
     </script>
