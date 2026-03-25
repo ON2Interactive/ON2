@@ -4,7 +4,14 @@ const COOKIE_NAME = "on2_admin_session";
 const SESSION_MAX_AGE = 60 * 60 * 12;
 
 function getEnv(name, fallback = "") {
-  return String(process.env[name] || fallback).trim();
+  const value = String(process.env[name] || fallback).trim();
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1).trim();
+  }
+  return value;
 }
 
 function parseCookies(cookieHeader) {
