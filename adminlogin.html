@@ -92,9 +92,18 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ username, password }),
             });
-            const payload = await response.json().catch(() => ({}));
+            const rawText = await response.text();
+            let payload = {};
+            try {
+              payload = rawText ? JSON.parse(rawText) : {};
+            } catch {
+              payload = {};
+            }
             if (!response.ok) {
-              statusEl.textContent = payload.error || "Login failed.";
+              statusEl.textContent =
+                payload.error ||
+                rawText ||
+                `Login failed (${response.status}).`;
               return;
             }
             window.location.replace("/admin");
