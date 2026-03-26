@@ -225,6 +225,13 @@
         min-width: 0;
       }
 
+      .admin-list-item-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
       .admin-list-item-title {
         margin: 0;
         font-size: 18px;
@@ -237,6 +244,16 @@
         color: var(--muted);
         font-size: 15px;
         line-height: 1.6;
+      }
+
+      .list-state {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.3;
+      }
+
+      .list-state.is-draft {
+        color: var(--text);
       }
 
       .admin-list-delete {
@@ -602,6 +619,7 @@
 
                 <div class="admin-toolbar">
                   <button class="toolbar-button" type="submit">Save news</button>
+                  <button id="publishNewsBtn" class="toolbar-button" type="button">Publish</button>
                   <button id="deleteNewsBtn" class="toolbar-button" type="button">Delete</button>
                   <button id="resetNewsBtn" class="toolbar-button" type="button">Reset</button>
                 </div>
@@ -680,6 +698,7 @@
         const deleteProductBtn = document.getElementById("deleteProductBtn");
         const resetNewsBtn = document.getElementById("resetNewsBtn");
         const deleteNewsBtn = document.getElementById("deleteNewsBtn");
+        const publishNewsBtn = document.getElementById("publishNewsBtn");
 
         let products = [];
         let newsItems = [];
@@ -871,6 +890,9 @@
                   <img class="admin-list-thumb" src="${imageUrl}" alt="" />
                   <span class="admin-list-item-copy">
                     <span class="admin-list-item-title">${escapeHtml(item.title)}</span>
+                    <span class="admin-list-item-meta">
+                      <span class="list-state${item.published ? "" : " is-draft"}">${item.published ? "Published" : "Draft"}</span>
+                    </span>
                     <span class="admin-list-item-summary">${escapeHtml(item.summary || "")}</span>
                   </span>
                   <span class="admin-list-delete" data-news-delete="${escapeHtml(item.id)}" aria-label="Delete ${escapeHtml(item.title)}" title="Delete news item">
@@ -949,6 +971,7 @@
           newsFields.content.value = "";
           newsFields.published.checked = true;
           newsFields.featured.checked = false;
+          publishNewsBtn.setAttribute("disabled", "disabled");
           renderNewsList();
           setStatus(newsStatus, "Ready for a new news item.");
         };
@@ -987,6 +1010,11 @@
           newsFields.content.value = item.content || "";
           newsFields.published.checked = Boolean(item.published);
           newsFields.featured.checked = Boolean(item.featured);
+          if (item.published) {
+            publishNewsBtn.setAttribute("disabled", "disabled");
+          } else {
+            publishNewsBtn.removeAttribute("disabled");
+          }
           renderNewsList();
           setStatus(newsStatus, `Editing ${item.title}.`);
         };
@@ -1103,6 +1131,39 @@
           }
         });
 
+        publishNewsBtn.addEventListener("click", async () => {
+          const id = newsFields.id.value.trim();
+          if (!id) return setStatus(newsStatus, "Select a news item first.");
+          newsFields.published.checked = true;
+          try {
+            const payload = {
+              title: newsFields.title.value.trim(),
+              slug: newsFields.slug.value.trim() || slugify(newsFields.title.value),
+              source_name: newsFields.source.value.trim(),
+              source_url: newsFields.sourceUrl.value.trim(),
+              image_url: newsFields.image.value.trim(),
+              published_at: newsFields.publishedAt.value ? new Date(newsFields.publishedAt.value).toISOString() : new Date().toISOString(),
+              summary: newsFields.summary.value.trim(),
+              content: newsFields.content.value.trim(),
+              published: true,
+              featured: newsFields.featured.checked,
+            };
+            const result = await api(`/api/admin-news/${encodeURIComponent(id)}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            activeNewsId = result.item?.id || activeNewsId;
+            await fetchAll();
+            const active = newsItems.find((item) => item.id === activeNewsId);
+            if (active) fillNewsForm(active);
+            setStatus(newsStatus, "News item published.");
+            setStatus(newsUtilityStatus, "News item published.");
+          } catch (error) {
+            setStatus(newsStatus, error.message);
+          }
+        });
+
         resetProductBtn.addEventListener("click", resetProductForm);
         resetNewsBtn.addEventListener("click", resetNewsForm);
         newItemBtn.addEventListener("click", () => {
@@ -1153,6 +1214,13 @@
               }
             },
           });
+        });
+        newsFields.published.addEventListener("change", () => {
+          if (newsFields.published.checked || !newsFields.id.value.trim()) {
+            publishNewsBtn.setAttribute("disabled", "disabled");
+          } else {
+            publishNewsBtn.removeAttribute("disabled");
+          }
         });
         refreshAllBtn.addEventListener("click", fetchAll);
         runNewsDraftsBtn.addEventListener("click", async () => {

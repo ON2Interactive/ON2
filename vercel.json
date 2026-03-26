@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "crons": [
+    { "path": "/api/admin-news-draft-run", "schedule": "0 21 * * *" }
+  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "^/about/?$", "dest": "/about.html" },

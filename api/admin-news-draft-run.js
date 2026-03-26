@@ -180,8 +180,13 @@ async function collectSourceCandidates() {
 }
 
 async function fetchExistingSlugs() {
-  const rows = await supabaseRequest("ai_news?select=slug,title");
-  return new Set((Array.isArray(rows) ? rows : []).map((row) => String(row.slug || "").trim()).filter(Boolean));
+  const rows = await supabaseRequest("ai_news?select=slug,title,source_url");
+  const items = Array.isArray(rows) ? rows : [];
+  return {
+    slugs: new Set(items.map((row) => String(row.slug || "").trim()).filter(Boolean)),
+    titles: new Set(items.map((row) => String(row.title || "").trim().toLowerCase()).filter(Boolean)),
+    sourceUrls: new Set(items.map((row) => normalizeCandidateUrl(row.source_url || "")).filter(Boolean)),
+  };
 }
 
 async function generateDraftCandidates(sourceCandidates) {
@@ -296,7 +301,7 @@ async function generateDraftCandidates(sourceCandidates) {
 }
 
 async function insertDrafts(items) {
-  const existingSlugs = await fetchExistingSlugs();
+  const existing = await fetchExistingSlugs();
   const drafts = [];
 
   for (const item of items) {
@@ -305,17 +310,22 @@ async function insertDrafts(items) {
     const content = String(item.content || "").trim();
     const sourceName = String(item.source_name || "").trim();
     const sourceUrl = String(item.source_url || "").trim();
+    const normalizedSourceUrl = normalizeCandidateUrl(sourceUrl);
     const publishedAt = toIsoDate(item.published_at);
     const slugBase = slugify(title);
     if (!title || !summary || !content || !sourceName || !sourceUrl || !slugBase) continue;
+    if (existing.sourceUrls.has(normalizedSourceUrl)) continue;
+    if (existing.titles.has(title.toLowerCase())) continue;
 
     let slug = slugBase;
     let counter = 2;
-    while (existingSlugs.has(slug)) {
+    while (existing.slugs.has(slug)) {
       slug = `${slugBase}-${counter}`;
       counter += 1;
     }
-    existingSlugs.add(slug);
+    existing.slugs.add(slug);
+    existing.titles.add(title.toLowerCase());
+    existing.sourceUrls.add(normalizedSourceUrl);
 
     const result = await supabaseRequest("ai_news", {
       method: "POST",
@@ -392,11 +402,18 @@ async function sendReviewEmail(items) {
 }
 
 module.exports = async (request, response) => {
-  const session = requireAdmin(request, response);
-  if (!session) return;
+  const isCronRequest =
+    request.method === "GET" &&
+    String(process.env.CRON_SECRET || "").trim() &&
+    String(request.headers.authorization || "").trim() === `Bearer ${String(process.env.CRON_SECRET || "").trim()}`;
 
-  if (request.method !== "POST") {
-    response.setHeader("Allow", "POST");
+  if (!isCronRequest) {
+    const session = requireAdmin(request, response);
+    if (!session) return;
+  }
+
+  if (!["POST", "GET"].includes(request.method)) {
+    response.setHeader("Allow", "POST, GET");
     return sendJson(response, 405, { error: "Method not allowed." });
   }
 
