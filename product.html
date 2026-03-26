@@ -157,10 +157,8 @@
         line-height: 1.55;
       }
       .product-sections {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
-        gap: 36px;
-        margin-top: 36px;
+        width: min(760px, 100%);
+        margin: 36px auto 0;
       }
       .product-main {
         display: grid;
@@ -189,25 +187,6 @@
       }
       .product-block p:last-child {
         margin-bottom: 0;
-      }
-      .product-side {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        padding: 22px;
-        align-self: start;
-      }
-      .product-side-title {
-        margin: 0 0 14px;
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1.2;
-        color: #1a1a1a;
-      }
-      .product-side p {
-        margin: 0;
-        color: var(--text-muted);
-        font-size: 16px;
-        line-height: 1.7;
       }
       .site-footer {
         background-color: #efe6d8;
@@ -329,8 +308,7 @@
           font-size: 16px;
         }
         .product-meta-value,
-        .product-block p,
-        .product-side p {
+        .product-block p {
           font-size: 16px;
         }
         .product-hero-title {
@@ -338,8 +316,7 @@
           line-height: 1.12;
           letter-spacing: -0.01em;
         }
-        .product-block-title,
-        .product-side-title {
+        .product-block-title {
           font-size: 18px;
         }
         .site-footer {
@@ -509,10 +486,6 @@
                     </section>
                   </div>
 
-                  <aside class="product-side">
-                    <h2 class="product-side-title">Notes</h2>
-                    <p>The hero uses the product image as a full-width background at roughly half the viewport height, then shifts into structured content below. This gives the slug page a stronger opening and a more premium feel.</p>
-                  </aside>
                 </div>
               </section>
             `;

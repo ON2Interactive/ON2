@@ -157,10 +157,8 @@
         line-height: 1.55;
       }
       .news-sections {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
-        gap: 36px;
-        margin-top: 36px;
+        width: min(760px, 100%);
+        margin: 36px auto 0;
       }
       .news-main {
         display: grid;
@@ -189,25 +187,6 @@
       }
       .news-block p:last-child {
         margin-bottom: 0;
-      }
-      .news-side {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        padding: 22px;
-        align-self: start;
-      }
-      .news-side-title {
-        margin: 0 0 14px;
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1.2;
-        color: #1a1a1a;
-      }
-      .news-side p {
-        margin: 0;
-        color: var(--text-muted);
-        font-size: 16px;
-        line-height: 1.7;
       }
       .site-footer {
         background-color: #efe6d8;
@@ -327,8 +306,7 @@
         }
         .news-summary,
         .news-meta-value,
-        .news-block p,
-        .news-side p {
+        .news-block p {
           font-size: 16px;
         }
         .news-hero-title {
@@ -336,8 +314,7 @@
           line-height: 1.12;
           letter-spacing: -0.01em;
         }
-        .news-block-title,
-        .news-side-title {
+        .news-block-title {
           font-size: 18px;
         }
         .site-footer {
@@ -509,10 +486,6 @@
                 </section>
               </div>
 
-              <aside class="news-side">
-                <h2 class="news-side-title">Notes</h2>
-                <p>This slug page now mirrors the product page intentionally. The two content types can diverge later if needed, but starting from the same layout keeps the system cleaner while the backend and content model are still taking shape.</p>
-              </aside>
             </div>
           </section>
         `;
