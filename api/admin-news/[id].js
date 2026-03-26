@@ -1,7 +1,5 @@
 const { requireAdmin, sendJson } = require("../_lib/admin");
 const { supabaseRequest } = require("../_lib/supabase");
-const DEFAULT_IMAGE = "/Assets/Hero-Latest.png";
-
 function normalizePayload(input) {
   const title = String(input.title || "").trim();
   const slug =
@@ -18,7 +16,7 @@ function normalizePayload(input) {
     content: String(input.content || "").trim(),
     source_name: String(input.source_name || input.source || "").trim(),
     source_url: String(input.source_url || "").trim(),
-    image_url: DEFAULT_IMAGE,
+    image_url: String(input.image_url || "").trim(),
     published: input.published !== false,
     featured: Boolean(input.featured),
     published_at: input.published_at || new Date().toISOString(),

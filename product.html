@@ -164,6 +164,16 @@
         display: grid;
         gap: 34px;
       }
+      .product-content-image {
+        width: min(760px, 100%);
+        margin: 0 auto 36px;
+      }
+      .product-content-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
       .product-block {
         padding-top: 24px;
         border-top: 1px solid var(--line);
@@ -437,14 +447,16 @@
             const client = escapeHtml(project.client || "Internal");
             const services = escapeHtml(toSentenceCase(project.solutions || "Product strategy, design, engineering"));
             const year = escapeHtml(project.year || "Current");
-            const image = "/Assets/Hero-Latest.png";
+            const heroImage = "/Assets/Hero-Latest.png";
+            const contentImage =
+              project.image_url && project.image_url !== heroImage ? escapeHtml(project.image_url) : "";
             const content = escapeHtml(project.content || "");
 
             document.title = `${title} | ON2 Interactive`;
 
             root.innerHTML = `
               <section class="product-hero">
-                <div class="product-hero-media" style="background-image: url('${image}')"></div>
+                <div class="product-hero-media" style="background-image: url('${heroImage}')"></div>
                 <div class="product-hero-overlay"></div>
                 <div class="product-hero-inner">
                   <p class="product-hero-kicker">${category}</p>
@@ -472,6 +484,7 @@
                 </div>
 
                 <div class="product-sections">
+                  ${contentImage ? `<div class="product-content-image"><img src="${contentImage}" alt="${title}" loading="lazy" /></div>` : ""}
                   <div class="product-main">
                     <section class="product-block">
                       <h2 class="product-block-title">Overview</h2>

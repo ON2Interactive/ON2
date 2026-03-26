@@ -164,6 +164,16 @@
         display: grid;
         gap: 34px;
       }
+      .news-content-image {
+        width: min(760px, 100%);
+        margin: 0 auto 36px;
+      }
+      .news-content-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
       .news-block {
         padding-top: 24px;
         border-top: 1px solid var(--line);
@@ -437,14 +447,16 @@
                 : "Current"
             );
             const category = "Latest AI News";
-            const image = "/Assets/Hero-Latest.png";
+            const heroImage = "/Assets/Hero-Latest.png";
+            const contentImage =
+              item.image_url && item.image_url !== heroImage ? escapeHtml(item.image_url) : "";
             const content = escapeHtml(item.content || "");
 
             document.title = `${title} | ON2 Interactive`;
 
             root.innerHTML = `
           <section class="news-hero">
-            <div class="news-hero-media" style="background-image: url('${image}')"></div>
+            <div class="news-hero-media" style="background-image: url('${heroImage}')"></div>
             <div class="news-hero-overlay"></div>
             <div class="news-hero-inner">
               <p class="news-hero-kicker">${category}</p>
@@ -472,6 +484,7 @@
             </div>
 
             <div class="news-sections">
+              ${contentImage ? `<div class="news-content-image"><img src="${contentImage}" alt="${title}" loading="lazy" /></div>` : ""}
               <div class="news-main">
                 <section class="news-block">
                   <h2 class="news-block-title">Overview</h2>

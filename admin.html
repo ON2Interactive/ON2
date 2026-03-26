@@ -328,6 +328,32 @@
         gap: 12px;
       }
 
+      .upload-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .upload-button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        padding: 0;
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .upload-button svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
       .upload-note {
         color: var(--muted);
         font-size: 14px;
@@ -473,10 +499,20 @@
                 </label>
 
                 <div class="form-label upload-field">
-                  <span>Image</span>
+                  <div class="upload-head">
+                    <span>Image</span>
+                    <button id="productUploadBtn" class="upload-button" type="button" aria-label="Upload product image" title="Upload product image">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 16V4"></path>
+                        <path d="m7 9 5-5 5 5"></path>
+                        <path d="M4 20h16"></path>
+                      </svg>
+                    </button>
+                  </div>
                   <input id="productImage" type="hidden" />
+                  <input id="productImageFile" type="file" accept="image/*" hidden />
                   <img id="productImagePreview" class="upload-preview" alt="" />
-                  <span class="upload-note">Using the ON2 default hero image.</span>
+                  <span class="upload-note">Shown on the landing page and above the content block.</span>
                 </div>
 
                 <label class="form-label" for="productSolutions">Solutions
@@ -563,7 +599,7 @@
                   <span>Image</span>
                   <input id="newsImage" type="hidden" />
                   <img id="newsImagePreview" class="upload-preview" alt="" />
-                  <span class="upload-note">Using the ON2 default hero image.</span>
+                  <span class="upload-note">Source article image appears here when available.</span>
                 </div>
 
                 <label class="form-label" for="newsSource">Source name
@@ -634,6 +670,7 @@
           client: document.getElementById("productClient"),
           sortOrder: document.getElementById("productSortOrder"),
           image: document.getElementById("productImage"),
+          imageFile: document.getElementById("productImageFile"),
           imagePreview: document.getElementById("productImagePreview"),
           solutions: document.getElementById("productSolutions"),
           summary: document.getElementById("productSummary"),
@@ -663,6 +700,7 @@
         const newsUtilityStatus = document.getElementById("newsUtilityStatus");
         const newItemBtn = document.getElementById("newItemBtn");
         const runNewsDraftsBtn = document.getElementById("runNewsDraftsBtn");
+        const productUploadBtn = document.getElementById("productUploadBtn");
         const resetProductBtn = document.getElementById("resetProductBtn");
         const deleteProductBtn = document.getElementById("deleteProductBtn");
         const resetNewsBtn = document.getElementById("resetNewsBtn");
@@ -746,6 +784,35 @@
           return `${url}${joiner}v=${Date.now()}`;
         };
 
+        const uploadImage = async (file, folder) => {
+          const base64Data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const result = String(reader.result || "");
+              const [, base64] = result.split(",");
+              if (!base64) {
+                reject(new Error("Unable to read image file."));
+                return;
+              }
+              resolve(base64);
+            };
+            reader.onerror = () => reject(new Error("Unable to read image file."));
+            reader.readAsDataURL(file);
+          });
+
+          const payload = await api("/api/admin-upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              folder,
+              fileName: file.name,
+              contentType: file.type || "application/octet-stream",
+              base64Data,
+            }),
+          });
+          return String(payload?.url || "").trim();
+        };
+
         const renderProductList = () => {
           if (!products.length) {
             productList.innerHTML = '<p class="empty-state">No products yet.</p>';
@@ -754,7 +821,7 @@
           productList.innerHTML = products
             .map((item) => {
               const activeClass = item.id === activeProductId ? " is-active" : "";
-              const imageUrl = DEFAULT_IMAGE;
+              const imageUrl = item.image_url || DEFAULT_IMAGE;
               return `
                 <button class="admin-list-item${activeClass}" type="button" data-product-id="${escapeHtml(item.id)}">
                   <img class="admin-list-thumb" src="${imageUrl}" alt="" />
@@ -810,7 +877,7 @@
           newsList.innerHTML = newsItems
             .map((item) => {
               const activeClass = item.id === activeNewsId ? " is-active" : "";
-              const imageUrl = DEFAULT_IMAGE;
+              const imageUrl = item.image_url || DEFAULT_IMAGE;
               return `
                 <button class="admin-list-item${activeClass}" type="button" data-news-id="${escapeHtml(item.id)}">
                   <img class="admin-list-thumb" src="${imageUrl}" alt="" />
@@ -870,7 +937,7 @@
           productFields.category.value = "";
           productFields.client.value = "";
           productFields.sortOrder.value = "0";
-          productFields.image.value = DEFAULT_IMAGE;
+          productFields.image.value = "";
           setImagePreview(productFields.imagePreview, productFields.image.value);
           productFields.solutions.value = "";
           productFields.summary.value = "";
@@ -888,7 +955,7 @@
           newsFields.slug.value = "";
           newsFields.source.value = "";
           newsFields.sourceUrl.value = "";
-          newsFields.image.value = DEFAULT_IMAGE;
+          newsFields.image.value = "";
           setImagePreview(newsFields.imagePreview, newsFields.image.value);
           newsFields.publishedAt.value = "";
           newsFields.summary.value = "";
@@ -909,7 +976,7 @@
           productFields.category.value = item.category || "";
           productFields.client.value = item.client || "";
           productFields.sortOrder.value = String(item.sort_order || 0);
-          productFields.image.value = DEFAULT_IMAGE;
+          productFields.image.value = item.image_url || "";
           setImagePreview(productFields.imagePreview, productFields.image.value);
           productFields.solutions.value = item.solutions || "";
           productFields.summary.value = item.summary || "";
@@ -927,7 +994,7 @@
           newsFields.slug.value = item.slug || "";
           newsFields.source.value = item.source_name || "";
           newsFields.sourceUrl.value = item.source_url || "";
-          newsFields.image.value = DEFAULT_IMAGE;
+          newsFields.image.value = item.image_url || "";
           setImagePreview(newsFields.imagePreview, newsFields.image.value);
           newsFields.publishedAt.value = toDatetimeLocal(item.published_at);
           newsFields.summary.value = item.summary || "";
@@ -974,7 +1041,7 @@
             category: productFields.category.value.trim(),
             client: productFields.client.value.trim(),
             sort_order: Number(productFields.sortOrder.value || 0) || 0,
-            image_url: DEFAULT_IMAGE,
+            image_url: productFields.image.value.trim(),
             solutions: productFields.solutions.value.trim(),
             summary: productFields.summary.value.trim(),
             content: productFields.content.value.trim(),
@@ -1004,7 +1071,7 @@
             slug: newsFields.slug.value.trim() || slugify(newsFields.title.value),
             source_name: newsFields.source.value.trim(),
             source_url: newsFields.sourceUrl.value.trim(),
-            image_url: DEFAULT_IMAGE,
+            image_url: newsFields.image.value.trim(),
             published_at: newsFields.publishedAt.value ? new Date(newsFields.publishedAt.value).toISOString() : new Date().toISOString(),
             summary: newsFields.summary.value.trim(),
             content: newsFields.content.value.trim(),
@@ -1065,7 +1132,7 @@
               slug: newsFields.slug.value.trim() || slugify(newsFields.title.value),
               source_name: newsFields.source.value.trim(),
               source_url: newsFields.sourceUrl.value.trim(),
-              image_url: DEFAULT_IMAGE,
+              image_url: newsFields.image.value.trim(),
               published_at: newsFields.publishedAt.value ? new Date(newsFields.publishedAt.value).toISOString() : new Date().toISOString(),
               summary: newsFields.summary.value.trim(),
               content: newsFields.content.value.trim(),
@@ -1090,6 +1157,28 @@
 
         resetProductBtn.addEventListener("click", resetProductForm);
         resetNewsBtn.addEventListener("click", resetNewsForm);
+        productUploadBtn.addEventListener("click", () => {
+          productFields.imageFile.click();
+        });
+        productFields.imageFile.addEventListener("change", async () => {
+          const file = productFields.imageFile.files?.[0];
+          if (!file) return;
+          setStatus(productStatus, "Uploading product image...");
+          try {
+            const imageUrl = await uploadImage(file, "products");
+            productFields.image.value = imageUrl;
+            setImagePreview(productFields.imagePreview, withCacheBust(imageUrl));
+            if (activeProductId) {
+              products = products.map((item) => (item.id === activeProductId ? { ...item, image_url: imageUrl } : item));
+            }
+            renderProductList();
+            setStatus(productStatus, "Product image uploaded. Save to apply it.");
+          } catch (error) {
+            setStatus(productStatus, error.message);
+          } finally {
+            productFields.imageFile.value = "";
+          }
+        });
         newItemBtn.addEventListener("click", () => {
           if (activeView === "news") {
             resetNewsForm();

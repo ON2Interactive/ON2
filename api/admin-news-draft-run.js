@@ -3,8 +3,6 @@ const { supabaseRequest } = require("./_lib/supabase");
 
 const GOOGLE_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
 const SENDGRID_SEND_URL = "https://api.sendgrid.com/v3/mail/send";
-const DEFAULT_NEWS_IMAGE = "/Assets/Hero-Latest.png";
-
 const APPROVED_SOURCES = [
   {
     name: "OpenAI Blog",
@@ -348,7 +346,7 @@ async function insertDrafts(items, sourceCandidates) {
     const sourceName = String(item.source_name || "").trim();
     const sourceUrl = String(item.source_url || "").trim();
     const normalizedSourceUrl = normalizeCandidateUrl(sourceUrl);
-    const imageUrl = DEFAULT_NEWS_IMAGE;
+    const imageUrl = String(item.image_url || "").trim() || imageBySourceUrl.get(normalizedSourceUrl) || "";
     const publishedAt = toIsoDate(item.published_at);
     const slugBase = slugify(title);
     if (!title || !summary || !content || !sourceName || !sourceUrl || !slugBase) continue;
