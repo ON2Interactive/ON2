@@ -437,6 +437,17 @@
           const normalized = text.toLowerCase();
           return normalized.charAt(0).toUpperCase() + normalized.slice(1);
         };
+        const renderParagraphs = (value, fallback) => {
+          const text = String(value || "").trim();
+          const source = text || String(fallback || "").trim();
+          if (!source) return "";
+          return source
+            .split(/\n\s*\n+/)
+            .map((paragraph) => paragraph.trim())
+            .filter(Boolean)
+            .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br />")}</p>`)
+            .join("");
+        };
 
         const slug = decodeURIComponent(String(window.location.pathname || "").split("/").pop() || "").trim().toLowerCase();
 
@@ -466,12 +477,15 @@
             const category = escapeHtml(toSentenceCase(project.category || "Product"));
             const summary = escapeHtml(project.summary || "");
             const client = escapeHtml(project.client || "Internal");
-            const services = escapeHtml(toSentenceCase(project.solutions || "Product strategy, design, engineering"));
+            const services = escapeHtml(project.solutions || "Product strategy, design, engineering");
             const year = escapeHtml(project.year || "Current");
             const heroImage = "/Assets/Hero-Latest.png";
             const contentImage =
               project.image_url && project.image_url !== heroImage ? escapeHtml(project.image_url) : "";
-            const content = escapeHtml(project.content || "");
+            const contentHtml = renderParagraphs(
+              project.content,
+              "This is the rebuilt placeholder structure for the product slug page. The direction is now image-led first, with the content flowing underneath in a calmer editorial layout rather than a boxed data sheet."
+            );
             const projectUrl = String(project.project_url || "").trim();
             const projectLinkLabel = escapeHtml(project.project_link_label || "View Project");
             const projectCta =
@@ -522,7 +536,7 @@
                     <section class="product-block">
                       <h2 class="product-block-title">Overview</h2>
                       <p>${summary}</p>
-                      <p>${content || "This is the rebuilt placeholder structure for the product slug page. The direction is now image-led first, with the content flowing underneath in a calmer editorial layout rather than a boxed data sheet."}</p>
+                      ${contentHtml}
                       ${projectCta}
                     </section>
                   </div>

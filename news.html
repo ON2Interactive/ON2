@@ -421,6 +421,17 @@
           const normalized = text.toLowerCase();
           return normalized.charAt(0).toUpperCase() + normalized.slice(1);
         };
+        const renderParagraphs = (value, fallback) => {
+          const text = String(value || "").trim();
+          const source = text || String(fallback || "").trim();
+          if (!source) return "";
+          return source
+            .split(/\n\s*\n+/)
+            .map((paragraph) => paragraph.trim())
+            .filter(Boolean)
+            .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br />")}</p>`)
+            .join("");
+        };
 
         const slug = decodeURIComponent(String(window.location.pathname || "").split("/").pop() || "").trim().toLowerCase();
         fetch(
@@ -456,7 +467,10 @@
             const heroImage = "/Assets/Hero-Latest.png";
             const contentImage =
               item.image_url && item.image_url !== heroImage ? escapeHtml(item.image_url) : "";
-            const content = escapeHtml(item.content || "");
+            const contentHtml = renderParagraphs(
+              item.content,
+              "This news detail page now follows the same structure as the product slug page so the system stays visually consistent. The hero leads, the summary and metadata sit below, and the article body continues in a calm editorial flow."
+            );
 
             document.title = `${title} | ON2 Interactive`;
 
@@ -495,7 +509,7 @@
                 <section class="news-block">
                   <h2 class="news-block-title">Overview</h2>
                   <p>${summary}</p>
-                  <p>${content || "This news detail page now follows the same structure as the product slug page so the system stays visually consistent. The hero leads, the summary and metadata sit below, and the article body continues in a calm editorial flow."}</p>
+                  ${contentHtml}
                 </section>
               </div>
 
