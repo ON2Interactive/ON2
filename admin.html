@@ -132,6 +132,7 @@
         display: flex;
         align-items: center;
         gap: 20px;
+        width: 100%;
       }
 
       .utility-button,
@@ -151,6 +152,7 @@
         justify-content: center;
         font-size: 50px;
         line-height: 1;
+        margin-left: auto;
       }
 
       .admin-view {
@@ -307,13 +309,16 @@
         padding: 0;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        width: fit-content;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        font-size: 50px;
+        line-height: 1;
       }
 
       .upload-button svg {
-        width: 18px;
-        height: 18px;
+        width: 50px;
+        height: 50px;
       }
 
       .upload-meta {
@@ -449,13 +454,12 @@
                   <span>Image</span>
                   <input id="productImage" type="hidden" />
                   <input id="productImageFile" type="file" accept="image/*" hidden />
-                  <button id="productImageUpload" class="upload-button" type="button">
+                  <button id="productImageUpload" class="upload-button" type="button" aria-label="Upload product image" title="Upload image">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <path d="M12 16V4"></path>
                       <path d="M8 8l4-4 4 4"></path>
                       <path d="M4 18h16"></path>
                     </svg>
-                    <span>Upload image</span>
                   </button>
                   <div id="productImageMeta" class="upload-meta"></div>
                 </div>
@@ -541,13 +545,12 @@
                   <span>Image</span>
                   <input id="newsImage" type="hidden" />
                   <input id="newsImageFile" type="file" accept="image/*" hidden />
-                  <button id="newsImageUpload" class="upload-button" type="button">
+                  <button id="newsImageUpload" class="upload-button" type="button" aria-label="Upload news image" title="Upload image">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <path d="M12 16V4"></path>
                       <path d="M8 8l4-4 4 4"></path>
                       <path d="M4 18h16"></path>
                     </svg>
-                    <span>Upload image</span>
                   </button>
                   <div id="newsImageMeta" class="upload-meta"></div>
                 </div>
@@ -1064,6 +1067,30 @@
             return;
           }
           resetProductForm();
+        });
+        productFields.imageUpload.addEventListener("click", () => productFields.imageFile.click());
+        newsFields.imageUpload.addEventListener("click", () => newsFields.imageFile.click());
+        productFields.imageFile.addEventListener("change", async () => {
+          const file = productFields.imageFile.files?.[0];
+          await uploadImage({
+            file,
+            folder: "products",
+            hiddenInput: productFields.image,
+            metaNode: productFields.imageMeta,
+            statusNode: productStatus,
+            buttonNode: productFields.imageUpload,
+          });
+        });
+        newsFields.imageFile.addEventListener("change", async () => {
+          const file = newsFields.imageFile.files?.[0];
+          await uploadImage({
+            file,
+            folder: "news",
+            hiddenInput: newsFields.image,
+            metaNode: newsFields.imageMeta,
+            statusNode: newsStatus,
+            buttonNode: newsFields.imageUpload,
+          });
         });
         refreshAllBtn.addEventListener("click", fetchAll);
 
