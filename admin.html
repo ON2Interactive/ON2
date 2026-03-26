@@ -113,7 +113,8 @@
 
       .admin-note,
       .form-status,
-      .empty-state {
+      .empty-state,
+      .utility-status {
         color: var(--muted);
         font-size: 16px;
         line-height: 1.7;
@@ -166,6 +167,11 @@
 
       .admin-view.is-active {
         display: block;
+      }
+
+      .view-status-row {
+        min-height: 28px;
+        padding: 10px 0 28px;
       }
 
       .admin-layout {
@@ -431,6 +437,9 @@
         </section>
 
         <section id="productsView" class="admin-view is-active" data-view="products">
+          <div class="view-status-row">
+            <p id="productUtilityStatus" class="utility-status" aria-live="polite"></p>
+          </div>
           <div class="admin-layout">
             <aside>
               <h2 class="admin-list-title">Products</h2>
@@ -522,6 +531,9 @@
         </section>
 
         <section id="newsView" class="admin-view" data-view="news">
+          <div class="view-status-row">
+            <p id="newsUtilityStatus" class="utility-status" aria-live="polite"></p>
+          </div>
           <div class="admin-layout">
             <aside>
               <h2 class="admin-list-title">News</h2>
@@ -660,6 +672,8 @@
 
         const productStatus = document.getElementById("productStatus");
         const newsStatus = document.getElementById("newsStatus");
+        const productUtilityStatus = document.getElementById("productUtilityStatus");
+        const newsUtilityStatus = document.getElementById("newsUtilityStatus");
         const newItemBtn = document.getElementById("newItemBtn");
         const runNewsDraftsBtn = document.getElementById("runNewsDraftsBtn");
         const resetProductBtn = document.getElementById("resetProductBtn");
@@ -1143,6 +1157,8 @@
         refreshAllBtn.addEventListener("click", fetchAll);
         runNewsDraftsBtn.addEventListener("click", async () => {
           runNewsDraftsBtn.setAttribute("disabled", "disabled");
+          runNewsDraftsBtn.textContent = "Fetching...";
+          setStatus(newsUtilityStatus, "Searching approved sources and generating draft summaries...");
           setStatus(newsStatus, "Fetching AI news drafts...");
           try {
             const result = await api("/api/admin-news-draft-run", { method: "POST" });
@@ -1150,16 +1166,17 @@
             if (result.items?.[0]) {
               fillNewsForm(result.items[0]);
             }
-            setStatus(
-              newsStatus,
-              result.created
-                ? `${result.created} draft${result.created === 1 ? "" : "s"} created and emailed for review.`
-                : "No new draft candidates were created."
-            );
+            const message = result.created
+              ? `${result.created} draft${result.created === 1 ? "" : "s"} created and emailed for review.`
+              : "No new draft candidates were created.";
+            setStatus(newsStatus, message);
+            setStatus(newsUtilityStatus, message);
           } catch (error) {
             setStatus(newsStatus, error.message);
+            setStatus(newsUtilityStatus, error.message);
           } finally {
             runNewsDraftsBtn.removeAttribute("disabled");
+            runNewsDraftsBtn.textContent = "Fetch drafts";
           }
         });
 
