@@ -1168,7 +1168,7 @@
             .map((project) => {
               const title = escapeHtml(project.title);
               const summary = escapeHtml(project.summary || "");
-              const image = escapeHtml(project.image_url || "/Images/ON2-Banner-Social-YT.png");
+              const image = "/Assets/Hero-Latest.png";
               const slug = encodeURIComponent(project.slug || project.id || "");
               return `
                 <a class="landing-product-row" href="/products/${slug}">
@@ -1193,7 +1193,7 @@
             .map((item) => {
               const title = escapeHtml(item.title);
               const summary = escapeHtml(item.summary || "");
-              const image = escapeHtml(item.image_url || "/Assets/Hero-Latest.png");
+              const image = "/Assets/Hero-Latest.png";
               const slug = encodeURIComponent(item.slug || "");
               return `
                 <a class="landing-news-row" href="/news/${slug}">

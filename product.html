@@ -460,7 +460,7 @@
             const client = escapeHtml(project.client || "Internal");
             const services = escapeHtml(toSentenceCase(project.solutions || "Product strategy, design, engineering"));
             const year = escapeHtml(project.year || "Current");
-            const image = escapeHtml(project.image_url || "/Assets/Hero-Latest.png");
+            const image = "/Assets/Hero-Latest.png";
             const content = escapeHtml(project.content || "");
 
             document.title = `${title} | ON2 Interactive`;

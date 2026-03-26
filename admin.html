@@ -328,24 +328,10 @@
         gap: 12px;
       }
 
-      .upload-button {
-        appearance: none;
-        border: 0;
-        background: transparent;
-        color: var(--text);
-        padding: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 35px;
-        height: 35px;
-        font-size: 35px;
-        line-height: 1;
-      }
-
-      .upload-button svg {
-        width: 35px;
-        height: 35px;
+      .upload-note {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
       }
 
       .upload-preview {
@@ -489,15 +475,8 @@
                 <div class="form-label upload-field">
                   <span>Image</span>
                   <input id="productImage" type="hidden" />
-                  <input id="productImageFile" type="file" accept="image/*" hidden />
-                  <button id="productImageUpload" class="upload-button" type="button" aria-label="Upload product image" title="Upload image">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M12 16V4"></path>
-                      <path d="M8 8l4-4 4 4"></path>
-                      <path d="M4 18h16"></path>
-                    </svg>
-                  </button>
                   <img id="productImagePreview" class="upload-preview" alt="" />
+                  <span class="upload-note">Using the ON2 default hero image.</span>
                 </div>
 
                 <label class="form-label" for="productSolutions">Solutions
@@ -583,15 +562,8 @@
                 <div class="form-label upload-field">
                   <span>Image</span>
                   <input id="newsImage" type="hidden" />
-                  <input id="newsImageFile" type="file" accept="image/*" hidden />
-                  <button id="newsImageUpload" class="upload-button" type="button" aria-label="Upload news image" title="Upload image">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M12 16V4"></path>
-                      <path d="M8 8l4-4 4 4"></path>
-                      <path d="M4 18h16"></path>
-                    </svg>
-                  </button>
                   <img id="newsImagePreview" class="upload-preview" alt="" />
+                  <span class="upload-note">Using the ON2 default hero image.</span>
                 </div>
 
                 <label class="form-label" for="newsSource">Source name
@@ -634,6 +606,7 @@
 
     <script>
       (() => {
+        const DEFAULT_IMAGE = "/Assets/Hero-Latest.png";
         const logoutBtn = document.getElementById("logoutBtn");
         const refreshAllBtn = document.getElementById("refreshAllBtn");
         const productList = document.getElementById("productList");
@@ -661,8 +634,6 @@
           client: document.getElementById("productClient"),
           sortOrder: document.getElementById("productSortOrder"),
           image: document.getElementById("productImage"),
-          imageFile: document.getElementById("productImageFile"),
-          imageUpload: document.getElementById("productImageUpload"),
           imagePreview: document.getElementById("productImagePreview"),
           solutions: document.getElementById("productSolutions"),
           summary: document.getElementById("productSummary"),
@@ -678,8 +649,6 @@
           source: document.getElementById("newsSource"),
           sourceUrl: document.getElementById("newsSourceUrl"),
           image: document.getElementById("newsImage"),
-          imageFile: document.getElementById("newsImageFile"),
-          imageUpload: document.getElementById("newsImageUpload"),
           imagePreview: document.getElementById("newsImagePreview"),
           publishedAt: document.getElementById("newsPublishedAt"),
           summary: document.getElementById("newsSummary"),
@@ -777,49 +746,6 @@
           return `${url}${joiner}v=${Date.now()}`;
         };
 
-        const fileToBase64 = (file) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              const result = String(reader.result || "");
-              const [, base64 = ""] = result.split(",");
-              resolve(base64);
-            };
-            reader.onerror = () => reject(new Error("Unable to read the selected file."));
-            reader.readAsDataURL(file);
-          });
-
-        const uploadImage = async ({ file, folder, hiddenInput, previewNode, statusNode, buttonNode, onComplete }) => {
-          if (!file) return;
-          const localPreviewUrl = URL.createObjectURL(file);
-          setImagePreview(previewNode, localPreviewUrl);
-          if (typeof onComplete === "function") onComplete(localPreviewUrl);
-          buttonNode.setAttribute("disabled", "disabled");
-          setStatus(statusNode, "Uploading image...");
-          try {
-            const base64Data = await fileToBase64(file);
-            const result = await api("/api/admin-upload", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                folder,
-                fileName: file.name,
-                contentType: file.type,
-                base64Data,
-              }),
-            });
-            hiddenInput.value = result.url || "";
-            const refreshedUrl = withCacheBust(hiddenInput.value);
-            setImagePreview(previewNode, refreshedUrl);
-            if (typeof onComplete === "function") onComplete(refreshedUrl);
-            setStatus(statusNode, "Image uploaded.");
-          } catch (error) {
-            setStatus(statusNode, error.message);
-          } finally {
-            buttonNode.removeAttribute("disabled");
-          }
-        };
-
         const renderProductList = () => {
           if (!products.length) {
             productList.innerHTML = '<p class="empty-state">No products yet.</p>';
@@ -828,7 +754,7 @@
           productList.innerHTML = products
             .map((item) => {
               const activeClass = item.id === activeProductId ? " is-active" : "";
-              const imageUrl = escapeHtml(item.image_url || "/Images/ON2-Banner-Social-YT.png");
+              const imageUrl = DEFAULT_IMAGE;
               return `
                 <button class="admin-list-item${activeClass}" type="button" data-product-id="${escapeHtml(item.id)}">
                   <img class="admin-list-thumb" src="${imageUrl}" alt="" />
@@ -884,7 +810,7 @@
           newsList.innerHTML = newsItems
             .map((item) => {
               const activeClass = item.id === activeNewsId ? " is-active" : "";
-              const imageUrl = escapeHtml(item.image_url || "/Assets/Hero-Latest.png");
+              const imageUrl = DEFAULT_IMAGE;
               return `
                 <button class="admin-list-item${activeClass}" type="button" data-news-id="${escapeHtml(item.id)}">
                   <img class="admin-list-thumb" src="${imageUrl}" alt="" />
@@ -944,8 +870,7 @@
           productFields.category.value = "";
           productFields.client.value = "";
           productFields.sortOrder.value = "0";
-          productFields.image.value = "/Images/ON2-Banner-Social-YT.png";
-          productFields.imageFile.value = "";
+          productFields.image.value = DEFAULT_IMAGE;
           setImagePreview(productFields.imagePreview, productFields.image.value);
           productFields.solutions.value = "";
           productFields.summary.value = "";
@@ -963,8 +888,7 @@
           newsFields.slug.value = "";
           newsFields.source.value = "";
           newsFields.sourceUrl.value = "";
-          newsFields.image.value = "/Assets/Hero-Latest.png";
-          newsFields.imageFile.value = "";
+          newsFields.image.value = DEFAULT_IMAGE;
           setImagePreview(newsFields.imagePreview, newsFields.image.value);
           newsFields.publishedAt.value = "";
           newsFields.summary.value = "";
@@ -985,7 +909,7 @@
           productFields.category.value = item.category || "";
           productFields.client.value = item.client || "";
           productFields.sortOrder.value = String(item.sort_order || 0);
-          productFields.image.value = item.image_url || "";
+          productFields.image.value = DEFAULT_IMAGE;
           setImagePreview(productFields.imagePreview, productFields.image.value);
           productFields.solutions.value = item.solutions || "";
           productFields.summary.value = item.summary || "";
@@ -1003,7 +927,7 @@
           newsFields.slug.value = item.slug || "";
           newsFields.source.value = item.source_name || "";
           newsFields.sourceUrl.value = item.source_url || "";
-          newsFields.image.value = item.image_url || "";
+          newsFields.image.value = DEFAULT_IMAGE;
           setImagePreview(newsFields.imagePreview, newsFields.image.value);
           newsFields.publishedAt.value = toDatetimeLocal(item.published_at);
           newsFields.summary.value = item.summary || "";
@@ -1050,7 +974,7 @@
             category: productFields.category.value.trim(),
             client: productFields.client.value.trim(),
             sort_order: Number(productFields.sortOrder.value || 0) || 0,
-            image_url: productFields.image.value.trim(),
+            image_url: DEFAULT_IMAGE,
             solutions: productFields.solutions.value.trim(),
             summary: productFields.summary.value.trim(),
             content: productFields.content.value.trim(),
@@ -1080,7 +1004,7 @@
             slug: newsFields.slug.value.trim() || slugify(newsFields.title.value),
             source_name: newsFields.source.value.trim(),
             source_url: newsFields.sourceUrl.value.trim(),
-            image_url: newsFields.image.value.trim(),
+            image_url: DEFAULT_IMAGE,
             published_at: newsFields.publishedAt.value ? new Date(newsFields.publishedAt.value).toISOString() : new Date().toISOString(),
             summary: newsFields.summary.value.trim(),
             content: newsFields.content.value.trim(),
@@ -1141,7 +1065,7 @@
               slug: newsFields.slug.value.trim() || slugify(newsFields.title.value),
               source_name: newsFields.source.value.trim(),
               source_url: newsFields.sourceUrl.value.trim(),
-              image_url: newsFields.image.value.trim(),
+              image_url: DEFAULT_IMAGE,
               published_at: newsFields.publishedAt.value ? new Date(newsFields.publishedAt.value).toISOString() : new Date().toISOString(),
               summary: newsFields.summary.value.trim(),
               content: newsFields.content.value.trim(),
@@ -1172,48 +1096,6 @@
             return;
           }
           resetProductForm();
-        });
-        productFields.imageUpload.addEventListener("click", () => productFields.imageFile.click());
-        newsFields.imageUpload.addEventListener("click", () => newsFields.imageFile.click());
-        productFields.imageFile.addEventListener("change", async () => {
-          const file = productFields.imageFile.files?.[0];
-          await uploadImage({
-            file,
-            folder: "products",
-            hiddenInput: productFields.image,
-            previewNode: productFields.imagePreview,
-            statusNode: productStatus,
-            buttonNode: productFields.imageUpload,
-            onComplete: (url) => {
-              if (activeProductId) {
-                const active = products.find((item) => item.id === activeProductId);
-                if (active) {
-                  active.image_url = url;
-                  renderProductList();
-                }
-              }
-            },
-          });
-        });
-        newsFields.imageFile.addEventListener("change", async () => {
-          const file = newsFields.imageFile.files?.[0];
-          await uploadImage({
-            file,
-            folder: "news",
-            hiddenInput: newsFields.image,
-            previewNode: newsFields.imagePreview,
-            statusNode: newsStatus,
-            buttonNode: newsFields.imageUpload,
-            onComplete: (url) => {
-              if (activeNewsId) {
-                const active = newsItems.find((item) => item.id === activeNewsId);
-                if (active) {
-                  active.image_url = url;
-                  renderNewsList();
-                }
-              }
-            },
-          });
         });
         newsFields.published.addEventListener("change", () => {
           if (newsFields.published.checked || !newsFields.id.value.trim()) {

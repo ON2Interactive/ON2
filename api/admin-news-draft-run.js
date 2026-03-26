@@ -348,7 +348,7 @@ async function insertDrafts(items, sourceCandidates) {
     const sourceName = String(item.source_name || "").trim();
     const sourceUrl = String(item.source_url || "").trim();
     const normalizedSourceUrl = normalizeCandidateUrl(sourceUrl);
-    const imageUrl = String(item.image_url || imageBySourceUrl.get(normalizedSourceUrl) || DEFAULT_NEWS_IMAGE).trim();
+    const imageUrl = DEFAULT_NEWS_IMAGE;
     const publishedAt = toIsoDate(item.published_at);
     const slugBase = slugify(title);
     if (!title || !summary || !content || !sourceName || !sourceUrl || !slugBase) continue;
