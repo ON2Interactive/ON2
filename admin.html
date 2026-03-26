@@ -1190,6 +1190,9 @@
           if (!file) return;
           const localPreviewUrl = URL.createObjectURL(file);
           const previousImageUrl = productFields.image.value.trim();
+          const previousListImageUrl = activeProductId
+            ? (products.find((item) => item.id === activeProductId)?.image_url || "")
+            : "";
           setImagePreview(productFields.imagePreview, localPreviewUrl);
           if (activeProductId) {
             products = products.map((item) =>
@@ -1212,14 +1215,14 @@
             setImagePreview(productFields.imagePreview, previousImageUrl);
             if (activeProductId) {
               products = products.map((item) =>
-                item.id === activeProductId ? { ...item, image_url: previousImageUrl } : item
+                item.id === activeProductId ? { ...item, image_url: previousListImageUrl } : item
               );
               renderProductList();
             }
             setStatus(productStatus, error.message);
           } finally {
             productFields.imageFile.value = "";
-            URL.revokeObjectURL(localPreviewUrl);
+            window.setTimeout(() => URL.revokeObjectURL(localPreviewUrl), 60000);
           }
         });
         newItemBtn.addEventListener("click", () => {
