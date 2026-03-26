@@ -82,6 +82,14 @@ function extractDescription(html) {
   return decodeHtml(descMatch?.[1] || "");
 }
 
+function extractImageUrl(html, pageUrl) {
+  const ogMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"]+)["']/i);
+  if (ogMatch?.[1]) return absolutizeUrl(decodeHtml(ogMatch[1]), pageUrl);
+  const twitterMatch = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"]+)["']/i);
+  if (twitterMatch?.[1]) return absolutizeUrl(decodeHtml(twitterMatch[1]), pageUrl);
+  return "";
+}
+
 function extractArticleText(html) {
   const articleMatch = html.match(/<article[\s\S]*?<\/article>/i);
   if (articleMatch?.[0]) {
@@ -165,6 +173,7 @@ async function collectSourceCandidates() {
             source_url: link.url,
             title: extractTitle(articleHtml) || link.anchorText,
             summary_hint: extractDescription(articleHtml),
+            image_url: extractImageUrl(articleHtml, link.url),
             content_hint: extractArticleText(articleHtml),
           });
         } catch (error) {
@@ -219,13 +228,14 @@ async function generateDraftCandidates(sourceCandidates) {
     "Prioritize actual product launches, API releases, model launches, major research updates, or significant AI infrastructure announcements.",
     "Ignore non-AI corporate news, opinion pieces, and duplicate coverage of the same announcement.",
     "For each item, return JSON with these exact keys:",
-    "title, summary, content, source_name, source_url, published_at",
+    "title, summary, content, source_name, source_url, image_url, published_at",
     "Rules:",
     "- title must be the actual article title",
     "- summary must be 1 concise sentence for a homepage row",
     "- content must be 2 short paragraphs in plain text summarizing why it matters for AI product builders",
     "- source_name must match one approved source",
     "- source_url must be the direct article URL from the approved source",
+    "- image_url should use the candidate image_url when available, otherwise an empty string",
     "- published_at should be ISO 8601 if available, otherwise an empty string",
     "- do not include markdown code fences",
     "- output must be valid JSON matching the schema exactly",
@@ -259,9 +269,10 @@ async function generateDraftCandidates(sourceCandidates) {
                   content: { type: "STRING" },
                   source_name: { type: "STRING" },
                   source_url: { type: "STRING" },
+                  image_url: { type: "STRING" },
                   published_at: { type: "STRING" },
                 },
-                required: ["title", "summary", "content", "source_name", "source_url", "published_at"],
+                required: ["title", "summary", "content", "source_name", "source_url", "image_url", "published_at"],
               },
             },
           },
@@ -300,7 +311,12 @@ async function generateDraftCandidates(sourceCandidates) {
   throw new Error(`Gemini returned no usable items: ${normalizedText.slice(0, 300)}`);
 }
 
-async function insertDrafts(items) {
+async function insertDrafts(items, sourceCandidates) {
+  const imageBySourceUrl = new Map(
+    (Array.isArray(sourceCandidates) ? sourceCandidates : [])
+      .map((item) => [normalizeCandidateUrl(item.source_url || ""), String(item.image_url || "").trim()])
+      .filter(([url]) => Boolean(url))
+  );
   const existing = await fetchExistingSlugs();
   const drafts = [];
 
@@ -311,6 +327,7 @@ async function insertDrafts(items) {
     const sourceName = String(item.source_name || "").trim();
     const sourceUrl = String(item.source_url || "").trim();
     const normalizedSourceUrl = normalizeCandidateUrl(sourceUrl);
+    const imageUrl = String(item.image_url || imageBySourceUrl.get(normalizedSourceUrl) || "").trim();
     const publishedAt = toIsoDate(item.published_at);
     const slugBase = slugify(title);
     if (!title || !summary || !content || !sourceName || !sourceUrl || !slugBase) continue;
@@ -337,7 +354,7 @@ async function insertDrafts(items) {
         content,
         source_name: sourceName,
         source_url: sourceUrl,
-        image_url: "",
+        image_url: imageUrl,
         published: false,
         featured: false,
         published_at: publishedAt,
@@ -424,7 +441,7 @@ module.exports = async (request, response) => {
       return sendJson(response, 200, { success: true, created: 0, items: [] });
     }
 
-    const drafts = await insertDrafts(candidates.slice(0, 3));
+    const drafts = await insertDrafts(candidates.slice(0, 3), sourceCandidates);
     await sendReviewEmail(drafts);
 
     return sendJson(response, 200, {
