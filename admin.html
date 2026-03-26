@@ -310,22 +310,27 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 50px;
-        height: 50px;
-        font-size: 50px;
+        width: 35px;
+        height: 35px;
+        font-size: 35px;
         line-height: 1;
       }
 
       .upload-button svg {
-        width: 50px;
-        height: 50px;
+        width: 35px;
+        height: 35px;
       }
 
-      .upload-meta {
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.6;
-        word-break: break-word;
+      .upload-preview {
+        width: 120px;
+        height: 84px;
+        object-fit: cover;
+        border-radius: 6px;
+        display: none;
+      }
+
+      .upload-preview.is-visible {
+        display: block;
       }
 
       .checkbox-group {
@@ -461,7 +466,7 @@
                       <path d="M4 18h16"></path>
                     </svg>
                   </button>
-                  <div id="productImageMeta" class="upload-meta"></div>
+                  <img id="productImagePreview" class="upload-preview" alt="" />
                 </div>
 
                 <label class="form-label" for="productSolutions">Solutions
@@ -552,7 +557,7 @@
                       <path d="M4 18h16"></path>
                     </svg>
                   </button>
-                  <div id="newsImageMeta" class="upload-meta"></div>
+                  <img id="newsImagePreview" class="upload-preview" alt="" />
                 </div>
 
                 <label class="form-label" for="newsSource">Source name
@@ -623,7 +628,7 @@
           image: document.getElementById("productImage"),
           imageFile: document.getElementById("productImageFile"),
           imageUpload: document.getElementById("productImageUpload"),
-          imageMeta: document.getElementById("productImageMeta"),
+          imagePreview: document.getElementById("productImagePreview"),
           solutions: document.getElementById("productSolutions"),
           summary: document.getElementById("productSummary"),
           content: document.getElementById("productContent"),
@@ -640,7 +645,7 @@
           image: document.getElementById("newsImage"),
           imageFile: document.getElementById("newsImageFile"),
           imageUpload: document.getElementById("newsImageUpload"),
-          imageMeta: document.getElementById("newsImageMeta"),
+          imagePreview: document.getElementById("newsImagePreview"),
           publishedAt: document.getElementById("newsPublishedAt"),
           summary: document.getElementById("newsSummary"),
           content: document.getElementById("newsContent"),
@@ -686,8 +691,14 @@
           element.textContent = String(text || "");
         };
 
-        const setImageMeta = (node, value) => {
-          node.textContent = value ? String(value) : "No image selected.";
+        const setImagePreview = (node, value) => {
+          if (!value) {
+            node.removeAttribute("src");
+            node.classList.remove("is-visible");
+            return;
+          }
+          node.src = String(value);
+          node.classList.add("is-visible");
         };
 
         const slugify = (value) =>
@@ -731,7 +742,7 @@
             reader.readAsDataURL(file);
           });
 
-        const uploadImage = async ({ file, folder, hiddenInput, metaNode, statusNode, buttonNode }) => {
+        const uploadImage = async ({ file, folder, hiddenInput, previewNode, statusNode, buttonNode, onComplete }) => {
           if (!file) return;
           buttonNode.setAttribute("disabled", "disabled");
           setStatus(statusNode, "Uploading image...");
@@ -748,7 +759,8 @@
               }),
             });
             hiddenInput.value = result.url || "";
-            setImageMeta(metaNode, hiddenInput.value);
+            setImagePreview(previewNode, hiddenInput.value);
+            if (typeof onComplete === "function") onComplete(hiddenInput.value);
             setStatus(statusNode, "Image uploaded.");
           } catch (error) {
             setStatus(statusNode, error.message);
@@ -880,7 +892,7 @@
           productFields.sortOrder.value = "0";
           productFields.image.value = "/Images/ON2-Banner-Social-YT.png";
           productFields.imageFile.value = "";
-          setImageMeta(productFields.imageMeta, productFields.image.value);
+          setImagePreview(productFields.imagePreview, productFields.image.value);
           productFields.solutions.value = "";
           productFields.summary.value = "";
           productFields.content.value = "";
@@ -899,7 +911,7 @@
           newsFields.sourceUrl.value = "";
           newsFields.image.value = "/Assets/Hero-Latest.png";
           newsFields.imageFile.value = "";
-          setImageMeta(newsFields.imageMeta, newsFields.image.value);
+          setImagePreview(newsFields.imagePreview, newsFields.image.value);
           newsFields.publishedAt.value = "";
           newsFields.summary.value = "";
           newsFields.content.value = "";
@@ -919,7 +931,7 @@
           productFields.client.value = item.client || "";
           productFields.sortOrder.value = String(item.sort_order || 0);
           productFields.image.value = item.image_url || "";
-          setImageMeta(productFields.imageMeta, productFields.image.value);
+          setImagePreview(productFields.imagePreview, productFields.image.value);
           productFields.solutions.value = item.solutions || "";
           productFields.summary.value = item.summary || "";
           productFields.content.value = item.content || "";
@@ -937,7 +949,7 @@
           newsFields.source.value = item.source_name || "";
           newsFields.sourceUrl.value = item.source_url || "";
           newsFields.image.value = item.image_url || "";
-          setImageMeta(newsFields.imageMeta, newsFields.image.value);
+          setImagePreview(newsFields.imagePreview, newsFields.image.value);
           newsFields.publishedAt.value = toDatetimeLocal(item.published_at);
           newsFields.summary.value = item.summary || "";
           newsFields.content.value = item.content || "";
@@ -1076,9 +1088,18 @@
             file,
             folder: "products",
             hiddenInput: productFields.image,
-            metaNode: productFields.imageMeta,
+            previewNode: productFields.imagePreview,
             statusNode: productStatus,
             buttonNode: productFields.imageUpload,
+            onComplete: (url) => {
+              if (activeProductId) {
+                const active = products.find((item) => item.id === activeProductId);
+                if (active) {
+                  active.image_url = url;
+                  renderProductList();
+                }
+              }
+            },
           });
         });
         newsFields.imageFile.addEventListener("change", async () => {
@@ -1087,9 +1108,18 @@
             file,
             folder: "news",
             hiddenInput: newsFields.image,
-            metaNode: newsFields.imageMeta,
+            previewNode: newsFields.imagePreview,
             statusNode: newsStatus,
             buttonNode: newsFields.imageUpload,
+            onComplete: (url) => {
+              if (activeNewsId) {
+                const active = newsItems.find((item) => item.id === activeNewsId);
+                if (active) {
+                  active.image_url = url;
+                  renderNewsList();
+                }
+              }
+            },
           });
         });
         refreshAllBtn.addEventListener("click", fetchAll);
