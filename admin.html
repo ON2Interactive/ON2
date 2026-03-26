@@ -1167,8 +1167,10 @@
               fillNewsForm(result.items[0]);
             }
             const message = result.created
-              ? `${result.created} draft${result.created === 1 ? "" : "s"} created and emailed for review.`
-              : "No new draft candidates were created.";
+              ? `${result.created} draft${result.created === 1 ? "" : "s"} created from ${result.candidates || result.created} candidate${(result.candidates || result.created) === 1 ? "" : "s"} and emailed for review.`
+              : result.candidates
+                ? `${result.candidates} candidate${result.candidates === 1 ? "" : "s"} found, but no drafts were inserted.`
+                : "No new draft candidates were created.";
             setStatus(newsStatus, message);
             setStatus(newsUtilityStatus, message);
           } catch (error) {

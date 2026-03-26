@@ -112,13 +112,26 @@ async function generateDraftCandidates() {
 
   const payload = await response.json();
   const text = payload?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("") || "{}";
+  const normalizedText = String(text || "").trim();
   let parsed;
   try {
-    parsed = JSON.parse(text);
+    parsed = JSON.parse(normalizedText);
   } catch (error) {
-    throw new Error(`Gemini returned non-JSON output: ${text.slice(0, 300)}`);
+    const match = normalizedText.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if (!match) {
+      throw new Error(`Gemini returned non-JSON output: ${normalizedText.slice(0, 300)}`);
+    }
+    try {
+      parsed = JSON.parse(match[0]);
+    } catch {
+      throw new Error(`Gemini returned non-JSON output: ${normalizedText.slice(0, 300)}`);
+    }
   }
-  return Array.isArray(parsed.items) ? parsed.items : [];
+  if (Array.isArray(parsed)) return parsed;
+  if (Array.isArray(parsed.items)) return parsed.items;
+  if (Array.isArray(parsed.news)) return parsed.news;
+  if (Array.isArray(parsed.articles)) return parsed.articles;
+  throw new Error(`Gemini returned no usable items: ${normalizedText.slice(0, 300)}`);
 }
 
 async function insertDrafts(items) {
@@ -237,6 +250,7 @@ module.exports = async (request, response) => {
 
     return sendJson(response, 200, {
       success: true,
+      candidates: candidates.length,
       created: drafts.length,
       items: drafts,
     });
