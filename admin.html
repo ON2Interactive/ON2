@@ -833,10 +833,17 @@
           productList.innerHTML = products
             .map((item) => {
               const activeClass = item.id === activeProductId ? " is-active" : "";
-              const imageUrl = item.image_url || DEFAULT_IMAGE;
+              const imageUrl =
+                item.id === activeProductId
+                  ? productFields.image.value.trim() || item.image_url || DEFAULT_IMAGE
+                  : item.image_url || DEFAULT_IMAGE;
+              const previewUrl =
+                item.id === activeProductId && productFields.image.value.trim()
+                  ? withCacheBust(imageUrl)
+                  : imageUrl;
               return `
                 <button class="admin-list-item${activeClass}" type="button" data-product-id="${escapeHtml(item.id)}">
-                  <img class="admin-list-thumb" src="${imageUrl}" alt="" />
+                  <img class="admin-list-thumb" src="${previewUrl}" alt="" />
                   <span class="admin-list-item-copy">
                     <span class="admin-list-item-title">${escapeHtml(item.title)}</span>
                     <span class="admin-list-item-summary">${escapeHtml(item.summary || "")}</span>
@@ -1181,6 +1188,15 @@
         productFields.imageFile.addEventListener("change", async () => {
           const file = productFields.imageFile.files?.[0];
           if (!file) return;
+          const localPreviewUrl = URL.createObjectURL(file);
+          const previousImageUrl = productFields.image.value.trim();
+          setImagePreview(productFields.imagePreview, localPreviewUrl);
+          if (activeProductId) {
+            products = products.map((item) =>
+              item.id === activeProductId ? { ...item, image_url: localPreviewUrl } : item
+            );
+            renderProductList();
+          }
           setStatus(productStatus, "Uploading product image...");
           try {
             const imageUrl = await uploadImage(file, "products");
@@ -1192,9 +1208,18 @@
             renderProductList();
             setStatus(productStatus, "Product image uploaded. Save to apply it.");
           } catch (error) {
+            productFields.image.value = previousImageUrl;
+            setImagePreview(productFields.imagePreview, previousImageUrl);
+            if (activeProductId) {
+              products = products.map((item) =>
+                item.id === activeProductId ? { ...item, image_url: previousImageUrl } : item
+              );
+              renderProductList();
+            }
             setStatus(productStatus, error.message);
           } finally {
             productFields.imageFile.value = "";
+            URL.revokeObjectURL(localPreviewUrl);
           }
         });
         newItemBtn.addEventListener("click", () => {
