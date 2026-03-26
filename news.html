@@ -158,21 +158,22 @@
       }
       .news-sections {
         width: min(760px, 100%);
-        margin: 36px auto 0;
+        margin: 48px auto 0;
       }
       .news-main {
         display: grid;
         gap: 34px;
       }
       .news-content-image {
-        width: min(760px, 100%);
-        margin: 0 auto 36px;
+        width: min(820px, calc(100% + 60px));
+        margin: 0 auto 40px;
+        transform: translateX(-30px);
       }
       .news-content-image img {
         display: block;
         width: 100%;
         height: auto;
-        border-radius: 10px;
+        border-radius: 12px;
       }
       .news-block {
         padding-top: 24px;
@@ -323,6 +324,11 @@
           font-size: 18px;
           line-height: 1.12;
           letter-spacing: -0.01em;
+        }
+        .news-content-image {
+          width: 100%;
+          margin-bottom: 32px;
+          transform: none;
         }
         .news-block-title {
           font-size: 18px;
@@ -490,12 +496,6 @@
                   <h2 class="news-block-title">Overview</h2>
                   <p>${summary}</p>
                   <p>${content || "This news detail page now follows the same structure as the product slug page so the system stays visually consistent. The hero leads, the summary and metadata sit below, and the article body continues in a calm editorial flow."}</p>
-                </section>
-
-                <section class="news-block">
-                  <h2 class="news-block-title">What this page will hold</h2>
-                  <p>Once the automated AI news pipeline is built, this page can support article excerpt, source link, author, publication date, topic tags, related stories, and summarized takeaways while keeping the same layout.</p>
-                  <p>That lets the front end stay stable even when the content ingestion process becomes more sophisticated later on.</p>
                 </section>
               </div>
 

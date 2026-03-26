@@ -158,21 +158,22 @@
       }
       .product-sections {
         width: min(760px, 100%);
-        margin: 36px auto 0;
+        margin: 48px auto 0;
       }
       .product-main {
         display: grid;
         gap: 34px;
       }
       .product-content-image {
-        width: min(760px, 100%);
-        margin: 0 auto 36px;
+        width: min(820px, calc(100% + 60px));
+        margin: 0 auto 40px;
+        transform: translateX(-30px);
       }
       .product-content-image img {
         display: block;
         width: 100%;
         height: auto;
-        border-radius: 10px;
+        border-radius: 12px;
       }
       .product-block {
         padding-top: 24px;
@@ -325,6 +326,11 @@
           font-size: 18px;
           line-height: 1.12;
           letter-spacing: -0.01em;
+        }
+        .product-content-image {
+          width: 100%;
+          margin-bottom: 32px;
+          transform: none;
         }
         .product-block-title {
           font-size: 18px;
@@ -490,12 +496,6 @@
                       <h2 class="product-block-title">Overview</h2>
                       <p>${summary}</p>
                       <p>${content || "This is the rebuilt placeholder structure for the product slug page. The direction is now image-led first, with the content flowing underneath in a calmer editorial layout rather than a boxed data sheet."}</p>
-                    </section>
-
-                    <section class="product-block">
-                      <h2 class="product-block-title">What this page will hold</h2>
-                      <p>Once the Supabase-backed product model is ready, this page can expand into a full case-study format with sections for context, problem, solution, technology stack, design system, outcomes, screenshots, and supporting media.</p>
-                      <p>The layout is already prepared for that evolution without needing to change the overall page direction again.</p>
                     </section>
                   </div>
 
