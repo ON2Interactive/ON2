@@ -134,7 +134,12 @@ async function generateDraftCandidates() {
 
   const payload = await response.json();
   const text = payload?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("") || "{}";
-  const parsed = JSON.parse(text);
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (error) {
+    throw new Error(`Gemini returned non-JSON output: ${text.slice(0, 300)}`);
+  }
   return Array.isArray(parsed.items) ? parsed.items : [];
 }
 
@@ -260,7 +265,7 @@ module.exports = async (request, response) => {
   } catch (error) {
     console.error("AI news draft run failed", error);
     return sendJson(response, 500, {
-      error: "Unable to create AI news drafts right now.",
+      error: error.message || "Unable to create AI news drafts right now.",
     });
   }
 };
