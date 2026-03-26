@@ -31,6 +31,26 @@ const APPROVED_SOURCES = [
     domain: "ai.meta.com",
     url: "https://ai.meta.com/blog/",
   },
+  {
+    name: "TechCrunch",
+    domain: "techcrunch.com",
+    url: "https://techcrunch.com/category/artificial-intelligence/",
+  },
+  {
+    name: "The Verge",
+    domain: "theverge.com",
+    url: "https://www.theverge.com/ai-artificial-intelligence",
+  },
+  {
+    name: "Wired",
+    domain: "wired.com",
+    url: "https://www.wired.com/tag/artificial-intelligence/",
+  },
+  {
+    name: "MIT News",
+    domain: "news.mit.edu",
+    url: "https://news.mit.edu/topic/artificial-intelligence2",
+  },
 ];
 
 function slugify(value) {
