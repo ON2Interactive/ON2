@@ -144,6 +144,10 @@
         padding: 0;
       }
 
+      .utility-button.is-hidden {
+        display: none;
+      }
+
       .utility-button-add {
         width: 50px;
         height: 50px;
@@ -421,6 +425,7 @@
         <section class="admin-utility">
           <div class="admin-utility-actions">
             <button id="refreshAllBtn" class="utility-button" type="button">Refresh</button>
+            <button id="runNewsDraftsBtn" class="utility-button is-hidden" type="button">Fetch drafts</button>
             <button id="newItemBtn" class="utility-button utility-button-add" type="button" aria-label="Create new item">+</button>
           </div>
         </section>
@@ -656,6 +661,7 @@
         const productStatus = document.getElementById("productStatus");
         const newsStatus = document.getElementById("newsStatus");
         const newItemBtn = document.getElementById("newItemBtn");
+        const runNewsDraftsBtn = document.getElementById("runNewsDraftsBtn");
         const resetProductBtn = document.getElementById("resetProductBtn");
         const deleteProductBtn = document.getElementById("deleteProductBtn");
         const resetNewsBtn = document.getElementById("resetNewsBtn");
@@ -675,6 +681,7 @@
           viewLinks.forEach((node) => {
             node.classList.toggle("is-active", node.dataset.viewLink === view);
           });
+          runNewsDraftsBtn.classList.toggle("is-hidden", view !== "news");
           if (window.location.hash !== `#${view}`) {
             history.replaceState(null, "", `#${view}`);
           }
@@ -1134,6 +1141,27 @@
           });
         });
         refreshAllBtn.addEventListener("click", fetchAll);
+        runNewsDraftsBtn.addEventListener("click", async () => {
+          runNewsDraftsBtn.setAttribute("disabled", "disabled");
+          setStatus(newsStatus, "Fetching AI news drafts...");
+          try {
+            const result = await api("/api/admin-news-draft-run", { method: "POST" });
+            await fetchAll();
+            if (result.items?.[0]) {
+              fillNewsForm(result.items[0]);
+            }
+            setStatus(
+              newsStatus,
+              result.created
+                ? `${result.created} draft${result.created === 1 ? "" : "s"} created and emailed for review.`
+                : "No new draft candidates were created."
+            );
+          } catch (error) {
+            setStatus(newsStatus, error.message);
+          } finally {
+            runNewsDraftsBtn.removeAttribute("disabled");
+          }
+        });
 
         logoutBtn.addEventListener("click", async () => {
           await fetch("/api/admin-logout", { method: "POST" }).catch(() => {});
