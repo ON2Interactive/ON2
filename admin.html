@@ -730,6 +730,13 @@
           return payload;
         };
 
+        const withCacheBust = (value) => {
+          const url = String(value || "").trim();
+          if (!url) return "";
+          const joiner = url.includes("?") ? "&" : "?";
+          return `${url}${joiner}v=${Date.now()}`;
+        };
+
         const fileToBase64 = (file) =>
           new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -744,6 +751,9 @@
 
         const uploadImage = async ({ file, folder, hiddenInput, previewNode, statusNode, buttonNode, onComplete }) => {
           if (!file) return;
+          const localPreviewUrl = URL.createObjectURL(file);
+          setImagePreview(previewNode, localPreviewUrl);
+          if (typeof onComplete === "function") onComplete(localPreviewUrl);
           buttonNode.setAttribute("disabled", "disabled");
           setStatus(statusNode, "Uploading image...");
           try {
@@ -759,8 +769,9 @@
               }),
             });
             hiddenInput.value = result.url || "";
-            setImagePreview(previewNode, hiddenInput.value);
-            if (typeof onComplete === "function") onComplete(hiddenInput.value);
+            const refreshedUrl = withCacheBust(hiddenInput.value);
+            setImagePreview(previewNode, refreshedUrl);
+            if (typeof onComplete === "function") onComplete(refreshedUrl);
             setStatus(statusNode, "Image uploaded.");
           } catch (error) {
             setStatus(statusNode, error.message);
