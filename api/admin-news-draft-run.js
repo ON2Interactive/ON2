@@ -101,28 +101,6 @@ async function generateDraftCandidates() {
       tools: [{ google_search: {} }],
       generationConfig: {
         temperature: 0.2,
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: "OBJECT",
-          properties: {
-            items: {
-              type: "ARRAY",
-              items: {
-                type: "OBJECT",
-                properties: {
-                  title: { type: "STRING" },
-                  summary: { type: "STRING" },
-                  content: { type: "STRING" },
-                  source_name: { type: "STRING" },
-                  source_url: { type: "STRING" },
-                  published_at: { type: "STRING" },
-                },
-                required: ["title", "summary", "content", "source_name", "source_url", "published_at"],
-              },
-            },
-          },
-          required: ["items"],
-        },
       },
     }),
   });
