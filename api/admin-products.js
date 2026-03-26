@@ -19,6 +19,8 @@ function normalizePayload(input) {
     solutions: String(input.solutions || input.services || "").trim(),
     year: String(input.year || "").trim(),
     image_url: String(input.image_url || "").trim(),
+    project_url: String(input.project_url || "").trim(),
+    project_link_label: String(input.project_link_label || "").trim(),
     published: input.published !== false,
     featured: Boolean(input.featured),
     sort_order: Number(input.sort_order || 0) || 0,

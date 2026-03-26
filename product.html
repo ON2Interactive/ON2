@@ -199,6 +199,21 @@
       .product-block p:last-child {
         margin-bottom: 0;
       }
+      .product-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+        color: var(--text);
+        text-decoration: none;
+        font-size: 16px;
+        line-height: 1.4;
+      }
+      .product-cta svg {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 auto;
+      }
       .site-footer {
         background-color: #efe6d8;
         background-image:
@@ -435,7 +450,7 @@
         };
 
         fetch(
-          `${supabaseUrl}/rest/v1/products?select=title,slug,summary,content,category,client,solutions,year,image_url&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+          `${supabaseUrl}/rest/v1/products?select=*&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`,
           { headers: supabaseHeaders }
         )
           .then((response) => response.json())
@@ -457,6 +472,18 @@
             const contentImage =
               project.image_url && project.image_url !== heroImage ? escapeHtml(project.image_url) : "";
             const content = escapeHtml(project.content || "");
+            const projectUrl = String(project.project_url || "").trim();
+            const projectLinkLabel = escapeHtml(project.project_link_label || "View Project");
+            const projectCta =
+              projectUrl
+                ? `<a class="product-cta" href="${escapeHtml(projectUrl)}" target="_blank" rel="noreferrer">
+                    <span>${projectLinkLabel}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M7 17 17 7"></path>
+                      <path d="M9 7h8v8"></path>
+                    </svg>
+                  </a>`
+                : "";
 
             document.title = `${title} | ON2 Interactive`;
 
@@ -496,6 +523,7 @@
                       <h2 class="product-block-title">Overview</h2>
                       <p>${summary}</p>
                       <p>${content || "This is the rebuilt placeholder structure for the product slug page. The direction is now image-led first, with the content flowing underneath in a calmer editorial layout rather than a boxed data sheet."}</p>
+                      ${projectCta}
                     </section>
                   </div>
 

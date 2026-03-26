@@ -515,6 +515,16 @@
                   <span class="upload-note">Shown on the landing page and above the content block.</span>
                 </div>
 
+                <div class="split-grid">
+                  <label class="form-label" for="productProjectUrl">Project URL
+                    <input class="text-input" id="productProjectUrl" type="url" placeholder="https://example.com" />
+                  </label>
+
+                  <label class="form-label" for="productProjectLinkLabel">Link label
+                    <input class="text-input" id="productProjectLinkLabel" type="text" placeholder="View Project" />
+                  </label>
+                </div>
+
                 <label class="form-label" for="productSolutions">Solutions
                   <input class="text-input" id="productSolutions" type="text" />
                 </label>
@@ -672,6 +682,8 @@
           image: document.getElementById("productImage"),
           imageFile: document.getElementById("productImageFile"),
           imagePreview: document.getElementById("productImagePreview"),
+          projectUrl: document.getElementById("productProjectUrl"),
+          projectLinkLabel: document.getElementById("productProjectLinkLabel"),
           solutions: document.getElementById("productSolutions"),
           summary: document.getElementById("productSummary"),
           content: document.getElementById("productContent"),
@@ -939,6 +951,8 @@
           productFields.sortOrder.value = "0";
           productFields.image.value = "";
           setImagePreview(productFields.imagePreview, productFields.image.value);
+          productFields.projectUrl.value = "";
+          productFields.projectLinkLabel.value = "";
           productFields.solutions.value = "";
           productFields.summary.value = "";
           productFields.content.value = "";
@@ -978,6 +992,8 @@
           productFields.sortOrder.value = String(item.sort_order || 0);
           productFields.image.value = item.image_url || "";
           setImagePreview(productFields.imagePreview, productFields.image.value);
+          productFields.projectUrl.value = item.project_url || "";
+          productFields.projectLinkLabel.value = item.project_link_label || "";
           productFields.solutions.value = item.solutions || "";
           productFields.summary.value = item.summary || "";
           productFields.content.value = item.content || "";
@@ -1042,6 +1058,8 @@
             client: productFields.client.value.trim(),
             sort_order: Number(productFields.sortOrder.value || 0) || 0,
             image_url: productFields.image.value.trim(),
+            project_url: productFields.projectUrl.value.trim(),
+            project_link_label: productFields.projectLinkLabel.value.trim(),
             solutions: productFields.solutions.value.trim(),
             summary: productFields.summary.value.trim(),
             content: productFields.content.value.trim(),
